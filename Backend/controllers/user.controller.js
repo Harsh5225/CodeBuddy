@@ -1,10 +1,12 @@
-import User from "../models/user.js";
-import { validator } from "../utils/validator.js";
+import { validatorcheck } from "../utils/validator.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { User } from "../models/user.js";
+import client from "../database/redis.js";
+
 export const register = async (req, res) => {
   try {
-    validator(req.body);
+    validatorcheck(req.body);
     const { firstname, email, password } = req.body;
 
     // Check if the user already exists
@@ -76,12 +78,22 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    res.cookie("token", "", {
-      maxAge: 0,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-    }); // Clear the token cookie
-    res.status(200).json({ message: "Logout successful" });
+    const payload = req.userInfo;
+    const token = req.cookies.token;
+    console.log(token,"token in logout")
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    await client.set(`token:${token}`, "blocked");
+    // Set the token in Redis with an expiration time (e.g., what is in the [payload exp])
+
+    await client.expireAt(`token:${token}`, payload.exp);
+
+    return res.cookie("token", null, { maxAge: 0 }).json({
+      success: true,
+      message: "Logout successful",
+    });
   } catch (error) {
     console.error("Error in logout controller:", error.message);
     res.status(500).json({ message: "Internal server error" });
@@ -126,17 +138,14 @@ export const getProfile = async (req, res) => {
 // const { password, ...userData } = user._doc;
 // res.json({ user: userData });
 
-
-
 // ### 🛡️ Cookie Security Flags (`httpOnly` & `secure`)
 
-// - **`httpOnly: true`**  
-//   Prevents JavaScript from accessing the cookie on the client side.  
+// - **`httpOnly: true`**
+//   Prevents JavaScript from accessing the cookie on the client side.
 //   ✅ Protects against **XSS (Cross-Site Scripting)** attacks.
 
-// - **`secure: process.env.NODE_ENV === "production"`**  
-//   Ensures the cookie is sent only over **HTTPS** connections in production.  
+// - **`secure: process.env.NODE_ENV === "production"`**
+//   Ensures the cookie is sent only over **HTTPS** connections in production.
 //   ✅ Protects against **MITM (Man-in-the-Middle)** attacks.
 
 // > ✅ Use both flags when storing sensitive data like authentication tokens in cookies.
-

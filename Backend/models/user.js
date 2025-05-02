@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const userSchema = new Schema(
@@ -35,16 +35,14 @@ const userSchema = new Schema(
     problemSolved: {
       type: [String],
     },
-    password:{
+    password: {
       type: String,
       required: true,
-    }
+    },
   },
   {
     timestamps: true,
   }
 );
 
-const User = mongoose.model("user", userSchema);
-
-module.exports = User;
+export const User = mongoose.model("User", userSchema);

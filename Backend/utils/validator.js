@@ -1,5 +1,5 @@
 import validator from "validator";
-export const validator = (data) => {
+export const validatorcheck = (data) => {
   const mandatoryFields = ["firstname", "email", "password"];
   const isAllowedFields = mandatoryFields.every((field) => field in data);
   if (!isAllowedFields) {
