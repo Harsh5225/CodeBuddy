@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  adminRegister,
   getProfile,
   login,
   logout,
@@ -17,5 +18,6 @@ authRouter.post("/register", register);
 authRouter.post("/login", login);
 authRouter.post("/logout", userMiddleware, logout);
 authRouter.get("/profile", isAuthenticate, getProfile);
+authRouter.post("/adminRegister", userMiddleware, adminRegister);
 
 export default authRouter;

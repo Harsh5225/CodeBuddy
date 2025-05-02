@@ -1,6 +1,8 @@
+import jwt from "jsonwebtoken";
 export const isAuthenticate = (req, res, next) => {
   try {
     const token = req.cookies.token;
+    console.log(token, "token in isAuthenticate middleware");
     if (!token) {
       return res
         .status(401)

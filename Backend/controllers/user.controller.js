@@ -9,6 +9,7 @@ export const register = async (req, res) => {
     validatorcheck(req.body);
     const { firstname, email, password } = req.body;
 
+    // req.body.role = "user";
     // Check if the user already exists
     const existingUser = await User.findOne({ emailId: email });
     if (existingUser) {
@@ -23,13 +24,21 @@ export const register = async (req, res) => {
       firstName: firstname,
       emailId: email,
       password: hashedPassword, // Store the hashed password
+      role: req.body.role,
+      age: req.body.age,
+      problemSolved: req.body.problemSolved,
+      lastName: req.body.lastname,
     });
     await newUser.save();
 
     // Generate a JWT token for the user
-    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { id: newUser._id, role: "user" },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
     // Set the token in the response header (optional)
 
     res.cookie("token", token, {
@@ -64,9 +73,13 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Invalid email or password" });
     }
     // Generate a JWT token for the user
-    const token = jwt.sign({ id: user._id, email }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { id: user._id, email, role: user.role },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
 
     res.cookie("token", token, { maxAge: 3600000 });
     res.status(200).json({ message: "Login successful", token });
@@ -78,9 +91,12 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    const payload = req.userInfo;
+    // const payload = req.userInfo;
     const token = req.cookies.token;
-    console.log(token,"token in logout")
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    console.log(token, "token in logout");
+    console.log("-------------------");
+    console.log(payload, "payload in logout");
     if (!token) {
       return res.status(401).json({ message: "Unauthorized" });
     }
@@ -96,6 +112,64 @@ export const logout = async (req, res) => {
     });
   } catch (error) {
     console.error("Error in logout controller:", error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const adminRegister = async (req, res) => {
+  try {
+    validatorcheck(req.body);
+    const { firstname, email, password } = req.body;
+
+    // Check if the user is an admin
+
+    if (req.userInfo.role !== "admin") {
+      return res.status(403).json({
+        message: "Forbidden you are not allowed to register as admin role",
+      });
+    }
+    // console.log(req.userInfo, "userInfo in adminRegister controller");
+    req.body.role = "admin";
+    // Check if the user already exists
+    const existingUser = await User.findOne({ emailId: email });
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+    // Hash the password before saving it to the database
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Create a new user
+    const newUser = new User({
+      firstName: firstname,
+      emailId: email,
+      password: hashedPassword, // Store the hashed password
+      role: req.body.role,
+      age: req.body.age,
+      problemSolved: req.body.problemSolved,
+      lastName: req.body.lastname,
+    });
+    await newUser.save();
+
+    // Generate a JWT token for the user
+    const token = jwt.sign(
+      { id: newUser._id, role: "admin" },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
+    // Set the token in the response header (optional)
+
+    res.cookie("token", token, {
+      maxAge: 3600000,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    });
+
+    res.status(201).json({ message: "User registered successfully" });
+  } catch (error) {
+    console.error("Error in register controller:", error.message);
     res.status(500).json({ message: "Internal server error" });
   }
 };
