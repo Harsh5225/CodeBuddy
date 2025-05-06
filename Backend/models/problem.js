@@ -72,10 +72,7 @@ const problemSchema = new mongoose.createSchema({
       },
     },
   ],
-  // constraints: {
-  //   type: String,
-  //   required: true,
-  // },
+
   startCode: [
     {
       language: {
@@ -83,6 +80,18 @@ const problemSchema = new mongoose.createSchema({
         required: true,
       },
       initialCode: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
+  referenceSolution: [
+    {
+      language: {
+        type: String,
+        required: true,
+      },
+      completeCode: {
         type: String,
         required: true,
       },
@@ -96,3 +105,20 @@ const problemSchema = new mongoose.createSchema({
 });
 
 export const Problem = mongoose.model("Problem", problemSchema);
+
+
+// sample data for referenceSolution
+// const referenceSolution = [
+//   {
+//     language: "c++",
+//     completeCode: "C++ Code",
+//   },
+//   {
+//     language: "java",
+//     completeCode: "java Code",
+//   },
+//   {
+//     language: "js",
+//     completeCode: "JS Code",
+//   },
+// ];
