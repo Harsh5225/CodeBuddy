@@ -28,7 +28,6 @@ export const createProblem = async (req, res) => {
         expected_output: testcase.output,
       }));
 
-
       // console.log(submissions);
 
       const submitResult = await submitBatch(submissions);
@@ -65,3 +64,13 @@ export const createProblem = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+//! ISSUE-(8-05)
+// fix(judge0): standardize to judge0-ce endpoint and add fallback
+
+// - Switch from judge0-extra-ce to standard judge0-ce endpoint
+// - Add C (50) as fallback language when preferred IDs fail
+// - Verify language support before submission
+// - Improve error logging for debugging
+
+// Resolves language ID errors (54,71 not found)
