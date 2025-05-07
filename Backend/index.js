@@ -4,6 +4,7 @@ import connectDB from "./database/db.js";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/userAuth.js";
 import client from "./database/redis.js";
+import problemRouter from "./routes/problemcreationRoute.js";
 const app = express();
 dotenv.config();
 app.use(express.json());
@@ -14,7 +15,8 @@ const PORT = process.env.PORT || 8000;
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
-app.use("/api/v1", authRouter);
+app.use("/user", authRouter);
+app.use("/problem", problemRouter);
 const main = async () => {
   try {
     // await client.connect();

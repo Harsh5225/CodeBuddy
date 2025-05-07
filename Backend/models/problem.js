@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const problemSchema = new mongoose.createSchema({
+const problemSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -105,7 +105,6 @@ const problemSchema = new mongoose.createSchema({
 });
 
 export const Problem = mongoose.model("Problem", problemSchema);
-
 
 // sample data for referenceSolution
 // const referenceSolution = [

@@ -8,7 +8,7 @@ export const submitBatch = async (submitData) => {
       method: "POST",
       url: "https://judge0-extra-ce.p.rapidapi.com/submissions/batch",
       params: {
-        base64_encoded: "true",
+        base64_encoded: "false",
       },
       headers: {
         "x-rapidapi-key": process.env.RAPIDAPI_KEY,
@@ -18,7 +18,7 @@ export const submitBatch = async (submitData) => {
       data: submitData,
     };
     const response = await axios.request(options);
-    console.log(response.data);
+    console.log("response in submitBatch==>", response.data);
     return response.data;
   } catch (error) {
     console.log("Error in submitBatch function:", error.message);
