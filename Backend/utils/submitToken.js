@@ -1,6 +1,11 @@
 import axios from "axios";
 import dotenv from "dotenv";
 dotenv.config();
+const waiting = async (timer) => {
+  setTimeout(() => {
+    return 1;
+  }, timer);
+};
 export const submitToken = async (resultToken) => {
   try {
     const options = {
@@ -40,7 +45,8 @@ export const submitToken = async (resultToken) => {
       }
 
       // Wait for a short period before checking again (e.g., 1 second)
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
+      await waiting(1000);
     }
   } catch (error) {
     console.log("Error in submitToken function:", error.message);

@@ -1,6 +1,8 @@
-import { getLanguageById } from "../utils/problemId.js";
+import { Problem } from "../models/problem.js";
 import { submitBatch } from "../utils/submitBatch.js";
 import { submitToken } from "../utils/submitToken.js";
+import { getLanguageById } from "../utils/problemId.js";
+
 export const createProblem = async (req, res) => {
   try {
     const {
@@ -12,19 +14,24 @@ export const createProblem = async (req, res) => {
       hiddenTestCases,
       startCode,
       referenceSolution,
+      problemCreator,
     } = req.body;
+    console.log("req.body in createProblem==>", req.body);
 
     for (const { language, completeCode } of referenceSolution) {
-      const langId = getLanguageById(language);
-
-      const submitData = visibleTestCases.map((data) => ({
+      const languageId = getLanguageById(language);
+      console.log("languageId", languageId);
+      const submissions = visibleTestCases.map((testcase) => ({
         source_code: completeCode,
-        language_id: langId,
-        stdin: data.input,
-        expected_output: data.output,
+        language_id: 71,
+        stdin: testcase.input,
+        expected_output: testcase.output,
       }));
 
-      const submitResult = await submitBatch(submitData);
+
+      // console.log(submissions);
+
+      const submitResult = await submitBatch(submissions);
       console.log("submitResult==>", submitResult);
 
       const resultToken = submitResult.map((data) => data.token);
@@ -32,7 +39,7 @@ export const createProblem = async (req, res) => {
       console.log("testResult==>", testResult);
 
       for (const data of testResult) {
-        const dataStatus = statusDescription.find(
+        const dataStatus = testResult.find(
           (status) => status.id === data.status_id
         ) || {
           description: "Unknown Status",
@@ -46,12 +53,11 @@ export const createProblem = async (req, res) => {
 
     const userProblem = await Problem.create({
       ...req.body,
-      problemCreator: req.user._id,
+      problemCreator: req.userInfo._id,
     });
 
     console.log("userProblem==>", userProblem);
     return res.status(200).json({
-      id: userProblem._id,
       message: "Problem created successfully",
     });
   } catch (error) {

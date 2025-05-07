@@ -7,5 +7,3 @@ export const getLanguageById = (lang) => {
 
   return language[lang.toLowerCase()];
 };
-
-//

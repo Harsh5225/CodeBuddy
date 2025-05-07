@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+const { Schema } = mongoose;
 
-const problemSchema = new mongoose.Schema({
+const problemSchema = new Schema({
   title: {
     type: String,
     required: true,
@@ -9,39 +10,14 @@ const problemSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  type: {
+  difficulty: {
     type: String,
     enum: ["easy", "medium", "hard"],
     required: true,
   },
   tags: {
     type: String,
-    enum: [
-      "array",
-      "string",
-      "linkedlist",
-      "tree",
-      "stack",
-      "queue",
-      "hashmap",
-      "heap",
-      "graph",
-      "dp",
-      "greedy",
-      "backtracking",
-      "binarysearch",
-      "bitmanipulation",
-      "math",
-      "recursion, sorting",
-      "trie",
-      "segmenttree",
-      "fenwicktree",
-      "matrix,",
-      "game theory",
-      "geometry",
-      "combinatorics",
-      "number theory",
-    ],
+    enum: ["array", "linkedList", "graph", "dp", "math"],
     required: true,
   },
   visibleTestCases: [
@@ -60,6 +36,7 @@ const problemSchema = new mongoose.Schema({
       },
     },
   ],
+
   hiddenTestCases: [
     {
       input: {
@@ -85,6 +62,7 @@ const problemSchema = new mongoose.Schema({
       },
     },
   ],
+
   referenceSolution: [
     {
       language: {
@@ -97,8 +75,9 @@ const problemSchema = new mongoose.Schema({
       },
     },
   ],
+
   problemCreator: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
