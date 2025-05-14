@@ -67,12 +67,13 @@ export const createProblem = async (req, res) => {
 
 export const updateProblem = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id;
     if (!id) {
       return res.status(404).json({
         message: "Missing id field",
       });
     }
+    // console.log(id)
     const {
       title,
       description,
@@ -162,7 +163,8 @@ export const deleteProblem = async (req, res) => {
 
 export const getProblem = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id;
+    console.log(id);
     if (!id) {
       return res.status(404).json({
         message: "Empty id field",

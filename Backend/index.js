@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import authRouter from "./routes/userAuth.js";
 import client from "./database/redis.js";
 import problemRouter from "./routes/problemcreationRoute.js";
+import submitRouter from "./routes/submit.js";
 const app = express();
 dotenv.config();
 app.use(express.json());
@@ -17,6 +18,8 @@ app.get("/", (req, res) => {
 });
 app.use("/user", authRouter);
 app.use("/problem", problemRouter);
+app.use("/problem-submit", submitRouter);
+
 const main = async () => {
   try {
     // await client.connect();

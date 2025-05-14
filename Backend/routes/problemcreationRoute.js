@@ -19,13 +19,13 @@ import { adminMiddleware } from "../middlewares/adminMiddleware.js";
 problemRouter.post("/create", userMiddleware, adminMiddleware, createProblem);
 problemRouter.patch("/:id", updateProblem);
 problemRouter.delete("/:id", deleteProblem);
-problemRouter.get("/:id",getProblem)
-problemRouter.get("/",getAllproblem)
+problemRouter.get("/:id", getProblem);
+problemRouter.get("/", getAllproblem);
 
 // //* above three needs to be admin protected
 
 // problemRouter.get("/", getAllProblems);
 // problemRouter.get("/:id", getAllProblemsById);
-// problemRouter.get("/user", solvedAllProblemByUser);
+// problemRouter.get("/user", solvedAllProblemByUser);  
 
 export default problemRouter;
