@@ -2,6 +2,7 @@ import { Problem } from "../models/problem.js";
 import { submitBatch } from "../utils/submitBatch.js";
 import { submitToken } from "../utils/submitToken.js";
 import { getLanguageById } from "../utils/problemId.js";
+import { User } from "../models/user.js";
 
 export const createProblem = async (req, res) => {
   try {
@@ -216,6 +217,50 @@ export const getAllproblem = async (req, res) => {
   }
 };
 
+// You have a User model where problemSolved is an array of ObjectId references to a Problem model. You want to create an API that fetches all problems solved by a specific user. My approach was to get the IDs from the problemSolved array and manually populate each one.
+
+// !Learning you don’t need to manually loop
+// However, instead of manually iterating through each ID, Mongoose allows you to use .populate('problemSolved') to automatically fetch full problem documents in one query even it's in an array.
+// It return an array of fully populated problems in the API response.
+
+export const allsolvedProblemByUser = async (req, res) => {
+  try {
+    console.log("allsolvedProblmes=>>", req.userInfo.id);
+    const userId = req.userInfo.id;
+
+    // agar mai problem bhejna chata huu to mujhe iterate har problme ke id mai karna padega aur usko populate karna padega
+
+    // Populate the 'problemSolved' field which contains array of ObjectIds
+    // const populatedUser = await User.findById(userId).populate("problemSolved");
+    // SELECTED ITEMS
+    const populatedUser = await User.findById(userId).populate({
+      path: "problemSolved",
+      select: "_id title difficulty tags",
+    });
+    const problems = populatedUser.problemSolved;
+    const count = problems.length;
+    if (!populatedUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      count,
+      problems,
+    });
+    return res.status(200).send("debugging");
+  } catch (error) {
+    console.log("Error in solvedAllproblemByUser controller:", error.message);
+    return res.status(500).json({
+      success: false,
+      message: `Error: ${error.message}`,
+    });
+  }
+};
+
 //! ISSUE-(8-05)
 // fix(judge0): standardize to judge0-ce endpoint and add fallback
 
@@ -225,3 +270,24 @@ export const getAllproblem = async (req, res) => {
 // - Improve error logging for debugging
 
 // Resolves language ID errors (54,71 not found)
+
+// populatedUser eg. json
+
+// {
+//   "_id": "user123",
+//   "username": "rohit",
+//   "email": "rohit@example.com",
+//   "problemSolved": [
+//     {
+//       "_id": "prob1",
+//       "title": "Two Sum",
+//       "difficulty": "Easy"
+//     },
+//     {
+//       "_id": "prob2",
+//       "title": "Longest Substring Without Repeating Characters",
+//       "difficulty": "Medium"
+//     }
+//   ],
+//   "__v": 0
+// }
