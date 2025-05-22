@@ -1,0 +1,22 @@
+"I have resumed work after my exams ended"
+
+Day 1
+
+Tasks Completed:
+
+1. Signup & Login Pages:
+
+   . Designed and implemented the UI for both signup and login functionality.
+   . Integrated form inputs and basic structure for authentication.
+
+2. Form Validation using Zod:
+
+   .Implemented schema-based form validation using **Zod** to ensure data correctness before sending requests to the backend.
+   .Defined Zod schemas for both signup and login forms.
+
+3. Zod Integration with React Hook Form:
+
+   .Installed and configured `@hookform/resolvers/zod` to connect Zod with React Hook Form.
+   .Used Zod resolver to validate inputs in real-time and display error messages on the form.
+
+
