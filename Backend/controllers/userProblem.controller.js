@@ -3,6 +3,7 @@ import { submitBatch } from "../utils/submitBatch.js";
 import { submitToken } from "../utils/submitToken.js";
 import { getLanguageById } from "../utils/problemId.js";
 import { User } from "../models/user.js";
+import Submission from "../models/submission.js";
 
 export const createProblem = async (req, res) => {
   try {
@@ -254,6 +255,25 @@ export const allsolvedProblemByUser = async (req, res) => {
     return res.status(200).send("debugging");
   } catch (error) {
     console.log("Error in solvedAllproblemByUser controller:", error.message);
+    return res.status(500).json({
+      success: false,
+      message: `Error: ${error.message}`,
+    });
+  }
+};
+
+export const submittedProblem = async (req, res) => {
+  try {
+    const userId = req.result._id;
+    const { pid: problemId } = req.params;
+    const ans = Submission.find({ userId, problemId });
+    if (ans.length == 0) {
+      res.status(200).send("No submissions");
+    }
+
+    res.status(200).send(ans);
+  } catch (error) {
+    console.log("Error in submittedProblem controller:", error.message);
     return res.status(500).json({
       success: false,
       message: `Error: ${error.message}`,

@@ -52,6 +52,6 @@ const submissionSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
+submissionSchema.index({ userId: 1, problemId: 1 }); // compound index creation
 const Submission = mongoose.model("Submission", submissionSchema);
 export default Submission;

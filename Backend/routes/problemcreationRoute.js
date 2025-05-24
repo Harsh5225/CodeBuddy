@@ -13,6 +13,7 @@ import {
   deleteProblem,
   getAllproblem,
   getProblem,
+  submittedProblem,
   updateProblem,
 } from "../controllers/userProblem.controller.js";
 import { adminMiddleware } from "../middlewares/adminMiddleware.js";
@@ -23,6 +24,7 @@ problemRouter.patch("/:id", updateProblem);
 problemRouter.delete("/:id", deleteProblem);
 problemRouter.get("/:id", getProblem);
 problemRouter.get("/", getAllproblem);
+problemRouter.get("/submittedProblem/:pid", submittedProblem);
 
 // //* above three needs to be admin protected
 

@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { User } from "../models/user.js";
 import client from "../database/redis.js";
+import Submission from "../models/submission.js";
 
 export const register = async (req, res) => {
   try {
@@ -194,6 +195,24 @@ export const getProfile = async (req, res) => {
     });
   } catch (error) {
     console.error("Error in getProfile controller:", error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const deleteProfile = async (req, res) => {
+  try {
+    const userId = req.result._id;
+    const deletedata = await User.findByIdAndDelete(userId);
+
+    // submission delete
+    await Submission.deleteMany(userId);
+
+    res.status(200).json({
+      success: true,
+      message: "deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error in deleteProfile controller:", error.message);
     res.status(500).json({ message: "Internal server error" });
   }
 };

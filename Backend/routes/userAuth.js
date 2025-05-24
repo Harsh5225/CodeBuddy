@@ -1,6 +1,7 @@
 import express from "express";
 import {
   adminRegister,
+  deleteProfile,
   getProfile,
   login,
   logout,
@@ -19,5 +20,17 @@ authRouter.post("/login", login);
 authRouter.post("/logout", userMiddleware, logout);
 authRouter.get("/profile", isAuthenticate, getProfile);
 authRouter.post("/adminRegister", userMiddleware, adminRegister);
+authRouter.delete("/delete-profile", userMiddleware, deleteProfile);
+authRouter.get("/check", userMiddleware, (req, res) => {
+  const reply = {
+    firstName: req.result.firstName,
+    emailId: req.result.emailId,
+    _id: req.result._id,
+  };
+  res.status(200).json({
+    user: reply,
+    message: "validUser",
+  });
+});
 
 export default authRouter;
