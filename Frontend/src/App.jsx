@@ -1,10 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router";
 import Home from "./Home";
 import Login from "./Login";
 import Signup from "./Signup";
+import { useDispatch, useSelector } from "react-redux";
+import { checkAuth } from "./features/auth/authSlice";
 
 const App = () => {
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(checkAuth());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated]);
   return (
     <div>
       <BrowserRouter>

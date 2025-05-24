@@ -20,3 +20,140 @@ Tasks Completed:
    .Used Zod resolver to validate inputs in real-time and display error messages on the form.
 
 
+
+
+
+---
+
+## 📘 Day 2 – Redux Toolkit Authentication (Text Format)
+
+---
+
+### 1. **Objective**
+
+* Build a scalable and clean auth flow.
+* Use Redux Toolkit with `createAsyncThunk` and `createSlice`.
+* Interact with a backend API using Axios for registration, login, checking auth, and logout.
+
+---
+
+### 2. **File Breakdown**
+
+* `authSlice.js`: Contains auth state and reducers.
+* `axiosClient.js`: Axios instance for consistent API calls.
+* `store.js`: Redux store setup to manage slices globally.
+
+---
+
+### 3. **`createAsyncThunk` Explained**
+
+* Handles async logic like API calls.
+* Generates 3 action types automatically:
+
+  * `pending`: When request is sent.
+  * `fulfilled`: When request is successful.
+  * `rejected`: When request fails.
+
+---
+
+### 4. **Async Thunks Defined**
+
+* `registerUser`: Sends a POST request to `/user/register`.
+* `loginUser`: Sends a POST request to `/user/login`.
+* `checkAuth`: Sends a GET request to `/user/check`.
+* `logoutUser`: Sends a POST request to `/logout`.
+
+Each thunk uses:
+
+```js
+try {
+  const res = await axiosClient.get/post(...);
+  return res.data;
+} catch (err) {
+  return rejectWithValue(err);
+}
+```
+
+---
+
+### 5. **authSlice Initial State**
+
+```js
+{
+  user: "",              // Stores user info
+  isAuthenticated: "",   // true/false based on auth check
+  loading: "",           // true during API calls
+  error: ""              // Stores error messages
+}
+```
+
+---
+
+### 6. **Reducers using `.addCase()`**
+
+For each thunk (e.g., `registerUser`, `loginUser`, etc.):
+
+* `.pending`: Set `loading = true`, clear `error`.
+* `.fulfilled`:
+
+  * Set `loading = false`.
+  * Set `user` to `action.payload`.
+  * Set `isAuthenticated` to `!!action.payload` (truthy check).
+* `.rejected`:
+
+  * Set `loading = false`.
+  * Set `error` to `action.payload.message || "Something went wrong"`.
+  * Clear `user` and set `isAuthenticated = false`.
+
+---
+
+ 7. Why !!action.payload is Used
+
+   .Converts a value to a boolean:
+
+  * `!!null` → `false`
+  * `!!{}` → `true`
+* So you can check if a payload exists before setting `isAuthenticated`.
+
+
+8.Axios Client Configuration
+
+In `axiosClient.js`:
+js
+const axiosClient = axios.create({
+  baseURL: "http://localhost:3000",
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json"
+  }
+});
+
+   .`withCredentials: true` is crucial for session cookies.
+   . `baseURL` centralizes the API root for reuse.
+
+---
+9.Store Setup (`store.js`)
+
+import { configureStore } from "@reduxjs/toolkit";
+import authReducer from "../features/auth/authSlice";
+
+export const store = configureStore({
+  reducer: {
+    auth: authReducer,
+  },
+});
+
+
+   .Registers `auth` slice into the Redux store.
+   .Accessible throughout the app via `useSelector()` and `useDispatch()`.
+
+
+Summary:
+
+   .Created full async login/register/logout/auth-check logic.
+   .Set up Axios for centralized API calls.
+   .Managed different states (`loading`, `user`, `isAuthenticated`, `error`) cleanly in Redux.
+   .Prepared your app for integrating UI components and session handling.
+
+
+
