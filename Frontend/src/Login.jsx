@@ -1,20 +1,40 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import GlitchText from "./Glitch";
+
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { loginUser } from "./features/auth/authSlice";
+import { useEffect } from "react";
 const Login = () => {
   const loginSchema = z.object({
     email: z.string().email("Invalid email"),
     password: z.string().min(8, "Password is too weak "),
   });
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { isAuthenticated, loading, error } = useSelector(
+    (state) => state.auth
+  );
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: zodResolver(loginSchema) });
 
-  const onSubmit = (data) => console.log(data);
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
+
+  const onSubmit = (data) => {
+    dispatch(loginUser(data));
+  };
   return (
     <>
       <div

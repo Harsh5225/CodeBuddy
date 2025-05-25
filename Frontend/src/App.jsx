@@ -1,26 +1,42 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
-import { BrowserRouter, Route, Routes } from "react-router";
-import Home from "./Home";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router";
+import HomePage from "./Home";
 import Login from "./Login";
 import Signup from "./Signup";
 import { useDispatch, useSelector } from "react-redux";
 import { checkAuth } from "./features/auth/authSlice";
 
 const App = () => {
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  let { isAuthenticated } = useSelector((state) => state.auth);
+  console.log(isAuthenticated);
   const dispatch = useDispatch();
-
   useEffect(() => {
     dispatch(checkAuth());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated]);
+  }, [dispatch]);
+
   return (
     <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home></Home>}></Route>
-          <Route path="/login" element={<Login></Login>}></Route>
-          <Route path="/signup" element={<Signup></Signup>}></Route>
+          <Route
+            path="/"
+            element={
+              isAuthenticated ? (
+                <HomePage></HomePage>
+              ) : (
+                <Navigate to="/signup" />
+              )
+            }
+          ></Route>
+          <Route
+            path="/login"
+            element={isAuthenticated ? <Navigate to="/" /> : <Login></Login>}
+          ></Route>
+          <Route
+            path="/signup"
+            element={isAuthenticated ? <Navigate to="/" /> : <Signup></Signup>}
+          ></Route>
         </Routes>
       </BrowserRouter>
     </div>
