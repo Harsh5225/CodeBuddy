@@ -8,7 +8,7 @@ import Submission from "../models/submission.js";
 export const register = async (req, res) => {
   try {
     validatorcheck(req.body);
-    const { firstname, email, password } = req.body;
+    const { firstName, email, password } = req.body;
 
     // req.body.role = "user";
     // Check if the user already exists
@@ -22,7 +22,7 @@ export const register = async (req, res) => {
 
     // Create a new user
     const newUser = new User({
-      firstName: firstname,
+      firstName: firstName,
       emailId: email,
       password: hashedPassword, // Store the hashed password
       role: req.body.role,
@@ -48,7 +48,14 @@ export const register = async (req, res) => {
       secure: process.env.NODE_ENV === "production",
     });
 
-    res.status(201).json({ message: "User registered successfully" });
+    res.status(201).json({
+      message: "User registered successfully",
+      user: {
+        id: newUser._id,
+        firstName: newUser.firstName,
+        emailId: newUser.emailId,
+      },
+    });
   } catch (error) {
     console.error("Error in register controller:", error.message);
     res.status(500).json({ message: "Internal server error" });
@@ -81,9 +88,14 @@ export const login = async (req, res) => {
         expiresIn: "1h",
       }
     );
+    const reply = {
+      firstName: user.firstName,
+      emailId: user.emailId,
+      _id: user._id,
+    };
 
     res.cookie("token", token, { maxAge: 3600000 });
-    res.status(200).json({ message: "Login successful", token });
+    res.status(200).json({ message: "Login successful", token, user: reply });
   } catch (error) {
     console.error("Error in login controller:", error.message);
     res.status(500).json({ message: "Internal server error" });
