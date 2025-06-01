@@ -157,3 +157,121 @@ Summary:
 
 
 
+Here’s a clean, well-structured note for your reference:
+
+---
+
+## 🔐 How to Protect Tokens from Unauthorized Use (e.g. via Postman)
+
+### 🎯 Problem:
+
+CORS only protects against **browser-based cross-origin** requests. If someone obtains your token (JWT/session token), **tools like Postman, curl, or scripts can still access your APIs**, since they bypass CORS entirely.
+
+---
+
+### ✅ Server-Side Strategies to Tackle This:
+
+#### 1. **Bind Token to Client Context (Fingerprinting)**
+
+* Store client metadata when the token is issued:
+
+  * IP address
+  * User-Agent string
+  * Device fingerprint
+* On each request, **verify** the metadata matches the stored values.
+* Block access if there's a mismatch.
+
+> Example (pseudo-middleware):
+
+```js
+if (storedIP !== requestIP || storedUA !== requestUserAgent) {
+   reject("Suspicious token usage");
+}
+```
+
+---
+
+#### 2. **Use Short-Lived Access Tokens + Refresh Tokens**
+
+* Access Token: Valid for a short time (5–15 mins)
+* Refresh Token: Longer lifespan, stored securely (e.g. HttpOnly cookie)
+* Limits the window of attack if a token is stolen.
+
+---
+
+#### 3. **IP or Geo-Based Restrictions**
+
+* Detect and block/alert on sudden changes in:
+
+  * IP address
+  * Geo-location (country, region)
+* Useful for highly sensitive applications (e.g. banking)
+
+---
+
+#### 4. **Token Revocation / Blacklisting**
+
+* Store active tokens in a **revocation list** (e.g. Redis or DB)
+* Invalidate tokens on:
+
+  * Logout
+  * Suspicious activity
+  * Manual admin action
+
+---
+
+#### 5. **Rate Limiting and Behavior Monitoring**
+
+* Use rate limits per:
+
+  * IP address
+  * Access token
+* Monitor usage patterns and alert/deny on abnormal behaviors.
+* Integrate services like:
+
+  * AWS WAF
+  * Cloudflare Bot Management
+
+---
+
+#### 6. **Secure Token Storage & Delivery**
+
+* Always use **HTTPS** to prevent MITM attacks.
+* Store tokens in:
+
+  * **HttpOnly** cookies (prevents XSS)
+  * Avoid `localStorage` for sensitive tokens
+* Set `Secure` and `SameSite` attributes on cookies.
+
+---
+
+### 📝 Summary
+
+CORS doesn't protect APIs from Postman or curl.
+To secure APIs:
+
+* Validate token context (IP, user-agent)
+* Use short-lived tokens + refresh tokens
+* Track and revoke tokens
+* Monitor suspicious activity
+
+---
+
+Let me know if you want this note exported as a PDF or markdown file!
+
+
+
+Without isLoading:
+Page Load → Show Login Page → Auth Check Completes → Show Home Page
+                 ^                                      ^
+                 |                                      |
+                 +----- This causes the flash ----------+
+
+With isLoading:
+Page Load → Show Loading Spinner → Auth Check Completes → Show Home Page
+                 ^                                           ^
+                 |                                           |
+                 +--- No flash, just a smooth transition ----+
+
+
+window.location.pathname = help in finding the current path of the page
