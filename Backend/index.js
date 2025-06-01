@@ -6,8 +6,17 @@ import authRouter from "./routes/userAuth.js";
 import client from "./database/redis.js";
 import problemRouter from "./routes/problemcreationRoute.js";
 import submitRouter from "./routes/submit.js";
+import cors from "cors";
+
 const app = express();
+
 dotenv.config();
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));

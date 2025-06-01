@@ -1,24 +1,28 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { logoutUser } from "../features/auth/authSlice";
-import { getAllProblems, getUserSolvedProblems } from "../features/problem/problemSlice";
+import {
+  getAllProblems,
+  getUserSolvedProblems,
+} from "../features/problem/problemSlice";
 
 function Homepage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
-  const { 
-    problems, 
-    solvedProblems, 
-    totalProblems, 
-    currentPage, 
+  const {
+    problems,
+    solvedProblems,
+    totalProblems,
+    currentPage,
     totalPages,
     loading,
     solvedLoading,
-    error
+    error,
   } = useSelector((state) => state.problem);
-  
+
   const [pageSize, setPageSize] = useState(10);
 
   // Fetch problems on component mount
@@ -42,21 +46,21 @@ function Homepage() {
 
   // Get difficulty badge color
   const getDifficultyBadge = (difficulty) => {
-    switch(difficulty?.toLowerCase()) {
-      case 'easy':
-        return 'badge-success';
-      case 'medium':
-        return 'badge-warning';
-      case 'hard':
-        return 'badge-error';
+    switch (difficulty?.toLowerCase()) {
+      case "easy":
+        return "badge-success";
+      case "medium":
+        return "badge-warning";
+      case "hard":
+        return "badge-error";
       default:
-        return 'badge-info';
+        return "badge-info";
     }
   };
 
   // Check if problem is solved by user
   const isProblemSolved = (problemId) => {
-    return solvedProblems.some(problem => problem._id === problemId);
+    return solvedProblems.some((problem) => problem._id === problemId);
   };
 
   // Handle problem selection
@@ -144,14 +148,26 @@ function Homepage() {
         {/* Error Display */}
         {error && (
           <div className="alert alert-error mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="stroke-current shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
             <span>{error}</span>
           </div>
         )}
 
         {/* Problems List */}
         <h2 className="text-2xl font-bold mb-4">Problems</h2>
-        
+
         {loading ? (
           <div className="flex justify-center my-8">
             <div className="loading loading-spinner loading-lg text-primary"></div>
@@ -176,22 +192,30 @@ function Homepage() {
                       <td>{(currentPage - 1) * pageSize + index + 1}</td>
                       <td>{problem.title}</td>
                       <td>
-                        <span className={`badge ${getDifficultyBadge(problem.difficulty)}`}>
+                        <span
+                          className={`badge ${getDifficultyBadge(
+                            problem.difficulty
+                          )}`}
+                        >
                           {problem.difficulty}
                         </span>
                       </td>
                       <td>
-                        <span className="badge badge-outline">{problem.tags}</span>
+                        <span className="badge badge-outline">
+                          {problem.tags}
+                        </span>
                       </td>
                       <td>
                         {isProblemSolved(problem._id) ? (
                           <span className="text-success">Solved</span>
                         ) : (
-                          <span className="text-base-content opacity-60">Not Attempted</span>
+                          <span className="text-base-content opacity-60">
+                            Not Attempted
+                          </span>
                         )}
                       </td>
                       <td>
-                        <button 
+                        <button
                           className="btn btn-primary btn-xs"
                           onClick={() => handleProblemSelect(problem._id)}
                         >
@@ -208,14 +232,14 @@ function Homepage() {
             {totalPages > 1 && (
               <div className="flex justify-center mt-6">
                 <div className="join">
-                  <button 
+                  <button
                     className="join-item btn"
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
                   >
                     «
                   </button>
-                  
+
                   {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
                     // Show pages around current page
                     let pageNum;
@@ -228,19 +252,21 @@ function Homepage() {
                     } else {
                       pageNum = currentPage - 2 + i;
                     }
-                    
+
                     return (
-                      <button 
+                      <button
                         key={pageNum}
-                        className={`join-item btn ${currentPage === pageNum ? 'btn-active' : ''}`}
+                        className={`join-item btn ${
+                          currentPage === pageNum ? "btn-active" : ""
+                        }`}
                         onClick={() => handlePageChange(pageNum)}
                       >
                         {pageNum}
                       </button>
                     );
                   })}
-                  
-                  <button 
+
+                  <button
                     className="join-item btn"
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
@@ -253,14 +279,26 @@ function Homepage() {
           </>
         ) : (
           <div className="alert alert-info">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-current shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="stroke-current shrink-0 w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
             <span>No problems found. Check back later!</span>
           </div>
         )}
 
         {/* Solved Problems Section */}
         <h2 className="text-2xl font-bold mb-4 mt-10">Your Solved Problems</h2>
-        
+
         {solvedLoading ? (
           <div className="flex justify-center my-8">
             <div className="loading loading-spinner loading-lg text-primary"></div>
@@ -283,15 +321,21 @@ function Homepage() {
                     <td>{index + 1}</td>
                     <td>{problem.title}</td>
                     <td>
-                      <span className={`badge ${getDifficultyBadge(problem.difficulty)}`}>
+                      <span
+                        className={`badge ${getDifficultyBadge(
+                          problem.difficulty
+                        )}`}
+                      >
                         {problem.difficulty}
                       </span>
                     </td>
                     <td>
-                      <span className="badge badge-outline">{problem.tags}</span>
+                      <span className="badge badge-outline">
+                        {problem.tags}
+                      </span>
                     </td>
                     <td>
-                      <button 
+                      <button
                         className="btn btn-primary btn-xs"
                         onClick={() => handleProblemSelect(problem._id)}
                       >
@@ -305,8 +349,23 @@ function Homepage() {
           </div>
         ) : (
           <div className="alert alert-info">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-current shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <span>You haven't solved any problems yet. Start solving to track your progress!</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="stroke-current shrink-0 w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+            <span>
+              You haven't solved any problems yet. Start solving to track your
+              progress!
+            </span>
           </div>
         )}
       </div>
