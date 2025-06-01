@@ -10,7 +10,6 @@ import {
 
 function Homepage() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   const {
     problems,
@@ -25,11 +24,53 @@ function Homepage() {
 
   const [pageSize, setPageSize] = useState(10);
 
+  // Filter states
+  const [filters, setFilters] = useState({
+    difficulty: "all",
+    tag: "all",
+    status: "all",
+  });
+
+  const [showFilters, setShowFilters] = useState(false);
+  const [filteredProblems, setFilteredProblems] = useState([]);
+
   // Fetch problems on component mount
   useEffect(() => {
     dispatch(getAllProblems({ pageNum: 1, pagecnt: pageSize }));
     dispatch(getUserSolvedProblems());
   }, [dispatch, pageSize]);
+
+  // Apply filters whenever problems change or filters change
+  useEffect(() => {
+    if (!problems) return;
+
+    let result = [...problems];
+
+    // Apply difficulty filter
+    if (filters.difficulty !== "all") {
+      result = result.filter(
+        (problem) => problem.difficulty?.toLowerCase() === filters.difficulty
+      );
+    }
+
+    // Apply tag filter
+    if (filters.tag !== "all") {
+      result = result.filter(
+        (problem) => problem.tags?.toLowerCase() === filters.tag
+      );
+    }
+
+    // Apply status filter
+    if (filters.status !== "all") {
+      if (filters.status === "solved") {
+        result = result.filter((problem) => isProblemSolved(problem._id));
+      } else if (filters.status === "unsolved") {
+        result = result.filter((problem) => !isProblemSolved(problem._id));
+      }
+    }
+
+    setFilteredProblems(result);
+  }, [problems, filters, solvedProblems]);
 
   // Handle logout
   const handleLogout = async () => {
@@ -68,6 +109,29 @@ function Homepage() {
     navigate(`/problem/${problemId}`);
   };
 
+  // Handle filter changes
+  const handleFilterChange = (filterType, value) => {
+    setFilters((prev) => ({
+      ...prev,
+      [filterType]: value,
+    }));
+  };
+
+  // Reset all filters
+  const resetFilters = () => {
+    setFilters({
+      difficulty: "all",
+      tag: "all",
+      status: "all",
+    });
+  };
+
+  // Get unique tags from problems
+  const getUniqueTags = () => {
+    return ["array", "linkedList", "graph", "dp", "math"];
+  };
+
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-base-200" data-theme="dark">
       {/* Navbar */}
@@ -93,11 +157,16 @@ function Homepage() {
               className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
             >
               <li>
-                <a>Profile</a>
+                <button onClick={() => navigate("/profile")}>Profile</button>
               </li>
-              <li>
+              {/* <li>
                 <a>Settings</a>
-              </li>
+              </li> */}
+              {user?.role === "admin" && (
+                <li>
+                  <button onClick={() => navigate("/admin")}>Admin Panel</button>
+                </li>
+              )}
               <li>
                 <button onClick={handleLogout}>Logout</button>
               </li>
@@ -119,7 +188,20 @@ function Homepage() {
               <h2 className="card-title text-success">Easy Problems</h2>
               <p>Perfect for beginners. Start your coding journey here.</p>
               <div className="card-actions justify-end">
-                <button className="btn btn-success btn-sm">Explore</button>
+                <button
+                  className="btn btn-success btn-sm"
+                  onClick={() => {
+                    handleFilterChange("difficulty", "easy");
+                    window.scrollTo({
+                      top:
+                        document.getElementById("problems-section").offsetTop -
+                        100,
+                      behavior: "smooth",
+                    });
+                  }}
+                >
+                  Explore
+                </button>
               </div>
             </div>
           </div>
@@ -129,7 +211,20 @@ function Homepage() {
               <h2 className="card-title text-warning">Medium Problems</h2>
               <p>Challenge yourself with intermediate difficulty problems.</p>
               <div className="card-actions justify-end">
-                <button className="btn btn-warning btn-sm">Explore</button>
+                <button
+                  className="btn btn-warning btn-sm"
+                  onClick={() => {
+                    handleFilterChange("difficulty", "medium");
+                    window.scrollTo({
+                      top:
+                        document.getElementById("problems-section").offsetTop -
+                        100,
+                      behavior: "smooth",
+                    });
+                  }}
+                >
+                  Explore
+                </button>
               </div>
             </div>
           </div>
@@ -139,7 +234,20 @@ function Homepage() {
               <h2 className="card-title text-error">Hard Problems</h2>
               <p>Test your skills with the most challenging problems.</p>
               <div className="card-actions justify-end">
-                <button className="btn btn-error btn-sm">Explore</button>
+                <button
+                  className="btn btn-error btn-sm"
+                  onClick={() => {
+                    handleFilterChange("difficulty", "hard");
+                    window.scrollTo({
+                      top:
+                        document.getElementById("problems-section").offsetTop -
+                        100,
+                      behavior: "smooth",
+                    });
+                  }}
+                >
+                  Explore
+                </button>
               </div>
             </div>
           </div>
@@ -166,135 +274,217 @@ function Homepage() {
         )}
 
         {/* Problems List */}
-        <h2 className="text-2xl font-bold mb-4">Problems</h2>
-
-        {loading ? (
-          <div className="flex justify-center my-8">
-            <div className="loading loading-spinner loading-lg text-primary"></div>
+        <div id="problems-section">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold">Problems</h2>
+            <button
+              className="btn btn-primary btn-sm"
+              onClick={() => setShowFilters(!showFilters)}
+            >
+              {showFilters ? "Hide Filters" : "Show Filters"}
+            </button>
           </div>
-        ) : problems.length > 0 ? (
-          <>
-            <div className="overflow-x-auto">
-              <table className="table w-full">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Difficulty</th>
-                    <th>Tags</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {problems.map((problem, index) => (
-                    <tr key={problem._id} className="hover">
-                      <td>{(currentPage - 1) * pageSize + index + 1}</td>
-                      <td>{problem.title}</td>
-                      <td>
-                        <span
-                          className={`badge ${getDifficultyBadge(
-                            problem.difficulty
-                          )}`}
-                        >
-                          {problem.difficulty}
-                        </span>
-                      </td>
-                      <td>
-                        <span className="badge badge-outline">
-                          {problem.tags}
-                        </span>
-                      </td>
-                      <td>
-                        {isProblemSolved(problem._id) ? (
-                          <span className="text-success">Solved</span>
-                        ) : (
-                          <span className="text-base-content opacity-60">
-                            Not Attempted
-                          </span>
-                        )}
-                      </td>
-                      <td>
-                        <button
-                          className="btn btn-primary btn-xs"
-                          onClick={() => handleProblemSelect(problem._id)}
-                        >
-                          Solve
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
 
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex justify-center mt-6">
-                <div className="join">
-                  <button
-                    className="join-item btn"
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                  >
-                    «
-                  </button>
-
-                  {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-                    // Show pages around current page
-                    let pageNum;
-                    if (totalPages <= 5) {
-                      pageNum = i + 1;
-                    } else if (currentPage <= 3) {
-                      pageNum = i + 1;
-                    } else if (currentPage >= totalPages - 2) {
-                      pageNum = totalPages - 4 + i;
-                    } else {
-                      pageNum = currentPage - 2 + i;
+          {/* Filters Section */}
+          {showFilters && (
+            <div className="bg-base-100 p-4 rounded-lg shadow-md mb-6">
+              <div className="flex flex-wrap gap-4">
+                {/* Difficulty Filter */}
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Difficulty</span>
+                  </label>
+                  <select
+                    className="select select-bordered w-full max-w-xs"
+                    value={filters.difficulty}
+                    onChange={(e) =>
+                      handleFilterChange("difficulty", e.target.value)
                     }
-
-                    return (
-                      <button
-                        key={pageNum}
-                        className={`join-item btn ${
-                          currentPage === pageNum ? "btn-active" : ""
-                        }`}
-                        onClick={() => handlePageChange(pageNum)}
-                      >
-                        {pageNum}
-                      </button>
-                    );
-                  })}
-
-                  <button
-                    className="join-item btn"
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
                   >
-                    »
-                  </button>
+                    <option value="all">All Difficulties</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                  </select>
+                </div>
+
+                {/* Tags Filter */}
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Tags</span>
+                  </label>
+                  <select
+                    className="select select-bordered w-full max-w-xs"
+                    value={filters.tag}
+                    onChange={(e) => handleFilterChange("tag", e.target.value)}
+                  >
+                    {getUniqueTags().map((tag) => (
+                      <option key={tag} value={tag}>
+                        {tag === "all"
+                          ? "All Tags"
+                          : tag.charAt(0).toUpperCase() + tag.slice(1)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Status Filter */}
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Status</span>
+                  </label>
+                  <select
+                    className="select select-bordered w-full max-w-xs"
+                    value={filters.status}
+                    onChange={(e) =>
+                      handleFilterChange("status", e.target.value)
+                    }
+                  >
+                    <option value="all">All Status</option>
+                    <option value="solved">Solved</option>
+                    <option value="unsolved">Unsolved</option>
+                  </select>
                 </div>
               </div>
-            )}
-          </>
-        ) : (
-          <div className="alert alert-info">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              className="stroke-current shrink-0 w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              ></path>
-            </svg>
-            <span>No problems found. Check back later!</span>
-          </div>
-        )}
+
+              <div className="mt-4">
+                <button
+                  className="btn btn-outline btn-sm"
+                  onClick={resetFilters}
+                >
+                  Reset Filters
+                </button>
+
+                <span className="ml-4 text-sm">
+                  Showing {filteredProblems.length} of {problems.length}{" "}
+                  problems
+                </span>
+              </div>
+            </div>
+          )}
+
+          {loading ? (
+            <div className="flex justify-center my-8">
+              <div className="loading loading-spinner loading-lg text-primary"></div>
+            </div>
+          ) : filteredProblems.length > 0 ? (
+            <>
+              <div className="overflow-x-auto">
+                <table className="table w-full">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Title</th>
+                      <th>Difficulty</th>
+                      <th>Tags</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredProblems.map((problem, index) => (
+                      <tr key={problem._id} className="hover">
+                        <td>{index + 1}</td>
+                        <td>{problem.title}</td>
+                        <td>
+                          <span
+                            className={`badge ${getDifficultyBadge(
+                              problem.difficulty
+                            )}`}
+                          >
+                            {problem.difficulty}
+                          </span>
+                        </td>
+                        <td>
+                          <span className="badge badge-outline">
+                            {problem.tags}
+                          </span>
+                        </td>
+                        <td>
+                          {isProblemSolved(problem._id) ? (
+                            <span className="text-success">Solved</span>
+                          ) : (
+                            <span className="text-base-content opacity-60">
+                              Not Attempted
+                            </span>
+                          )}
+                        </td>
+                        <td>
+                          <button
+                            className="btn btn-primary btn-xs"
+                            onClick={() => handleProblemSelect(problem._id)}
+                          >
+                            Solve
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Only show pagination if not filtering */}
+              {filters.difficulty === "all" &&
+                filters.tag === "all" &&
+                filters.status === "all" && (
+                  <div className="flex justify-center mt-6">
+                    <div className="join">
+                      <button
+                        className="join-item btn"
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                      >
+                        «
+                      </button>
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                        (page) => (
+                          <button
+                            key={page}
+                            className={`join-item btn ${
+                              currentPage === page ? "btn-active" : ""
+                            }`}
+                            onClick={() => handlePageChange(page)}
+                          >
+                            {page}
+                          </button>
+                        )
+                      )}
+                      <button
+                        className="join-item btn"
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                      >
+                        »
+                      </button>
+                    </div>
+                  </div>
+                )}
+            </>
+          ) : (
+            <div className="alert alert-info">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                className="stroke-current shrink-0 w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
+              </svg>
+              <span>
+                {filters.difficulty !== "all" ||
+                filters.tag !== "all" ||
+                filters.status !== "all"
+                  ? "No problems match your filters. Try adjusting your criteria."
+                  : "No problems found. Check back later!"}
+              </span>
+            </div>
+          )}
+        </div>
 
         {/* Solved Problems Section */}
         <h2 className="text-2xl font-bold mb-4 mt-10">Your Solved Problems</h2>
