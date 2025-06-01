@@ -7,13 +7,14 @@ import client from "./database/redis.js";
 import problemRouter from "./routes/problemcreationRoute.js";
 import submitRouter from "./routes/submit.js";
 import cors from "cors";
+import submissionRoutes from "./routes/submission.routes.js";
 
 const app = express();
 
 dotenv.config();
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "http://localhost:5174",
     credentials: true,
   })
 );
@@ -28,6 +29,7 @@ app.get("/", (req, res) => {
 app.use("/user", authRouter);
 app.use("/problem", problemRouter);
 app.use("/problem-submit", submitRouter);
+app.use("/submission", submissionRoutes);
 
 const main = async () => {
   try {
@@ -50,4 +52,4 @@ const main = async () => {
 };
 
 main();
-"// Updated configuration" 
+("// Updated configuration");

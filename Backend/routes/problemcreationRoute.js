@@ -20,12 +20,10 @@ import { adminMiddleware } from "../middlewares/adminMiddleware.js";
 
 problemRouter.get("/userSolvedProblem", userMiddleware, allsolvedProblemByUser);
 problemRouter.post("/create", userMiddleware, adminMiddleware, createProblem);
-problemRouter.patch("/:id", updateProblem);
-problemRouter.delete("/:id", deleteProblem);
+problemRouter.patch("/:id", userMiddleware, adminMiddleware, updateProblem);
+problemRouter.delete("/:id", userMiddleware, adminMiddleware, deleteProblem);
 problemRouter.get("/:id", getProblem);
 problemRouter.get("/", getAllproblem);
-problemRouter.get("/submittedProblem/:pid", submittedProblem);
-
-// //* above three needs to be admin protected
+problemRouter.get("/submittedProblem/:pid", userMiddleware, submittedProblem);
 
 export default problemRouter;

@@ -20,6 +20,17 @@ export const createProblem = async (req, res) => {
     } = req.body;
     console.log("req.body in createProblem==>", req.body);
 
+    // Normalize language case to lowercase
+    const normalizedStartCode = startCode.map(item => ({
+      ...item,
+      language: item.language.toLowerCase()
+    }));
+
+    const normalizedReferenceSolution = referenceSolution.map(item => ({
+      ...item,
+      language: item.language.toLowerCase()
+    }));
+
     for (const { language, completeCode } of referenceSolution) {
       const languageId = getLanguageById(language);
       console.log("languageId", languageId);
@@ -53,7 +64,14 @@ export const createProblem = async (req, res) => {
     }
 
     const userProblem = await Problem.create({
-      ...req.body,
+      title,
+      description,
+      difficulty,
+      tags,
+      visibleTestCases,
+      hiddenTestCases,
+      startCode: normalizedStartCode,
+      referenceSolution: normalizedReferenceSolution,
       problemCreator: req.userInfo._id,
     });
 
@@ -75,7 +93,7 @@ export const updateProblem = async (req, res) => {
         message: "Missing id field",
       });
     }
-    // console.log(id)
+    
     const {
       title,
       description,
@@ -88,10 +106,16 @@ export const updateProblem = async (req, res) => {
       problemCreator,
     } = req.body;
 
-    const dsaProblem = await Problem.findById(id);
-    if (!dsaProblem) {
-      return res.status(404).send("ID is not persent in server or wrong id");
-    }
+    // Normalize language case to lowercase
+    const normalizedStartCode = startCode.map(item => ({
+      ...item,
+      language: item.language.toLowerCase()
+    }));
+
+    const normalizedReferenceSolution = referenceSolution.map(item => ({
+      ...item,
+      language: item.language.toLowerCase()
+    }));
 
     //checks
     for (const { language, completeCode } of referenceSolution) {
@@ -128,7 +152,17 @@ export const updateProblem = async (req, res) => {
 
     const updatedProblem = await Problem.findByIdAndUpdate(
       id,
-      { ...req.body },
+      {
+        title,
+        description,
+        difficulty,
+        tags,
+        visibleTestCases,
+        hiddenTestCases,
+        startCode: normalizedStartCode,
+        referenceSolution: normalizedReferenceSolution,
+        problemCreator,
+      },
       {
         runValidators: true,
         new: true,
@@ -137,7 +171,7 @@ export const updateProblem = async (req, res) => {
 
     return res.status(200).json({
       message: "Problem updated successfully",
-      data: updateProblem,
+      data: updatedProblem,
     });
   } catch (error) {
     console.log("Error in updating Problem controller:", error.message);

@@ -54,6 +54,7 @@ export const register = async (req, res) => {
         id: newUser._id,
         firstName: newUser.firstName,
         emailId: newUser.emailId,
+        role: newUser.role,
       },
     });
   } catch (error) {
@@ -92,6 +93,7 @@ export const login = async (req, res) => {
       firstName: user.firstName,
       emailId: user.emailId,
       _id: user._id,
+      role: user.role,
     };
 
     res.cookie("token", token, { maxAge: 3600000 });
