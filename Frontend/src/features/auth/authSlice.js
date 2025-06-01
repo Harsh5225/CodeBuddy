@@ -32,7 +32,9 @@ export const checkAuth = createAsyncThunk(
       const { data } = await axiosClient.get("/user/check");
       return data.user;
     } catch (error) {
-      return rejectWithValue(error);
+      // Make sure to properly handle the error
+      console.log(error);
+      return rejectWithValue(null); // Return null explicitly
     }
   }
 );
@@ -41,7 +43,7 @@ export const logoutUser = createAsyncThunk(
   "auth/logout",
   async (_, { rejectWithValue }) => {
     try {
-      await axiosClient.post("/logout");
+      await axiosClient.get("/user/logout");
       return null;
     } catch (error) {
       return rejectWithValue(error);
@@ -117,6 +119,8 @@ export const authSlice = createSlice({
       .addCase(logoutUser.fulfilled, (state) => {
         state.loading = false;
         state.isAuthenticated = false;
+        state.user = null;
+        state.error = null;
       })
       .addCase(logoutUser.rejected, (state, action) => {
         state.loading = false;
@@ -127,5 +131,4 @@ export const authSlice = createSlice({
   },
 });
 
-
-export default authSlice.reducer
+export default authSlice.reducer;
