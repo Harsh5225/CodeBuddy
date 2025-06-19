@@ -7,7 +7,7 @@ import {
   getAllProblems,
   getUserSolvedProblems,
 } from "../features/problem/problemSlice";
-
+import { NavLink } from "react-router";
 function Homepage() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
@@ -164,7 +164,9 @@ function Homepage() {
               </li> */}
               {user?.role === "admin" && (
                 <li>
-                  <button onClick={() => navigate("/admin")}>Admin Panel</button>
+                  <button onClick={() => navigate("/admin")}>
+                    Admin Panel
+                  </button>
                 </li>
               )}
               <li>
@@ -385,7 +387,11 @@ function Homepage() {
                     {filteredProblems.map((problem, index) => (
                       <tr key={problem._id} className="hover">
                         <td>{index + 1}</td>
-                        <td>{problem.title}</td>
+                        <NavLink to={`/problem/${problem._id}`}>
+                          {" "}
+                          <td>{problem.title}</td>
+                        </NavLink>
+
                         <td>
                           <span
                             className={`badge ${getDifficultyBadge(

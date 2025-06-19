@@ -10,13 +10,14 @@ import NotFound from "./pages/ErrorPage";
 import ShimmerHomepage from "./components/ShimmerHomepage";
 import ProfilePage from "./pages/ProfilePage";
 import AdminPanel from "./pages/AdminPanel";
+import ProblemPage from "./pages/ProblemPage";
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { user, isAuthenticated, loading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  console.log("user",user);
+  console.log("user", user);
   useEffect(() => {
     const checkUserAuth = async () => {
       await dispatch(checkAuth());
@@ -82,6 +83,7 @@ const App = () => {
             )
           }
         ></Route>
+        <Route path="/problem/:problemId" element={<ProblemPage />}></Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
