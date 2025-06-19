@@ -5,19 +5,17 @@ import cookieParser from "cookie-parser";
 import authRouter from "./routes/userAuth.js";
 import client from "./database/redis.js";
 import problemRouter from "./routes/problemcreationRoute.js";
-import submitRouter from "./routes/submit.js";
+// import submitRouter from "./routes/submit.js";
 import cors from "cors";
 import submissionRoutes from "./routes/submission.routes.js";
-
-const app = express();
-
 dotenv.config();
-app.use(
-  cors({
-    origin: "http://localhost:5174",
-    credentials: true,
-  })
-);
+const app = express();
+const corsOptions = {
+  origin: "http://localhost:5173",
+  credentials: true, // ✅ allow cookies
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
@@ -28,7 +26,7 @@ app.get("/", (req, res) => {
 });
 app.use("/user", authRouter);
 app.use("/problem", problemRouter);
-app.use("/problem-submit", submitRouter);
+// app.use("/problem-submit", submitRouter);
 app.use("/submission", submissionRoutes);
 
 const main = async () => {

@@ -71,6 +71,7 @@ export const login = async (req, res) => {
         .status(400)
         .json({ message: "Email and password are required" });
     }
+    console.log(req.body)
     // Check if the user exists
     const user = await User.findOne({ emailId: email });
     if (!user) {

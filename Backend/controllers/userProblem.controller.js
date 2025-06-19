@@ -21,14 +21,14 @@ export const createProblem = async (req, res) => {
     console.log("req.body in createProblem==>", req.body);
 
     // Normalize language case to lowercase
-    const normalizedStartCode = startCode.map(item => ({
+    const normalizedStartCode = startCode.map((item) => ({
       ...item,
-      language: item.language.toLowerCase()
+      language: item.language.toLowerCase(),
     }));
 
-    const normalizedReferenceSolution = referenceSolution.map(item => ({
+    const normalizedReferenceSolution = referenceSolution.map((item) => ({
       ...item,
-      language: item.language.toLowerCase()
+      language: item.language.toLowerCase(),
     }));
 
     for (const { language, completeCode } of referenceSolution) {
@@ -93,7 +93,7 @@ export const updateProblem = async (req, res) => {
         message: "Missing id field",
       });
     }
-    
+
     const {
       title,
       description,
@@ -107,14 +107,14 @@ export const updateProblem = async (req, res) => {
     } = req.body;
 
     // Normalize language case to lowercase
-    const normalizedStartCode = startCode.map(item => ({
+    const normalizedStartCode = startCode.map((item) => ({
       ...item,
-      language: item.language.toLowerCase()
+      language: item.language.toLowerCase(),
     }));
 
-    const normalizedReferenceSolution = referenceSolution.map(item => ({
+    const normalizedReferenceSolution = referenceSolution.map((item) => ({
       ...item,
-      language: item.language.toLowerCase()
+      language: item.language.toLowerCase(),
     }));
 
     //checks
@@ -298,20 +298,17 @@ export const allsolvedProblemByUser = async (req, res) => {
 
 export const submittedProblem = async (req, res) => {
   try {
-    const userId = req.result._id;
-    const { pid: problemId } = req.params;
-    const ans = Submission.find({ userId, problemId });
-    if (ans.length == 0) {
-      res.status(200).send("No submissions");
-    }
+    console.log("result", req.userInfo);
+    const userId = req.userInfo._id;
+    const problemId = req.params.pid;
+
+    const ans = await Submission.find({ userId, problemId });
+
+    if (ans.length == 0) res.status(200).send("No Submission is persent");
 
     res.status(200).send(ans);
-  } catch (error) {
-    console.log("Error in submittedProblem controller:", error.message);
-    return res.status(500).json({
-      success: false,
-      message: `Error: ${error.message}`,
-    });
+  } catch (err) {
+    res.status(500).send("Internal Server Error");
   }
 };
 
