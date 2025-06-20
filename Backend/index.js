@@ -5,6 +5,8 @@ import cookieParser from "cookie-parser";
 import authRouter from "./routes/userAuth.js";
 import client from "./database/redis.js";
 import problemRouter from "./routes/problemcreationRoute.js";
+import doubtRouter from "./routes/aiChatRoute.js";
+
 // import submitRouter from "./routes/submit.js";
 import cors from "cors";
 import submissionRoutes from "./routes/submission.routes.js";
@@ -28,6 +30,7 @@ app.use("/user", authRouter);
 app.use("/problem", problemRouter);
 // app.use("/problem-submit", submitRouter);
 app.use("/submission", submissionRoutes);
+app.use("/ai", doubtRouter);
 
 const main = async () => {
   try {
