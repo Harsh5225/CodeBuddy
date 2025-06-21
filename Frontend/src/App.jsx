@@ -11,6 +11,7 @@ import ShimmerHomepage from "./components/ShimmerHomepage";
 import ProfilePage from "./pages/ProfilePage";
 import AdminPanel from "./pages/AdminPanel";
 import ProblemPage from "./pages/ProblemPage";
+import LandingPage from "./pages/LandingPage";
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -55,11 +56,43 @@ const App = () => {
   }
 
   return (
+    // <BrowserRouter>
+    //   <Routes>
+    //     <Route
+    //       path="/"
+    //       element={isAuthenticated ? <HomePage /> : <Navigate to="/login" />}
+    //     />
+    //     <Route
+    //       path="/login"
+    //       element={isAuthenticated ? <Navigate to="/" /> : <Login />}
+    //     />
+    //     <Route
+    //       path="/signup"
+    //       element={isAuthenticated ? <Navigate to="/" /> : <Signup />}
+    //     />
+    //     <Route
+    //       path="/profile"
+    //       element={isAuthenticated ? <ProfilePage /> : <Navigate to="/login" />}
+    //     />
+    //     <Route
+    //       path="/admin"
+    //       element={
+    //         isAuthenticated && user?.role === "admin" ? (
+    //           <AdminPanel></AdminPanel>
+    //         ) : (
+    //           <Navigate to="/"></Navigate>
+    //         )
+    //       }
+    //     ></Route>
+    //     <Route path="/problem/:problemId" element={<ProblemPage />}></Route>
+    //     <Route path="*" element={<NotFound />} />
+    //   </Routes>
+    // </BrowserRouter>
     <BrowserRouter>
       <Routes>
         <Route
           path="/"
-          element={isAuthenticated ? <HomePage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <HomePage /> : <LandingPage />}
         />
         <Route
           path="/login"
@@ -77,13 +110,16 @@ const App = () => {
           path="/admin"
           element={
             isAuthenticated && user?.role === "admin" ? (
-              <AdminPanel></AdminPanel>
+              <AdminPanel />
             ) : (
-              <Navigate to="/"></Navigate>
+              <Navigate to="/" />
             )
           }
-        ></Route>
-        <Route path="/problem/:problemId" element={<ProblemPage />}></Route>
+        />
+        <Route
+          path="/problem/:problemId"
+          element={isAuthenticated ? <ProblemPage /> : <Navigate to="/login" />}
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

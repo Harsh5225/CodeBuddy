@@ -17,6 +17,7 @@
     "@reduxjs/toolkit": "^2.8.2",
     "@tailwindcss/vite": "^4.1.7",
     "axios": "^1.9.0",
+    "framer-motion": "^12.18.1",
     "lucide-react": "^0.511.0",
     "monaco-editor": "^0.52.2",
     "monaco-themes": "^0.4.5",

@@ -75,7 +75,7 @@ function Homepage() {
   // Handle logout
   const handleLogout = async () => {
     await dispatch(logoutUser());
-    navigate("/login");
+    navigate("/");
   };
 
   // Handle pagination
@@ -135,7 +135,7 @@ function Homepage() {
   return (
     <div className="min-h-screen bg-base-200" data-theme="dark">
       {/* Navbar */}
-      <div className="navbar bg-base-100 shadow-lg">
+      <div className="navbar bg-base-100/80 backdrop-blur-md border-b border-base-300 sticky top-0 z-50">
         <div className="flex-1">
           <a className="btn btn-ghost text-xl text-primary">LeetCode Clone</a>
         </div>

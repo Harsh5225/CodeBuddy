@@ -62,7 +62,7 @@ const ProfilePage = () => {
 
   const handleLogout = async () => {
     await dispatch(logoutUser());
-    navigate("/login");
+    navigate("/");
   };
 
   if (loading) {
