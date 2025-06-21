@@ -1,28 +1,33 @@
+/* eslint-disable no-unused-vars */
 import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import axiosClient from "../utils/axiosClient";
 import { Send } from "lucide-react";
 import ReactMarkdown from "react-markdown";
-
+import { useDispatch, useSelector } from "react-redux";
+import { addMessage, setMessages } from "../features/chatMessage/ChatSlice";
 function ChatAi({ problem }) {
-  const [messages, setMessages] = useState([
-    {
-      role: "model",
-      parts: [{ text: "Hi, how are you?" }],
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    },
-    {
-      role: "user",
-      parts: [{ text: "I am good" }],
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    },
-  ]);
+  // const [messages, setMessages] = useState([
+  //   {
+  //     role: "model",
+  //     parts: [{ text: "Hi, how are you?" }],
+  //     time: new Date().toLocaleTimeString([], {
+  //       hour: "2-digit",
+  //       minute: "2-digit",
+  //     }),
+  //   },
+  //   {
+  //     role: "user",
+  //     parts: [{ text: "I am good" }],
+  //     time: new Date().toLocaleTimeString([], {
+  //       hour: "2-digit",
+  //       minute: "2-digit",
+  //     }),
+  //   },
+  // ]);
+  const messages = useSelector((state) => state.chat.messages);
+  const dispatch = useDispatch();
+
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -48,14 +53,13 @@ function ChatAi({ problem }) {
       }),
     };
 
-    const updatedMessages = [...messages, userMessage];
-    setMessages(updatedMessages);
+    dispatch(addMessage(userMessage));
     reset();
     setIsLoading(true);
 
     try {
       const response = await axiosClient.post("/ai/chat", {
-        messages: updatedMessages.map((msg) => ({
+        messages: [...messages, userMessage].map((msg) => ({
           role: msg.role,
           parts: [{ text: msg.parts[0].text }],
         })),
@@ -74,7 +78,8 @@ function ChatAi({ problem }) {
         }),
       };
 
-      setMessages((prev) => [...prev, aiMessage]);
+      // setMessages((prev) => [...prev, aiMessage]);
+      dispatch(addMessage(aiMessage));
     } catch (error) {
       console.error("API Error:", error);
 
@@ -87,7 +92,7 @@ function ChatAi({ problem }) {
         }),
       };
 
-      setMessages((prev) => [...prev, errorMessage]);
+      dispatch(addMessage(errorMessage));
     } finally {
       setIsLoading(false);
     }
@@ -152,3 +157,16 @@ function ChatAi({ problem }) {
 }
 
 export default ChatAi;
+
+// !Problem:  AI Chat Messages Disappear on Page Navigation
+// Description:
+// When navigating away from the AI Chat page and returning, all previous messages are lost, even though the user expects to see the previous conversation.
+// You send messages to the AI chat.
+
+//  Solution: Use Redux Store for Persistent Chat State
+// Move the message state from component-level (useState) to a global Redux store, which persists across route changes and component unmounts.
+
+// steps taken
+// Those messages are dispatched to the Redux store (e.g., via addMessage()).
+// Even if you navigate away, Redux state is preserved (unless manually cleared).
+// When you return to the AI chat, you read messages from Redux, not from useState.
