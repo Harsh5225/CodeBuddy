@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import axiosClient from "../utils/axiosClient";
 import { Send } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 function ChatAi({ problem }) {
   const [messages, setMessages] = useState([
@@ -98,25 +99,29 @@ function ChatAi({ problem }) {
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`chat ${msg.role === "user" ? "chat-end" : "chat-start"}`}
+            className={`chat ${
+              msg.role === "user" ? "chat-end" : "chat-start"
+            }`}
           >
-            <div className="chat-bubble bg-base-200 text-base-content">
-              {msg.parts[0].text}
-            </div>
-            <div className="chat-header">
+            <div className="chat-header mb-1 text-sm text-gray-500">
               {msg.role === "model" ? "AI" : "You"}
               <time className="text-xs opacity-50 ml-2">{msg.time}</time>
+            </div>
+            <div className="chat-bubble bg-base-200 text-base-content whitespace-pre-wrap break-words max-w-[90%] p-3 leading-snug">
+              <div className="prose prose-sm max-w-none whitespace-pre-wrap break-words leading-snug">
+                <ReactMarkdown>{msg.parts[0].text}</ReactMarkdown>
+              </div>
             </div>
           </div>
         ))}
 
-        {/* AI is typing... bubble (no timestamp to avoid confusion) */}
+        {/* AI typing bubble */}
         {isLoading && (
           <div className="chat chat-start">
-            <div className="chat-bubble bg-base-200 text-base-content animate-pulse">
+            <div className="chat-header mb-1 text-sm text-gray-500">AI</div>
+            <div className="chat-bubble bg-base-200 text-base-content animate-pulse max-w-[90%] p-3">
               AI is typing...
             </div>
-            <div className="chat-header">AI</div>
           </div>
         )}
 
