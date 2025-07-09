@@ -7,15 +7,61 @@ import client from "./database/redis.js";
 import problemRouter from "./routes/problemcreationRoute.js";
 import doubtRouter from "./routes/aiChatRoute.js";
 
+import http from "http";
+import { Server } from "socket.io";
+
 // import submitRouter from "./routes/submit.js";
 import cors from "cors";
 import submissionRoutes from "./routes/submission.routes.js";
+import videoRouter from "./routes/videoCreator.js";
 dotenv.config();
 const app = express();
 const corsOptions = {
   origin: "http://localhost:5173",
   credentials: true, // ✅ allow cookies
 };
+
+// socket.io setup
+
+const server = http.createServer(app);
+// Create a new instance of the Socket.IO server
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+    credentials: true, // ✅ allow cookies
+  },
+});
+
+const rooms = new Map();
+
+io.on("connection", (socket) => {
+  console.log(`New client connected: ${socket.id}`);
+
+  let currentRoom = null;
+  let currentUser = null;
+
+  socket.on("join_room", ({ roomId, userName }) => {
+    if (currentRoom) {
+      socket.leave(currentRoom);
+      rooms.get(currentRoom).delete(socket.id);
+      console.log(`User ${currentUser} left room ${currentRoom}`);
+
+      io.to(currentRoom).emit("userJoined", Array.from(rooms.get(currentRoom)));
+    }
+
+    currentRoom = roomId;
+    currentUser = userName;
+    socket.join(roomId);
+    if (!rooms.has(roomId)) {
+      rooms.set(roomId, new Set());
+    }
+    rooms.get(roomId).add(userName);
+
+    io.to(roomId).emit("userJoined", Array.from(rooms.get(roomId)));
+
+  });
+});
 
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -31,6 +77,7 @@ app.use("/problem", problemRouter);
 // app.use("/problem-submit", submitRouter);
 app.use("/submission", submissionRoutes);
 app.use("/ai", doubtRouter);
+app.use("/video", videoRouter);
 
 const main = async () => {
   try {

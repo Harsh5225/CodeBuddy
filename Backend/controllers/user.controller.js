@@ -4,7 +4,8 @@ import jwt from "jsonwebtoken";
 import { User } from "../models/user.js";
 import client from "../database/redis.js";
 import Submission from "../models/submission.js";
-
+import { deleteImage, uploadImage } from "../utils/Cloudinary.js";
+import path from "path";
 export const register = async (req, res) => {
   try {
     validatorcheck(req.body);
@@ -71,7 +72,7 @@ export const login = async (req, res) => {
         .status(400)
         .json({ message: "Email and password are required" });
     }
-    console.log(req.body)
+    console.log(req.body);
     // Check if the user exists
     const user = await User.findOne({ emailId: email });
     if (!user) {
@@ -229,6 +230,54 @@ export const deleteProfile = async (req, res) => {
   } catch (error) {
     console.error("Error in deleteProfile controller:", error.message);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const updateUserProfile = async (req, res) => {
+  try {
+    const userId = req.userInfo._id;
+    const updates = { ...req.body }; // include all text fields
+    const profilePhoto = req.file;
+    console.log("updatephotourl in edit profile", profilePhoto);
+    // Fetch user first to perform checks and manage photo deletion
+    const user = await User.findById(userId);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    // Handle profile image upload if a file is included
+    if (profilePhoto) {
+      // Delete existing Cloudinary image
+      if (user.photoUrl) {
+        const publicId = user.photoUrl.split("/").pop().split(".")[0];
+        await deleteImage(publicId);
+      }
+
+      // Normalize Windows path (if needed)
+      const cloudResponse = await uploadImage(path.resolve(profilePhoto.path));
+      updates.photoUrl = cloudResponse; // Add to updates
+      console.log("updatephotourl in edit profile", cloudResponse);
+    }
+
+    // Update user
+    const updatedUser = await User.findByIdAndUpdate(userId, updates, {
+      new: true,
+      runValidators: true,
+    }).select("-password");
+
+    return res.status(200).json({
+      success: true,
+      user: updatedUser,
+      message: "Profile updated successfully",
+    });
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update user profile",
+    });
   }
 };
 

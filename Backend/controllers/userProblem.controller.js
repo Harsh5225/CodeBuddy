@@ -3,6 +3,7 @@ import { submitBatch } from "../utils/submitBatch.js";
 import { submitToken } from "../utils/submitToken.js";
 import { getLanguageById } from "../utils/problemId.js";
 import { User } from "../models/user.js";
+import { SolutionVideo } from "../models/solutionVideo.js";
 import Submission from "../models/submission.js";
 
 export const createProblem = async (req, res) => {
@@ -200,7 +201,6 @@ export const deleteProblem = async (req, res) => {
 export const getProblem = async (req, res) => {
   try {
     const id = req.params.id;
-    console.log(id);
     if (!id) {
       return res.status(404).json({
         message: "Empty id field",
@@ -210,14 +210,24 @@ export const getProblem = async (req, res) => {
     const dsaProblem = await Problem.findById(id);
     if (!dsaProblem) return res.status(404).send("Problem is Missing");
 
-    return res.status(200).json({
-      dsaProblem,
-    });
+    const video = await SolutionVideo.findOne({ problemId: id });
+
+    if (video) {
+      const responseData = {
+        ...dsaProblem.toObject(),
+        secureUrl: video.secureUrl,
+        thumbnailUrl: video.thumbnailUrl,
+        duration: video.duration,
+      };
+      return res.status(200).json(responseData);
+    }
+
+    return res.status(200).json(dsaProblem);
   } catch (error) {
     console.log("error in getProblem controller", error.message);
     return res.status(500).json({
       success: false,
-      message: error,
+      message: error.message,
     });
   }
 };
@@ -304,7 +314,7 @@ export const submittedProblem = async (req, res) => {
 
     const ans = await Submission.find({ userId, problemId });
 
-    if (ans.length == 0) res.status(200).send("No Submission is persent");
+    if (ans.length == 0) return res.status(200).send(ans);
 
     res.status(200).send(ans);
   } catch (err) {

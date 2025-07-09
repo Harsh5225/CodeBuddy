@@ -6,9 +6,11 @@ import {
   login,
   logout,
   register,
+  updateUserProfile,
 } from "../controllers/user.controller.js";
 import { isAuthenticate } from "../middlewares/isAuthenticate.js";
 import { userMiddleware } from "../middlewares/userMiddleware.js";
+import upload from "../utils/multer.js";
 const authRouter = express.Router();
 
 // register
@@ -17,10 +19,11 @@ const authRouter = express.Router();
 // get profile
 authRouter.post("/register", register);
 authRouter.post("/login", login);
-authRouter.post("/logout", userMiddleware, logout);
+authRouter.get("/logout", userMiddleware, logout);
 authRouter.get("/profile", isAuthenticate, getProfile);
 authRouter.post("/adminRegister", userMiddleware, adminRegister);
 authRouter.delete("/delete-profile", userMiddleware, deleteProfile);
+authRouter.put("/edit-profile", userMiddleware, upload.single("profilePhoto"), updateUserProfile);
 authRouter.get("/check", userMiddleware, (req, res) => {
   const reply = {
     firstName: req.userInfo.firstName,

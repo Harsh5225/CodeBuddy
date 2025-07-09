@@ -100,7 +100,6 @@ export const submit = async (req, res) => {
 
 export const runcode = async (req, res) => {
   try {
-    console.log("result", req.userInfo);
     const userId = req.userInfo.id;
     const problemId = req.params.id;
     const { code, language } = req.body;
@@ -121,7 +120,6 @@ export const runcode = async (req, res) => {
     }
 
     const languageId = getLanguageById(language);
-
     const submissions = problem.visibleTestCases.map((testcase) => ({
       source_code: code,
       language_id: languageId,
@@ -132,7 +130,6 @@ export const runcode = async (req, res) => {
     const submitResult = await submitBatch(submissions);
     const resultToken = submitResult.map((value) => value.token);
     const testResult = await submitToken(resultToken);
-    // const testResults = await submitToken(tokens).select('-field1 -field2 -field3'); according to frontend requirement i want to show there
 
     let testCasesPassed = 0;
     let runtime = 0;
@@ -140,30 +137,42 @@ export const runcode = async (req, res) => {
     let status = true;
     let errorMessage = null;
 
+    const statusMap = {
+      1: "In Queue",
+      2: "Processing",
+      3: "Accepted",
+      4: "Wrong Answer",
+      5: "Time Limit Exceeded",
+      6: "Compilation Error",
+      7: "Runtime Error",
+      8: "Internal Error",
+    };
+
     for (const test of testResult) {
-      if (test.status_id == 3) {
+      test.status_description = statusMap[test.status_id] || "Unknown";
+
+      if (test.status_id === 3) {
         testCasesPassed++;
-        runtime = runtime + parseFloat(test.time);
-        memory = Math.max(memory, test.memory);
+        runtime += parseFloat(test.time || 0);
+        memory = Math.max(memory, test.memory || 0);
       } else {
-        if (test.status_id == 4) {
-          status = false;
-          errorMessage = test.stderr;
-        } else {
-          status = false;
-          errorMessage = test.stderr;
-        }
+        status = false;
+        errorMessage =
+          test.compile_output || test.stderr || test.message || "Unknown error";
       }
     }
 
     return res.status(201).json({
       success: status,
       testCases: testResult,
+      testCasesPassed,
+      totalTestCases: problem.visibleTestCases.length,
       runtime,
       memory,
+      errorMessage,
     });
   } catch (error) {
-    console.error("Error in submit controller:", error.message);
+    console.error("Error in run controller:", error.message);
     return res.status(500).json({
       success: false,
       message: `Error: ${error.message}`,
