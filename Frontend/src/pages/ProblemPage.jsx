@@ -1,14 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-"use client"
+"use client";
 
-import { useState, useEffect, useRef } from "react"
-import { useForm } from "react-hook-form"
-import Editor from "@monaco-editor/react"
-import { useParams } from "react-router"
-import axiosClient from "../utils/axiosClient"
-import SubmissionHistory from "../components/SubmissionHistory"
-import ChatAi from "../components/ChatAi"
-import Editorial from "../components/Editorial"
+import { useState, useEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
+import Editor from "@monaco-editor/react";
+import { useParams } from "react-router";
+import axiosClient from "../utils/axiosClient";
+import SubmissionHistory from "../components/SubmissionHistory";
+import ChatAi from "../components/ChatAi";
+import Editorial from "../components/Editorial";
 import {
   Play,
   Send,
@@ -25,147 +26,153 @@ import {
   XCircle,
   AlertCircle,
   Zap,
-} from "lucide-react"
+} from "lucide-react";
 
 const langMap = {
   cpp: "C++",
   java: "Java",
   javascript: "JavaScript",
-}
+};
 
 const ProblemPage = () => {
-  const [problem, setProblem] = useState(null)
-  const [selectedLanguage, setSelectedLanguage] = useState("javascript")
-  const [code, setCode] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [runResult, setRunResult] = useState(null)
-  const [submitResult, setSubmitResult] = useState(null)
-  const [activeLeftTab, setActiveLeftTab] = useState("description")
-  const [activeRightTab, setActiveRightTab] = useState("code")
-  const editorRef = useRef(null)
-  const { problemId } = useParams()
+  const [problem, setProblem] = useState(null);
+  const [selectedLanguage, setSelectedLanguage] = useState("javascript");
+  const [code, setCode] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [runResult, setRunResult] = useState(null);
+  const [submitResult, setSubmitResult] = useState(null);
+  const [activeLeftTab, setActiveLeftTab] = useState("description");
+  const [activeRightTab, setActiveRightTab] = useState("code");
+  const editorRef = useRef(null);
+  const { problemId } = useParams();
 
-  const { handleSubmit } = useForm()
+  const { handleSubmit } = useForm();
 
   useEffect(() => {
     const fetchProblem = async () => {
-      setLoading(true)
+      setLoading(true);
       try {
-        const response = await axiosClient.get(`/problem/${problemId}`)
-        console.log("fetchProblem", response.data)
+        const response = await axiosClient.get(`/problem/${problemId}`);
+        console.log("fetchProblem", response.data);
 
         const initialCode = response.data.startCode.find(
-          (sc) => sc.language.toLowerCase() === langMap[selectedLanguage].toLowerCase(),
-        ).initialCode
-        console.log("initialCode", initialCode)
-        console.log("response.data.dsaProblem", response.data)
-        setProblem(response.data)
-        setCode(initialCode)
-        setLoading(false)
+          (sc) =>
+            sc.language.toLowerCase() ===
+            langMap[selectedLanguage].toLowerCase()
+        ).initialCode;
+        console.log("initialCode", initialCode);
+        console.log("response.data.dsaProblem", response.data);
+        setProblem(response.data);
+        setCode(initialCode);
+        setLoading(false);
       } catch (error) {
-        console.error("Error fetching problem:", error)
-        setLoading(false)
+        console.error("Error fetching problem:", error);
+        setLoading(false);
       }
-    }
+    };
 
-    fetchProblem()
-  }, [problemId])
+    fetchProblem();
+  }, [problemId]);
 
   // Update code when language changes
   useEffect(() => {
     if (problem) {
       const initialCode = problem.startCode.find(
-        (sc) => sc.language.toLowerCase() === langMap[selectedLanguage].toLowerCase(),
-      ).initialCode
-      setCode(initialCode)
+        (sc) =>
+          sc.language.toLowerCase() === langMap[selectedLanguage].toLowerCase()
+      ).initialCode;
+      setCode(initialCode);
     }
-    console.log("updated code", code)
-  }, [selectedLanguage, problem])
+    console.log("updated code", code);
+  }, [selectedLanguage, problem]);
 
   const handleEditorChange = (value) => {
-    setCode(value || "")
-  }
+    setCode(value || "");
+  };
 
   const handleEditorDidMount = (editor) => {
-    editorRef.current = editor
-  }
+    editorRef.current = editor;
+  };
 
   const handleLanguageChange = (language) => {
-    setSelectedLanguage(language)
-  }
+    setSelectedLanguage(language);
+  };
 
   const handleRun = async () => {
-    setLoading(true)
-    setRunResult(null)
+    setLoading(true);
+    setRunResult(null);
 
     try {
       const response = await axiosClient.post(`/submission/run/${problemId}`, {
         code,
         language: selectedLanguage,
-      })
+      });
 
-      console.log("res in run", response)
+      console.log("res in run", response);
 
-      setRunResult(response.data)
-      setLoading(false)
-      setActiveRightTab("testcase")
+      setRunResult(response.data);
+      setLoading(false);
+      setActiveRightTab("testcase");
     } catch (error) {
-      console.error("Error running code:", error)
+      console.error("Error running code:", error);
       setRunResult({
         success: false,
         error: "Internal server error",
-      })
-      setLoading(false)
-      setActiveRightTab("testcase")
+      });
+      setLoading(false);
+      setActiveRightTab("testcase");
     }
-  }
+  };
 
   const handleSubmitCode = async () => {
-    setLoading(true)
-    setSubmitResult(null)
+    setLoading(true);
+    setSubmitResult(null);
 
     try {
-      const response = await axiosClient.post(`/submission/submit/${problemId}`, {
-        code: code,
-        language: selectedLanguage,
-      })
+      const response = await axiosClient.post(
+        `/submission/submit/${problemId}`,
+        {
+          code: code,
+          language: selectedLanguage,
+        }
+      );
 
-      setSubmitResult(response.data)
-      setLoading(false)
-      setActiveRightTab("result")
+      setSubmitResult(response.data);
+      setLoading(false);
+      setActiveRightTab("result");
     } catch (error) {
-      console.error("Error submitting code:", error)
-      setSubmitResult(null)
-      setLoading(false)
-      setActiveRightTab("result")
+      console.error("Error submitting code:", error);
+      setSubmitResult(null);
+      setLoading(false);
+      setActiveRightTab("result");
     }
-  }
+  };
 
   const getLanguageForMonaco = (lang) => {
     switch (lang) {
       case "javascript":
-        return "javascript"
+        return "javascript";
       case "java":
-        return "java"
+        return "java";
       case "cpp":
-        return "cpp"
+        return "cpp";
       default:
-        return "javascript"
+        return "javascript";
     }
-  }
+  };
 
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
       case "easy":
-        return "text-green-400 bg-green-500/10 border-green-500/20"
+        return "text-green-400 bg-green-500/10 border-green-500/20";
       case "medium":
-        return "text-yellow-400 bg-yellow-500/10 border-yellow-500/20"
+        return "text-yellow-400 bg-yellow-500/10 border-yellow-500/20";
       case "hard":
-        return "text-red-400 bg-red-500/10 border-red-500/20"
+        return "text-red-400 bg-red-500/10 border-red-500/20";
       default:
-        return "text-gray-400 bg-gray-500/10 border-gray-500/20"
+        return "text-gray-400 bg-gray-500/10 border-gray-500/20";
     }
-  }
+  };
 
   const leftTabs = [
     { id: "description", label: "Description", icon: FileText },
@@ -173,13 +180,13 @@ const ProblemPage = () => {
     { id: "solutions", label: "Solutions", icon: Code },
     { id: "submissions", label: "Submissions", icon: History },
     { id: "chatAI", label: "AI Assistant", icon: MessageSquare },
-  ]
+  ];
 
   const rightTabs = [
     { id: "code", label: "Code", icon: Code },
     { id: "testcase", label: "Test Cases", icon: TestTube },
     { id: "result", label: "Result", icon: Trophy },
-  ]
+  ];
 
   if (loading && !problem) {
     return (
@@ -200,7 +207,7 @@ const ProblemPage = () => {
           <p className="text-gray-300 text-lg">Loading problem...</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -227,7 +234,7 @@ const ProblemPage = () => {
         {/* Left Tabs */}
         <div className="flex border-b border-gray-700/50 bg-gray-800/30 backdrop-blur-sm">
           {leftTabs.map((tab) => {
-            const Icon = tab.icon
+            const Icon = tab.icon;
             return (
               <button
                 key={tab.id}
@@ -241,7 +248,7 @@ const ProblemPage = () => {
                 <Icon className="w-4 h-4" />
                 <span className="hidden lg:inline">{tab.label}</span>
               </button>
-            )
+            );
           })}
         </div>
 
@@ -252,13 +259,16 @@ const ProblemPage = () => {
               {activeLeftTab === "description" && (
                 <div className="p-6">
                   <div className="flex items-center gap-4 mb-6">
-                    <h1 className="text-2xl font-bold text-white">{problem.title}</h1>
+                    <h1 className="text-2xl font-bold text-white">
+                      {problem.title}
+                    </h1>
                     <div
                       className={`px-3 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(
-                        problem.difficulty,
+                        problem.difficulty
                       )}`}
                     >
-                      {problem.difficulty.charAt(0).toUpperCase() + problem.difficulty.slice(1)}
+                      {problem.difficulty.charAt(0).toUpperCase() +
+                        problem.difficulty.slice(1)}
                     </div>
                     <div className="px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full text-xs font-medium">
                       {problem.tags}
@@ -266,7 +276,9 @@ const ProblemPage = () => {
                   </div>
 
                   <div className="prose prose-invert max-w-none">
-                    <div className="text-gray-300 leading-relaxed whitespace-pre-wrap">{problem.description}</div>
+                    <div className="text-gray-300 leading-relaxed whitespace-pre-wrap">
+                      {problem.description}
+                    </div>
                   </div>
 
                   <div className="mt-8">
@@ -280,19 +292,33 @@ const ProblemPage = () => {
                           key={index}
                           className="bg-gradient-to-r from-gray-800/50 to-gray-700/30 p-5 rounded-xl border border-gray-600/30 backdrop-blur-sm"
                         >
-                          <h4 className="font-semibold text-purple-300 mb-3">Example {index + 1}:</h4>
+                          <h4 className="font-semibold text-purple-300 mb-3">
+                            Example {index + 1}:
+                          </h4>
                           <div className="space-y-3 text-sm font-mono">
                             <div className="flex">
-                              <span className="text-blue-400 font-semibold min-w-20">Input:</span>
-                              <span className="text-gray-200 bg-gray-900/50 px-2 py-1 rounded">{example.input}</span>
+                              <span className="text-blue-400 font-semibold min-w-20">
+                                Input:
+                              </span>
+                              <span className="text-gray-200 bg-gray-900/50 px-2 py-1 rounded">
+                                {example.input}
+                              </span>
                             </div>
                             <div className="flex">
-                              <span className="text-green-400 font-semibold min-w-20">Output:</span>
-                              <span className="text-gray-200 bg-gray-900/50 px-2 py-1 rounded">{example.output}</span>
+                              <span className="text-green-400 font-semibold min-w-20">
+                                Output:
+                              </span>
+                              <span className="text-gray-200 bg-gray-900/50 px-2 py-1 rounded">
+                                {example.output}
+                              </span>
                             </div>
                             <div className="flex">
-                              <span className="text-yellow-400 font-semibold min-w-20">Explanation:</span>
-                              <span className="text-gray-300">{example.explanation}</span>
+                              <span className="text-yellow-400 font-semibold min-w-20">
+                                Explanation:
+                              </span>
+                              <span className="text-gray-300">
+                                {example.explanation}
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -309,7 +335,9 @@ const ProblemPage = () => {
                       <BookOpen className="w-6 h-6 mr-2 text-purple-400" />
                       Editorial Solution
                     </h2>
-                    <p className="text-gray-400">Watch the comprehensive explanation and walkthrough</p>
+                    <p className="text-gray-400">
+                      Watch the comprehensive explanation and walkthrough
+                    </p>
                   </div>
                   <Editorial
                     secureUrl={problem.secureUrl}
@@ -339,14 +367,19 @@ const ProblemPage = () => {
                         </div>
                         <div className="p-6">
                           <pre className="bg-gray-900/80 p-4 rounded-lg text-sm overflow-x-auto border border-gray-700/50">
-                            <code className="text-gray-200">{solution?.completeCode}</code>
+                            <code className="text-gray-200">
+                              {solution?.completeCode}
+                            </code>
                           </pre>
                         </div>
                       </div>
                     )) || (
                       <div className="text-center py-12">
                         <AlertCircle className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                        <p className="text-gray-400">Solutions will be available after you solve the problem.</p>
+                        <p className="text-gray-400">
+                          Solutions will be available after you solve the
+                          problem.
+                        </p>
                       </div>
                     )}
                   </div>
@@ -382,7 +415,7 @@ const ProblemPage = () => {
         {/* Right Tabs */}
         <div className="flex border-b border-gray-700/50 bg-gray-800/30 backdrop-blur-sm">
           {rightTabs.map((tab) => {
-            const Icon = tab.icon
+            const Icon = tab.icon;
             return (
               <button
                 key={tab.id}
@@ -396,7 +429,7 @@ const ProblemPage = () => {
                 <Icon className="w-4 h-4" />
                 <span>{tab.label}</span>
               </button>
-            )
+            );
           })}
         </div>
 
@@ -417,7 +450,11 @@ const ProblemPage = () => {
                       }`}
                       onClick={() => handleLanguageChange(lang)}
                     >
-                      {lang === "cpp" ? "C++" : lang === "javascript" ? "JavaScript" : "Java"}
+                      {lang === "cpp"
+                        ? "C++"
+                        : lang === "javascript"
+                        ? "JavaScript"
+                        : "Java"}
                     </button>
                   ))}
                 </div>
@@ -467,7 +504,9 @@ const ProblemPage = () => {
                 <div className="flex gap-3">
                   <button
                     className={`flex items-center space-x-2 px-6 py-2 bg-gray-700/50 hover:bg-gray-600/50 text-gray-200 rounded-lg transition-all duration-200 font-medium ${
-                      loading ? "opacity-50 cursor-not-allowed" : "hover:scale-105"
+                      loading
+                        ? "opacity-50 cursor-not-allowed"
+                        : "hover:scale-105"
                     }`}
                     onClick={handleRun}
                     disabled={loading}
@@ -481,7 +520,9 @@ const ProblemPage = () => {
                   </button>
                   <button
                     className={`flex items-center space-x-2 px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white rounded-lg transition-all duration-200 font-medium shadow-lg ${
-                      loading ? "opacity-50 cursor-not-allowed" : "hover:scale-105"
+                      loading
+                        ? "opacity-50 cursor-not-allowed"
+                        : "hover:scale-105"
                     }`}
                     onClick={handleSubmitCode}
                     disabled={loading}
@@ -516,7 +557,9 @@ const ProblemPage = () => {
                     <div>
                       <div className="flex items-center mb-4">
                         <CheckCircle className="w-6 h-6 mr-2" />
-                        <h4 className="font-bold text-lg">All test cases passed!</h4>
+                        <h4 className="font-bold text-lg">
+                          All test cases passed!
+                        </h4>
                       </div>
                       <div className="flex gap-6 mb-6 text-sm">
                         <div className="flex items-center">
@@ -531,19 +574,34 @@ const ProblemPage = () => {
 
                       <div className="space-y-3">
                         {runResult.testCases.map((tc, i) => (
-                          <div key={i} className="bg-gray-800/50 p-4 rounded-lg border border-gray-600/30">
+                          <div
+                            key={i}
+                            className="bg-gray-800/50 p-4 rounded-lg border border-gray-600/30"
+                          >
                             <div className="font-mono text-sm space-y-2">
                               <div className="flex">
-                                <span className="text-blue-400 font-semibold min-w-20">Input:</span>
-                                <span className="text-gray-200">{tc.stdin}</span>
+                                <span className="text-blue-400 font-semibold min-w-20">
+                                  Input:
+                                </span>
+                                <span className="text-gray-200">
+                                  {tc.stdin}
+                                </span>
                               </div>
                               <div className="flex">
-                                <span className="text-yellow-400 font-semibold min-w-20">Expected:</span>
-                                <span className="text-gray-200">{tc.expected_output}</span>
+                                <span className="text-yellow-400 font-semibold min-w-20">
+                                  Expected:
+                                </span>
+                                <span className="text-gray-200">
+                                  {tc.expected_output}
+                                </span>
                               </div>
                               <div className="flex">
-                                <span className="text-purple-400 font-semibold min-w-20">Output:</span>
-                                <span className="text-gray-200">{tc.stdout}</span>
+                                <span className="text-purple-400 font-semibold min-w-20">
+                                  Output:
+                                </span>
+                                <span className="text-gray-200">
+                                  {tc.stdout}
+                                </span>
                               </div>
                               <div className="flex items-center text-green-400">
                                 <CheckCircle className="w-4 h-4 mr-1" />
@@ -562,29 +620,50 @@ const ProblemPage = () => {
                       </div>
                       <div className="space-y-3">
                         {runResult.testCases.map((tc, i) => (
-                          <div key={i} className="bg-gray-800/50 p-4 rounded-lg border border-gray-600/30">
+                          <div
+                            key={i}
+                            className="bg-gray-800/50 p-4 rounded-lg border border-gray-600/30"
+                          >
                             <div className="font-mono text-sm space-y-2">
                               <div className="flex">
-                                <span className="text-blue-400 font-semibold min-w-20">Input:</span>
-                                <span className="text-gray-200">{tc.stdin}</span>
+                                <span className="text-blue-400 font-semibold min-w-20">
+                                  Input:
+                                </span>
+                                <span className="text-gray-200">
+                                  {tc.stdin}
+                                </span>
                               </div>
                               <div className="flex">
-                                <span className="text-yellow-400 font-semibold min-w-20">Expected:</span>
-                                <span className="text-gray-200">{tc.expected_output}</span>
+                                <span className="text-yellow-400 font-semibold min-w-20">
+                                  Expected:
+                                </span>
+                                <span className="text-gray-200">
+                                  {tc.expected_output}
+                                </span>
                               </div>
                               <div className="flex">
-                                <span className="text-purple-400 font-semibold min-w-20">Output:</span>
-                                <span className="text-gray-200">{tc.stdout}</span>
+                                <span className="text-purple-400 font-semibold min-w-20">
+                                  Output:
+                                </span>
+                                <span className="text-gray-200">
+                                  {tc.stdout}
+                                </span>
                               </div>
                               <div
-                                className={`flex items-center ${tc.status_id == 3 ? "text-green-400" : "text-red-400"}`}
+                                className={`flex items-center ${
+                                  tc.status_id == 3
+                                    ? "text-green-400"
+                                    : "text-red-400"
+                                }`}
                               >
                                 {tc.status_id == 3 ? (
                                   <CheckCircle className="w-4 h-4 mr-1" />
                                 ) : (
                                   <XCircle className="w-4 h-4 mr-1" />
                                 )}
-                                <span className="font-semibold">{tc.status_id == 3 ? "Passed" : "Failed"}</span>
+                                <span className="font-semibold">
+                                  {tc.status_id == 3 ? "Passed" : "Failed"}
+                                </span>
                               </div>
                             </div>
                           </div>
@@ -596,7 +675,9 @@ const ProblemPage = () => {
               ) : (
                 <div className="text-center py-12">
                   <TestTube className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                  <p className="text-gray-400">Click "Run" to test your code with the example test cases.</p>
+                  <p className="text-gray-400">
+                    Click "Run" to test your code with the example test cases.
+                  </p>
                 </div>
               )}
             </div>
@@ -611,38 +692,53 @@ const ProblemPage = () => {
               {submitResult ? (
                 <div
                   className={`p-6 rounded-xl border backdrop-blur-sm ${
-                    submitResult.accepted ? "bg-green-500/10 border-green-500/20" : "bg-red-500/10 border-red-500/20"
+                    submitResult.accepted
+                      ? "bg-green-500/10 border-green-500/20"
+                      : "bg-red-500/10 border-red-500/20"
                   }`}
                 >
                   {submitResult.accepted ? (
                     <div>
                       <div className="flex items-center mb-4">
                         <Trophy className="w-8 h-8 mr-3 text-yellow-400" />
-                        <h4 className="font-bold text-2xl text-green-400">Accepted!</h4>
+                        <h4 className="font-bold text-2xl text-green-400">
+                          Accepted!
+                        </h4>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                         <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-600/30">
                           <div className="flex items-center mb-2">
                             <CheckCircle className="w-5 h-5 mr-2 text-green-400" />
-                            <span className="text-gray-300 font-medium">Test Cases</span>
+                            <span className="text-gray-300 font-medium">
+                              Test Cases
+                            </span>
                           </div>
                           <p className="text-xl font-bold text-white">
-                            {submitResult.passedTestCases}/{submitResult.totalTestCases}
+                            {submitResult.passedTestCases}/
+                            {submitResult.totalTestCases}
                           </p>
                         </div>
                         <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-600/30">
                           <div className="flex items-center mb-2">
                             <Clock className="w-5 h-5 mr-2 text-blue-400" />
-                            <span className="text-gray-300 font-medium">Runtime</span>
+                            <span className="text-gray-300 font-medium">
+                              Runtime
+                            </span>
                           </div>
-                          <p className="text-xl font-bold text-white">{submitResult.runtime} sec</p>
+                          <p className="text-xl font-bold text-white">
+                            {submitResult.runtime} sec
+                          </p>
                         </div>
                         <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-600/30">
                           <div className="flex items-center mb-2">
                             <Zap className="w-5 h-5 mr-2 text-purple-400" />
-                            <span className="text-gray-300 font-medium">Memory</span>
+                            <span className="text-gray-300 font-medium">
+                              Memory
+                            </span>
                           </div>
-                          <p className="text-xl font-bold text-white">{submitResult.memory} KB</p>
+                          <p className="text-xl font-bold text-white">
+                            {submitResult.memory} KB
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -650,13 +746,16 @@ const ProblemPage = () => {
                     <div>
                       <div className="flex items-center mb-4">
                         <XCircle className="w-8 h-8 mr-3 text-red-400" />
-                        <h4 className="font-bold text-2xl text-red-400">{submitResult.error}</h4>
+                        <h4 className="font-bold text-2xl text-red-400">
+                          {submitResult.error}
+                        </h4>
                       </div>
                       <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-600/30 mt-6">
                         <p className="text-gray-300">
                           Test Cases Passed:{" "}
                           <span className="font-bold text-white">
-                            {submitResult.passedTestCases}/{submitResult.totalTestCases}
+                            {submitResult.passedTestCases}/
+                            {submitResult.totalTestCases}
                           </span>
                         </p>
                       </div>
@@ -666,7 +765,9 @@ const ProblemPage = () => {
               ) : (
                 <div className="text-center py-12">
                   <Trophy className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                  <p className="text-gray-400">Click "Submit" to submit your solution for evaluation.</p>
+                  <p className="text-gray-400">
+                    Click "Submit" to submit your solution for evaluation.
+                  </p>
                 </div>
               )}
             </div>
@@ -674,7 +775,7 @@ const ProblemPage = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProblemPage
+export default ProblemPage;
