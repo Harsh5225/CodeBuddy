@@ -12,7 +12,8 @@ import ProfilePage from "./pages/ProfilePage";
 import AdminPanel from "./pages/AdminPanel";
 import ProblemPage from "./pages/ProblemPage";
 import LandingPage from "./pages/LandingPage";
-
+import AdminVideo from "./components/AdminVideo";
+import AdminUpload from "./components/AdminUpload";
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { user, isAuthenticated, loading } = useSelector((state) => state.auth);
@@ -119,6 +120,26 @@ const App = () => {
         <Route
           path="/problem/:problemId"
           element={isAuthenticated ? <ProblemPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/admin/video"
+          element={
+            isAuthenticated && user?.role === "admin" ? (
+              <AdminVideo />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+        <Route
+          path="/admin/upload/:problemId"
+          element={
+            isAuthenticated && user?.role === "admin" ? (
+              <AdminUpload />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
         />
         <Route path="*" element={<NotFound />} />
       </Routes>

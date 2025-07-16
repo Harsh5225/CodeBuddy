@@ -25,6 +25,8 @@ const SubmissionHistory = ({ problemId }) => {
         return "badge-neutral";
     }
   };
+  console.log("data",submissions);
+  console.log("error",error);
 
   const formatMemory = (memory) =>
     memory < 1024 ? `${memory} kB` : `${(memory / 1024).toFixed(2)} MB`;
@@ -50,7 +52,7 @@ const SubmissionHistory = ({ problemId }) => {
     );
   }
 
-  if (submissions === "No Submission is persent") {
+  if (submissions.length===0) {
     return (
       <div className="alert alert-info shadow-lg">
         <span>No submissions found for this problem</span>

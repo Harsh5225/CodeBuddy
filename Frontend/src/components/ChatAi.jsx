@@ -8,22 +8,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { addMessage, setMessages } from "../features/chatMessage/ChatSlice";
 function ChatAi({ problem }) {
   // const [messages, setMessages] = useState([
-  //   {
-  //     role: "model",
-  //     parts: [{ text: "Hi, how are you?" }],
-  //     time: new Date().toLocaleTimeString([], {
-  //       hour: "2-digit",
-  //       minute: "2-digit",
-  //     }),
-  //   },
-  //   {
-  //     role: "user",
-  //     parts: [{ text: "I am good" }],
-  //     time: new Date().toLocaleTimeString([], {
-  //       hour: "2-digit",
-  //       minute: "2-digit",
-  //     }),
-  //   },
+    // {
+    //   role: "model",
+    //   parts: [{ text: "Hi, how are you?" }],
+    //   time: new Date().toLocaleTimeString([], {
+    //     hour: "2-digit",
+    //     minute: "2-digit",
+    //   }),
+    // },
+    // {
+    //   role: "user",
+    //   parts: [{ text: "I am good" }],
+    //   time: new Date().toLocaleTimeString([], {
+    //     hour: "2-digit",
+    //     minute: "2-digit",
+    //   }),
+    // },
   // ]);
   const messages = useSelector((state) => state.chat.messages);
   const dispatch = useDispatch();

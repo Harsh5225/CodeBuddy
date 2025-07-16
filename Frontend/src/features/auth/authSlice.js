@@ -43,7 +43,7 @@ export const logoutUser = createAsyncThunk(
   "auth/logout",
   async (_, { rejectWithValue }) => {
     try {
-      const resp=await axiosClient.get("/user/logout");
+      const resp = await axiosClient.get("/user/logout");
       return resp;
     } catch (error) {
       return rejectWithValue(error);
@@ -59,7 +59,11 @@ export const authSlice = createSlice({
     loading: "",
     error: "",
   },
-  reducers: {},
+  reducers: {
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       // register user
@@ -130,5 +134,5 @@ export const authSlice = createSlice({
       });
   },
 });
-
+export const { setUser } = authSlice.actions;
 export default authSlice.reducer;

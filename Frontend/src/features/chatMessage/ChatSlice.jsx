@@ -1,7 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  messages: [],
+  messages: [
+    {
+      role: "model",
+      parts: [{ text: "Hi, how are you?" }],
+      time: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    },
+    {
+      role: "user",
+      parts: [{ text: "I am good" }],
+      time: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    },
+  ],
 };
 
 export const chatSlice = createSlice({
