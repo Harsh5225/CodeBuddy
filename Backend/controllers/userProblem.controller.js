@@ -262,6 +262,95 @@ export const getAllproblem = async (req, res) => {
   }
 };
 
+//
+
+export const createManyProblems = async (req, res) => {
+  try {
+
+    console.log(req.body, "req.body in createManyProblems controller");
+    const { problems } = req.body; // problems: Array of problem objects
+    const createdProblems = [];
+    const failedProblems = [];
+
+    for (const problem of problems) {
+      try {
+        const {
+          title,
+          description,
+          difficulty,
+          tags,
+          visibleTestCases,
+          hiddenTestCases,
+          startCode,
+          referenceSolution,
+        } = problem;
+
+        const normalizedStartCode = startCode.map((item) => ({
+          ...item,
+          language: item.language.toLowerCase(),
+        }));
+
+        const normalizedReferenceSolution = referenceSolution.map((item) => ({
+          ...item,
+          language: item.language.toLowerCase(),
+        }));
+
+        for (const { language, completeCode } of referenceSolution) {
+          const languageId = getLanguageById(language);
+          const submissions = visibleTestCases.map((testcase) => ({
+            source_code: completeCode,
+            language_id: languageId,
+            stdin: testcase.input,
+            expected_output: testcase.output,
+          }));
+
+          const submitResult = await submitBatch(submissions);
+          const resultToken = submitResult.map((data) => data.token);
+          const testResult = await submitToken(resultToken);
+
+          const failedTest = testResult.find((data) => data.status_id !== 3);
+          if (failedTest) {
+            const statusDesc =
+              testResult.find((status) => status.id === failedTest.status_id)
+                ?.description || "Unknown Status";
+
+            failedProblems.push({
+              title,
+              reason: `Test case failed: ${statusDesc}`,
+            });
+            throw new Error(statusDesc);
+          }
+        }
+
+        const userProblem = await Problem.create({
+          title,
+          description,
+          difficulty,
+          tags,
+          visibleTestCases,
+          hiddenTestCases,
+          startCode: normalizedStartCode,
+          referenceSolution: normalizedReferenceSolution,
+          problemCreator: req.userInfo._id,
+        });
+
+        createdProblems.push(userProblem.title);
+      } catch (err) {
+        console.log(`Error creating problem "${problem.title}":`, err.message);
+      }
+    }
+
+    return res.status(200).json({
+      message: "Bulk problem creation completed",
+      createdProblems,
+      failedProblems,
+    });
+  } catch (error) {
+    console.log("Error in createManyProblems controller:", error.message);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 // You have a User model where problemSolved is an array of ObjectId references to a Problem model. You want to create an API that fetches all problems solved by a specific user. My approach was to get the IDs from the problemSolved array and manually populate each one.
 
 // !Learning you don’t need to manually loop
