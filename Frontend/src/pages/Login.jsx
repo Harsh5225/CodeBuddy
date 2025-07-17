@@ -1,5 +1,3 @@
-
-
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 
@@ -59,7 +57,7 @@ const Login = () => {
     dispatch(loginUser(data));
   };
 
-  // Enhanced animations with more sophistication
+  // Animations remain the same
   const containerAnimation = useSpring({
     from: { opacity: 0, transform: "translateY(80px) scale(0.9)" },
     to: { opacity: 1, transform: "translateY(0) scale(1.0)" },
@@ -87,124 +85,27 @@ const Login = () => {
     config: { tension: 150, friction: 18 },
   });
 
-  const welcomeBackMessages = [
-    "Continue your coding journey",
-    "Your progress awaits",
-    "Ready to solve more challenges?",
-    "Welcome back, coder!",
-  ];
-
-  // const achievements = ["Solved 500+ problems", "Ranked in top 10%", "30-day streak active", "5 contests won"]
-
-  // const features = [
-  //   {
-  //     icon: Code,
-  //     title: "Practice Coding",
-  //     description: "Solve algorithmic challenges daily",
-  //     color: "from-blue-500/20 to-indigo-500/20",
-  //     iconColor: "text-blue-400",
-  //     borderColor: "border-blue-500/20",
-  //   },
-  //   {
-  //     icon: TrendingUp,
-  //     title: "Track Progress",
-  //     description: "Monitor your improvement over time",
-  //     color: "from-blue-500/20 to-emerald-500/20",
-  //     iconColor: "text-blue-400",
-  //     borderColor: "border-blue-500/20",
-  //   },
-  //   {
-  //     icon: Trophy,
-  //     title: "Compete & Win",
-  //     description: "Join contests and earn rewards",
-  //     color: "from-yellow-500/20 to-orange-500/20",
-  //     iconColor: "text-yellow-400",
-  //     borderColor: "border-yellow-500/20",
-  //   },
-  //   {
-  //     icon: Shield,
-  //     title: "Secure Platform",
-  //     description: "Your data is always protected",
-  //     color: "from-blue-500/20 to-cyan-500/20",
-  //     iconColor: "text-blue-400",
-  //     borderColor: "border-blue-500/20",
-  //   },
-  // ]
-
-  // const featureAnimations = useMemo(() => {
-  //   return features.map((_, index) => ({
-  //     opacity: 0,
-  //     transform: "translateX(-40px) scale(0.8)",
-  //     delay: 600 + index * 150,
-  //     config: { tension: 200, friction: 20 },
-  //   }))
-  // }, []) // Removed features from dependency array
-
-  // // const achievementAnimations = useMemo(() => {
-  // //   return achievements.map((_, index) => ({
-  // //     opacity: 0,
-  // //     transform: "translateX(-30px)",
-  // //     delay: 1000 + index * 100,
-  // //     config: { tension: 180, friction: 15 },
-  // //   }))
-  // // }, []) // Removed achievements from dependency array
-
-  // const [featureAnimationStyles, setFeatureAnimationStyles] = useState(
-  //   featureAnimations.map(() => ({ opacity: 0, transform: "translateX(-40px) scale(0.8)" })),
-  // )
-  // const [achievementAnimationStyles, setAchievementAnimationStyles] = useState(
-  //   achievementAnimations.map(() => ({ opacity: 0, transform: "translateX(-30px)" })),
-  // )
-
-  // useEffect(() => {
-  //   featureAnimations.forEach((animation, index) => {
-  //     setTimeout(() => {
-  //       setFeatureAnimationStyles((prevStyles) => {
-  //         const newStyles = [...prevStyles]
-  //         newStyles[index] = { opacity: 1, transform: "translateX(0) scale(1)" }
-  //         return newStyles
-  //       })
-  //     }, animation.delay)
-  //   })
-
-  //   achievementAnimations.forEach((animation, index) => {
-  //     setTimeout(() => {
-  //       setAchievementAnimationStyles((prevStyles) => {
-  //         const newStyles = [...prevStyles]
-  //         newStyles[index] = { opacity: 1, transform: "translateX(0)" }
-  //         return newStyles
-  //       })
-  //     }, animation.delay)
-  //   })
-  // }, [])
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 flex items-center justify-center px-4 relative overflow-hidden">
-      {/* Enhanced Background Effects */}
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-r from-blue-500/8 to-blue-500/8 rounded-full blur-3xl"></div>
       </div>
-
-      {/* Animated Grid Background */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:60px_60px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
 
-      {/* Floating Elements */}
-      <div className="absolute top-20 left-20 w-2 h-2 bg-blue-400 rounded-full animate-ping"></div>
-      <div className="absolute top-40 right-32 w-1 h-1 bg-blue-400 rounded-full animate-pulse"></div>
-      <div className="absolute bottom-32 left-40 w-1.5 h-1.5 bg-pink-400 rounded-full animate-bounce"></div>
-
+      {/* Main container with reduced max-width and gap for a more compact layout */}
       <animated.div
         style={containerAnimation}
-        className="w-full max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10"
+        className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10"
       >
-        {/* Left Side - Enhanced Branding & Features */}
-        <div className="hidden lg:block space-y-20">
+        {/* Left Side - Made more compact */}
+        {/* Further reduced vertical spacing to space-y-8 */}
+        <div className="hidden lg:block space-y-8">
           <animated.div style={logoAnimation}>
-            <div className="flex items-center space-x-4 mb-5">
+            <div className="flex items-center space-x-4">
               <div className="relative">
                 <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-500 rounded-2xl flex items-center justify-center shadow-2xl">
                   <Code className="w-8 h-8 text-white" />
@@ -213,7 +114,7 @@ const Login = () => {
                   <Sparkles className="w-3 h-3 text-white" />
                 </div>
               </div>
-              <div >
+              <div>
                 <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
                   CodeBuddy
                 </h1>
@@ -225,90 +126,44 @@ const Login = () => {
           </animated.div>
 
           <animated.div style={heroAnimation}>
-            <div className="space-y-8 ">
-              <div className="space-y-6">
-                <h2 className="text-5xl font-bold text-white leading-tight">
-                  Welcome back to your
-                  <span className="bg-gradient-to-r from-blue-400 via-pink-400 to-blue-400 bg-clip-text text-transparent block">
-                    coding journey
-                  </span>
-                  <span className="text-3xl block mt-2 text-gray-300">
-                    Let's continue! 🚀
-                  </span>
-                </h2>
-                <p className="text-gray-300 text-xl leading-relaxed">
-                  Continue solving challenging problems, track your progress,
-                  and become a better programmer with our comprehensive
-                  platform.
-                </p>
-              </div>
-
-              {/* Achievement List */}
-              {/* <div className="space-y-3">
-                <h3 className="text-white font-bold text-lg mb-4 flex items-center">
-                  <Award className="w-5 h-5 mr-2 text-yellow-400" />
-                  Your Achievements
-                </h3>
-                {achievements.map((achievement, index) => (
-                  <animated.div
-                    key={index}
-                    style={achievementAnimationStyles[index]}
-                    className="flex items-center space-x-3"
-                  >
-                    <div className="w-6 h-6 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full flex items-center justify-center">
-                      <CheckCircle className="w-4 h-4 text-white" />
-                    </div>
-                    <span className="text-gray-300 font-medium">{achievement}</span>
-                  </animated.div>
-                ))}
-              </div> */}
+            <div className="space-y-6">
+              {/* Reduced font size from 5xl to 4xl and 3xl to 2xl on large screens */}
+              <h2 className="text-4xl lg:text-4xl font-bold text-white leading-tight">
+                Welcome back to your
+                <span className="bg-gradient-to-r from-blue-400 via-pink-400 to-blue-400 bg-clip-text text-transparent block">
+                  coding journey
+                </span>
+                <span className="text-2xl lg:text-2xl block mt-2 text-gray-300">
+                  Let's continue! 🚀
+                </span>
+              </h2>
+              {/* Reduced font size from xl to lg on large screens */}
+              <p className="text-lg lg:text-lg text-gray-300 leading-relaxed">
+                Continue solving challenging problems, track your progress, and
+                become a better programmer.
+              </p>
             </div>
           </animated.div>
 
-          {/* Enhanced Features Grid */}
-          {/* <div className="grid grid-cols-2 gap-4">
-            {features.map((feature, index) => {
-              const Icon = feature.icon
-              return (
-                <animated.div
-                  key={index}
-                  style={featureAnimationStyles[index]}
-                  className={`p-5 bg-gradient-to-r ${feature.color} rounded-2xl border ${feature.borderColor} backdrop-blur-sm hover:scale-105 transition-all duration-300 cursor-pointer group`}
-                >
-                  <div
-                    className={`w-12 h-12 bg-gradient-to-r ${feature.color} rounded-xl flex items-center justify-center border ${feature.borderColor} mb-4 group-hover:scale-110 transition-transform duration-300`}
-                  >
-                    <Icon className={`w-6 h-6 ${feature.iconColor}`} />
-                  </div>
-                  <div>
-                    <h3 className="text-white font-bold text-lg mb-2">{feature.title}</h3>
-                    <p className="text-gray-400 text-sm leading-relaxed">{feature.description}</p>
-                  </div>
-                </animated.div>
-              )
-            })}
-          </div> */}
-
-          {/* Enhanced Stats */}
-          {/* <div className="flex items-center justify-between p-6 bg-gradient-to-r from-gray-800/40 to-gray-700/30 rounded-2xl border border-gray-600/30 backdrop-blur-sm">
+          <div className="flex items-center justify-between p-5 bg-gradient-to-r from-gray-800/40 to-gray-700/30 rounded-2xl border border-gray-600/30 backdrop-blur-sm">
             <div className="text-center">
-              <div className="text-2xl font-bold text-white">50K+</div>
-              <div className="text-gray-400 text-sm">Active Users</div>
+              <div className="text-lg font-bold text-white">BEGIN</div>
+              <div className="text-gray-400 text-sm">Set Your Vision</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-white">1M+</div>
-              <div className="text-gray-400 text-sm">Problems Solved</div>
+              <div className="text-lg font-bold text-white">BUILD</div>
+              <div className="text-gray-400 text-sm">Stay Consistent</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-white">95%</div>
-              <div className="text-gray-400 text-sm">Success Rate</div>
+              <div className="text-lg font-bold text-white">BREAKTHROUGH</div>
+              <div className="text-gray-400 text-sm">Achieve Excellence</div>
             </div>
-          </div> */}
+          </div>
         </div>
 
-        {/* Right Side - Enhanced Login Form */}
-        <div className="flex items-center justify-center my-auto ">
-          <div className="w-full max-w-md mx-auto my-auto lg:mx-0 mt-4 ">
+        {/* Right Side - Form */}
+        <div className="flex items-center justify-center">
+          <div className="w-full max-w-md mx-auto lg:mx-0">
             {/* Mobile Logo */}
             <div className="lg:hidden text-center mb-8">
               <div className="flex items-center justify-center space-x-3 mb-4">
@@ -316,11 +171,8 @@ const Login = () => {
                   <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-500 rounded-xl flex items-center justify-center">
                     <Code className="w-7 h-7 text-white" />
                   </div>
-                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center">
-                    <Sparkles className="w-2.5 h-2.5 text-white" />
-                  </div>
                 </div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-blue-400 bg-clip-text text-transparent pt-5]">
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-blue-400 bg-clip-text text-transparent">
                   CodeBuddy
                 </h1>
               </div>
@@ -329,44 +181,26 @@ const Login = () => {
               </p>
             </div>
 
+            {/* Form card padding reduced from p-8 to p-6 */}
             <animated.div
               style={formAnimation}
-              className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 backdrop-blur-xl rounded-3xl border border-gray-600/40 p-8 shadow-2xl relative overflow-hidden"
+              className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 backdrop-blur-xl rounded-3xl border border-gray-600/40 p-6 shadow-2xl relative"
             >
-              {/* Form Background Effect */}
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-blue-500/5 rounded-3xl"></div>
-
               <div className="relative z-10">
-                <div className="hidden lg:block text-center mb-8">
-                  <h2 className="text-3xl font-bold text-white mb-3">
+                <div className="hidden lg:block text-center mb-6">
+                  <h2 className="text-3xl font-bold text-white">
                     Welcome Back
                   </h2>
-                  <p className="text-gray-400 text-lg">
+                  <p className="text-gray-400">
                     Sign in to continue your journey
                   </p>
-                  <div className="flex items-center justify-center mt-4 space-x-2">
-                    <Star className="w-5 h-5 text-yellow-400 fill-current" />
-                    <Star className="w-5 h-5 text-yellow-400 fill-current" />
-                    <Star className="w-5 h-5 text-yellow-400 fill-current" />
-                    <Star className="w-5 h-5 text-yellow-400 fill-current" />
-                    <Star className="w-5 h-5 text-yellow-400 fill-current" />
-                    <span className="text-gray-400 text-sm ml-2">
-                      Trusted by developers
-                    </span>
-                  </div>
                 </div>
 
-                {/* Error Display */}
-                {/* {error && (
-                <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
-                  <p className="text-red-400 text-sm flex items-center">
-                    <Shield className="w-4 h-4 mr-2" />
-                    {error}
-                  </p>
-                </div>
-              )} */}
-
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                {/* Form element spacing reduced from space-y-6 to space-y-4 */}
+                <form
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="space-y-4"
+                >
                   {/* Email Field */}
                   <div className="space-y-2">
                     <label className="text-gray-300 text-sm font-medium flex items-center">
@@ -378,9 +212,8 @@ const Login = () => {
                         {...register("email")}
                         type="email"
                         placeholder="Enter your email"
-                        className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                        className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
-                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-blue-500/10 opacity-0 hover:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
                     </div>
                     {errors.email && (
                       <p className="text-red-400 text-sm flex items-center mt-1">
@@ -400,11 +233,11 @@ const Login = () => {
                         {...register("password")}
                         type={showPassword ? "text" : "password"}
                         placeholder="Enter your password"
-                        className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3.5 pr-12 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                        className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 pr-12 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                       <button
                         type="button"
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-200 transition-colors duration-200"
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-200"
                         onClick={() => setShowPassword((prev) => !prev)}
                       >
                         {showPassword ? (
@@ -413,7 +246,6 @@ const Login = () => {
                           <Eye className="w-5 h-5" />
                         )}
                       </button>
-                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-blue-500/10 opacity-0 hover:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
                     </div>
                     {errors.password && (
                       <p className="text-red-400 text-sm flex items-center mt-1">
@@ -422,39 +254,34 @@ const Login = () => {
                     )}
                   </div>
 
-                  {/* Enhanced Login Button */}
+                  {/* Login Button */}
                   <button
                     type="submit"
                     disabled={loading}
-                    className={`w-full bg-gradient-to-r from-blue-600 via-pink-600 to-blue-600 hover:from-blue-500 hover:via-pink-500 hover:to-blue-500 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 flex items-center justify-center space-x-3 shadow-2xl relative overflow-hidden ${
+                    className={`w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2 ${
                       loading
                         ? "opacity-50 cursor-not-allowed"
-                        : "hover:scale-105 hover:shadow-blue-500/25"
+                        : "hover:scale-105"
                     }`}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
                     {loading ? (
-                      <>
-                        <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                        <span className="text-lg">Signing In...</span>
-                      </>
+                      <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                     ) : (
                       <>
                         <Target className="w-5 h-5" />
-                        <span className="text-lg">Continue Journey</span>
-                        <ArrowRight className="w-5 h-5" />
+                        <span>Continue Journey</span>
                       </>
                     )}
                   </button>
 
                   {/* Signup Link */}
-                  <div className="text-center pt-6 border-t border-gray-600/40">
+                  <div className="text-center pt-4 border-t border-gray-600/40">
                     <p className="text-gray-400">
                       Don't have an account?{" "}
                       <button
                         type="button"
                         onClick={() => navigate("/signup")}
-                        className="text-blue-400 hover:text-blue-300 font-semibold transition-colors duration-200 hover:underline"
+                        className="text-blue-400 hover:text-blue-300 font-semibold"
                       >
                         Create Account
                       </button>
@@ -463,16 +290,6 @@ const Login = () => {
                 </form>
               </div>
             </animated.div>
-
-            {/* Enhanced Security Badge */}
-            <div className="mt-8 text-center">
-              <div className="inline-flex items-center space-x-3 text-gray-400 text-sm bg-gray-800/30 px-6 py-3 rounded-full border border-gray-600/30 backdrop-blur-sm">
-                <Shield className="w-5 h-5 text-blue-400" />
-                <span>256-bit SSL encryption</span>
-                <Sparkles className="w-5 h-5 text-blue-400" />
-                <span>GDPR compliant</span>
-              </div>
-            </div>
           </div>
         </div>
       </animated.div>
