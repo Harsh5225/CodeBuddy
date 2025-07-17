@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-"use client";
+
 
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
@@ -120,16 +119,16 @@ const SignUp = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 flex items-center justify-center px-4 relative overflow-hidden">
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-r from-purple-500/8 to-blue-500/8 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-r from-blue-500/8 to-blue-500/8 rounded-full blur-3xl"></div>
       </div>
 
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:60px_60px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
 
-      <div className="absolute top-20 left-20 w-2 h-2 bg-purple-400 rounded-full animate-ping"></div>
+      <div className="absolute top-20 left-20 w-2 h-2 bg-blue-400 rounded-full animate-ping"></div>
       <div className="absolute top-40 right-32 w-1 h-1 bg-blue-400 rounded-full animate-pulse"></div>
       <div className="absolute bottom-32 left-40 w-1.5 h-1.5 bg-pink-400 rounded-full animate-bounce"></div>
 
@@ -142,7 +141,7 @@ const SignUp = () => {
           <animated.div style={logoAnimation}>
             <div className="flex items-center mt-[-4rem] space-x-4 mb-10">
               <div className="relative">
-                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl flex items-center justify-center shadow-2xl">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-500 rounded-2xl flex items-center justify-center shadow-2xl">
                   <Code className="w-8 h-8 text-white" />
                 </div>
                 <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center">
@@ -150,7 +149,7 @@ const SignUp = () => {
                 </div>
               </div>
               <div>
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
                   CodeBuddy
                 </h1>
                 <p className="text-gray-400 text-base font-medium">
@@ -165,7 +164,7 @@ const SignUp = () => {
               <div className="space-y-6">
                 <h2 className="text-5xl font-bold text-white leading-tight">
                   Start your
-                  <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent block">
+                  <span className="bg-gradient-to-r from-blue-400 via-pink-400 to-blue-400 bg-clip-text text-transparent block">
                     coding adventure
                   </span>
                   <span className="text-3xl block mt-2 text-gray-300">
@@ -185,7 +184,7 @@ const SignUp = () => {
                     style={benefitAnimationStyles[index]}
                     className="flex items-center space-x-3"
                   >
-                    <div className="w-6 h-6 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center">
+                    <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full flex items-center justify-center">
                       <CheckCircle className="w-4 h-4 text-white" />
                     </div>
                     <span className="text-gray-300 font-medium">{benefit}</span>
@@ -215,14 +214,14 @@ const SignUp = () => {
           <div className="lg:hidden text-center mb-8">
             <div className="flex items-center justify-center space-x-3 mb-4">
               <div className="relative">
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-500 rounded-xl flex items-center justify-center">
                   <Code className="w-7 h-7 text-white" />
                 </div>
                 <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center">
                   <Sparkles className="w-2.5 h-2.5 text-white" />
                 </div>
               </div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-blue-400 bg-clip-text text-transparent">
                 CodeBuddy
               </h1>
             </div>
@@ -236,7 +235,7 @@ const SignUp = () => {
               style={formAnimation}
               className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 backdrop-blur-xl rounded-3xl border border-gray-600/40 p-8 shadow-2xl relative overflow-hidden"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-blue-500/5 rounded-3xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-blue-500/5 rounded-3xl"></div>
 
               <div className="relative z-10">
                 <div className="hidden lg:block text-center mb-8">
@@ -269,9 +268,9 @@ const SignUp = () => {
                         {...register("firstName")}
                         type="text"
                         placeholder="Enter your first name"
-                        className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                        className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                       />
-                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500/10 to-blue-500/10 opacity-0 hover:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
+                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-blue-500/10 opacity-0 hover:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
                     </div>
                     {errors.firstName && (
                       <p className="text-red-400 text-sm flex items-center mt-1">
@@ -290,9 +289,9 @@ const SignUp = () => {
                         {...register("email")}
                         type="email"
                         placeholder="Enter your email"
-                        className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                        className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                       />
-                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500/10 to-blue-500/10 opacity-0 hover:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
+                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-blue-500/10 opacity-0 hover:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
                     </div>
                     {errors.email && (
                       <p className="text-red-400 text-sm flex items-center mt-1">
@@ -311,7 +310,7 @@ const SignUp = () => {
                         {...register("password")}
                         type={showPassword ? "text" : "password"}
                         placeholder="Create a strong password"
-                        className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3.5 pr-12 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                        className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3.5 pr-12 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                       />
                       <button
                         type="button"
@@ -324,7 +323,7 @@ const SignUp = () => {
                           <Eye className="w-5 h-5" />
                         )}
                       </button>
-                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500/10 to-blue-500/10 opacity-0 hover:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
+                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-blue-500/10 opacity-0 hover:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
                     </div>
                     {errors.password && (
                       <p className="text-red-400 text-sm flex items-center mt-1">
@@ -336,10 +335,10 @@ const SignUp = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className={`w-full bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 hover:from-purple-500 hover:via-pink-500 hover:to-blue-500 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 flex items-center justify-center space-x-3 shadow-2xl relative overflow-hidden ${
+                    className={`w-full bg-gradient-to-r from-blue-600 via-pink-600 to-blue-600 hover:from-blue-500 hover:via-pink-500 hover:to-blue-500 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 flex items-center justify-center space-x-3 shadow-2xl relative overflow-hidden ${
                       loading
                         ? "opacity-50 cursor-not-allowed"
-                        : "hover:scale-105 hover:shadow-purple-500/25"
+                        : "hover:scale-105 hover:shadow-blue-500/25"
                     }`}
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
@@ -363,7 +362,7 @@ const SignUp = () => {
                       <button
                         type="button"
                         onClick={() => navigate("/login")}
-                        className="text-purple-400 hover:text-purple-300 font-semibold transition-colors duration-200 hover:underline"
+                        className="text-blue-400 hover:text-blue-300 font-semibold transition-colors duration-200 hover:underline"
                       >
                         Sign In
                       </button>

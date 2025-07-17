@@ -15,6 +15,7 @@
     "@monaco-editor/react": "^4.7.0",
     "@react-spring/web": "^10.0.1",
     "@reduxjs/toolkit": "^2.8.2",
+    "@studio-freight/lenis": "^1.0.42",
     "@tailwindcss/vite": "^4.1.7",
     "axios": "^1.9.0",
     "framer-motion": "^12.18.1",

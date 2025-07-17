@@ -9,6 +9,7 @@ import {
   getUserSolvedProblems,
 } from "../features/problem/problemSlice";
 import { NavLink } from "react-router";
+import useLenis from "../hooks/useLenis";
 import {
   Code,
   Filter,
@@ -34,6 +35,7 @@ import {
 } from "lucide-react";
 
 function Homepage() {
+  useLenis();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const {
@@ -115,7 +117,7 @@ function Homepage() {
   const getDifficultyBadge = (difficulty) => {
     switch (difficulty?.toLowerCase()) {
       case "easy":
-        return "text-green-400 bg-green-500/10 border-green-500/20";
+        return "text-blue-400 bg-blue-500/10 border-blue-500/20";
       case "medium":
         return "text-yellow-400 bg-yellow-500/10 border-yellow-500/20";
       case "hard":
@@ -165,17 +167,17 @@ function Homepage() {
       description: "Perfect for beginners. Start your coding journey here.",
       difficulty: "easy",
       icon: Target,
-      gradient: "from-green-600 to-emerald-600",
-      bgGradient: "from-green-500/10 to-emerald-500/10",
-      borderColor: "border-green-500/20",
+      gradient: "from-blue-600 to-emerald-600",
+      bgGradient: "from-blue-500/10 to-emerald-500/10",
+      borderColor: "border-blue-500/20",
     },
     {
       title: "Medium Problems",
       description: "Challenge yourself with intermediate difficulty problems.",
       difficulty: "medium",
       icon: Zap,
-      gradient: "from-yellow-600 to-orange-600",
-      bgGradient: "from-yellow-500/10 to-orange-500/10",
+      gradient: "from-yellow-600 to-blue-600",
+      bgGradient: "from-yellow-500/10 to-blue-500/10",
       borderColor: "border-yellow-500/20",
     },
     {
@@ -193,18 +195,18 @@ function Homepage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden">
       {/* Enhanced Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-r from-purple-500/8 to-blue-500/8 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-r from-blue-500/8 to-blue-500/8 rounded-full blur-3xl"></div>
       </div>
 
       {/* Animated Grid Background */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
 
       {/* Floating Elements */}
-      <div className="absolute top-20 left-20 w-2 h-2 bg-purple-400 rounded-full animate-ping"></div>
+      <div className="absolute top-20 left-20 w-2 h-2 bg-blue-400 rounded-full animate-ping"></div>
       <div className="absolute top-40 right-32 w-1 h-1 bg-blue-400 rounded-full animate-pulse"></div>
       <div className="absolute bottom-32 left-40 w-1.5 h-1.5 bg-pink-400 rounded-full animate-bounce"></div>
 
@@ -214,14 +216,14 @@ function Homepage() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
               <div className="relative">
-                <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-500 rounded-lg flex items-center justify-center">
                   <Code className="w-5 h-5 text-white" />
                 </div>
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center">
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-yellow-400 to-blue-400 rounded-full flex items-center justify-center">
                   <Sparkles className="w-1.5 h-1.5 text-white" />
                 </div>
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+              <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-400 bg-clip-text text-transparent">
                 CodeBuddy
               </span>
             </div>
@@ -235,7 +237,7 @@ function Homepage() {
                     .classList.toggle("hidden")
                 }
               >
-                <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-500 rounded-full flex items-center justify-center">
                   <span className="text-sm font-bold text-white">
                     {user?.firstName?.charAt(0) || "U"}
                   </span>
@@ -285,14 +287,14 @@ function Homepage() {
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            <span className="bg-gradient-to-r from-purple-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-400 via-blue-400 to-blue-400 bg-clip-text text-transparent">
               Welcome back, {user?.firstName || "User"}!
             </span>
           </h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Continue your coding journey and master algorithmic problem solving
           </p>
-          <div className="mt-6 w-24 h-1 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full mx-auto"></div>
+          <div className="mt-6 w-24 h-1 bg-gradient-to-r from-blue-500 to-blue-500 rounded-full mx-auto"></div>
         </div>
 
         {/* Stats Cards */}
@@ -307,7 +309,7 @@ function Homepage() {
                   {totalProblems || 0}
                 </p>
               </div>
-              <BookOpen className="w-8 h-8 text-purple-400" />
+              <BookOpen className="w-8 h-8 text-blue-400" />
             </div>
           </div>
 
@@ -315,11 +317,11 @@ function Homepage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm font-medium">Solved</p>
-                <p className="text-2xl font-bold text-green-400">
+                <p className="text-2xl font-bold text-blue-400">
                   {solvedProblems?.length || 0}
                 </p>
               </div>
-              <CheckCircle className="w-8 h-8 text-green-400" />
+              <CheckCircle className="w-8 h-8 text-blue-400" />
             </div>
           </div>
 
@@ -364,7 +366,7 @@ function Homepage() {
         {/* Problem Categories */}
         <div className="mb-12">
           <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
-            <Brain className="w-6 h-6 mr-3 text-purple-400" />
+            <Brain className="w-6 h-6 mr-3 text-blue-400" />
             Problem Categories
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -410,13 +412,13 @@ function Homepage() {
         <div id="problems-section" className="mb-12">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <h2 className="text-2xl font-bold text-white flex items-center">
-              <Code className="w-6 h-6 mr-3 text-purple-400" />
+              <Code className="w-6 h-6 mr-3 text-blue-400" />
               All Problems
             </h2>
             <button
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 backdrop-blur-sm border ${
                 showFilters
-                  ? "bg-purple-600 text-white border-purple-500/30"
+                  ? "bg-blue-600 text-white border-blue-500/30"
                   : "bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 hover:text-white border-gray-600/30"
               }`}
               onClick={() => setShowFilters(!showFilters)}
@@ -436,7 +438,7 @@ function Homepage() {
                     Difficulty
                   </label>
                   <select
-                    className="w-full bg-gray-700/60 border border-gray-600/60 rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent backdrop-blur-sm"
+                    className="w-full bg-gray-700/60 border border-gray-600/60 rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm"
                     value={filters.difficulty}
                     onChange={(e) =>
                       handleFilterChange("difficulty", e.target.value)
@@ -455,7 +457,7 @@ function Homepage() {
                     Tags
                   </label>
                   <select
-                    className="w-full bg-gray-700/60 border border-gray-600/60 rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent backdrop-blur-sm"
+                    className="w-full bg-gray-700/60 border border-gray-600/60 rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm"
                     value={filters.tag}
                     onChange={(e) => handleFilterChange("tag", e.target.value)}
                   >
@@ -475,7 +477,7 @@ function Homepage() {
                     Status
                   </label>
                   <select
-                    className="w-full bg-gray-700/60 border border-gray-600/60 rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent backdrop-blur-sm"
+                    className="w-full bg-gray-700/60 border border-gray-600/60 rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm"
                     value={filters.status}
                     onChange={(e) =>
                       handleFilterChange("status", e.target.value)
@@ -505,7 +507,7 @@ function Homepage() {
 
           {loading ? (
             <div className="flex justify-center py-12">
-              <div className="w-12 h-12 border-4 border-purple-500/30 border-t-purple-400 rounded-full animate-spin"></div>
+              <div className="w-12 h-12 border-4 border-blue-500/30 border-t-blue-400 rounded-full animate-spin"></div>
             </div>
           ) : filteredProblems.length > 0 ? (
             <>
@@ -546,7 +548,7 @@ function Homepage() {
                           <td className="px-6 py-4">
                             <NavLink
                               to={`/problem/${problem._id}`}
-                              className="text-white hover:text-purple-400 font-medium transition-colors duration-200"
+                              className="text-white hover:text-blue-400 font-medium transition-colors duration-200"
                             >
                               {problem.title}
                             </NavLink>
@@ -567,7 +569,7 @@ function Homepage() {
                           </td>
                           <td className="px-6 py-4">
                             {isProblemSolved(problem._id) ? (
-                              <div className="flex items-center text-green-400">
+                              <div className="flex items-center text-blue-400">
                                 <CheckCircle className="w-4 h-4 mr-1" />
                                 <span className="text-sm font-medium">
                                   Solved
@@ -582,7 +584,7 @@ function Homepage() {
                           </td>
                           <td className="px-6 py-4">
                             <button
-                              className="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105"
+                              className="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-500 hover:to-blue-500 text-white rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105"
                               onClick={() => handleProblemSelect(problem._id)}
                             >
                               Solve
@@ -614,7 +616,7 @@ function Homepage() {
                             key={page}
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 backdrop-blur-sm border ${
                               currentPage === page
-                                ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white border-purple-500/30"
+                                ? "bg-gradient-to-r from-blue-600 to-blue-600 text-white border-blue-500/30"
                                 : "bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 border-gray-600/30"
                             }`}
                             onClick={() => handlePageChange(page)}
@@ -657,7 +659,7 @@ function Homepage() {
 
           {solvedLoading ? (
             <div className="flex justify-center py-12">
-              <div className="w-12 h-12 border-4 border-purple-500/30 border-t-purple-400 rounded-full animate-spin"></div>
+              <div className="w-12 h-12 border-4 border-blue-500/30 border-t-blue-400 rounded-full animate-spin"></div>
             </div>
           ) : solvedProblems.length > 0 ? (
             <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 rounded-xl border border-gray-600/30 backdrop-blur-sm overflow-hidden">
@@ -691,7 +693,7 @@ function Homepage() {
                         <td className="px-6 py-4 text-gray-300">{index + 1}</td>
                         <td className="px-6 py-4">
                           <div className="flex items-center">
-                            <CheckCircle className="w-4 h-4 text-green-400 mr-2" />
+                            <CheckCircle className="w-4 h-4 text-blue-400 mr-2" />
                             <span className="text-white font-medium">
                               {problem.title}
                             </span>

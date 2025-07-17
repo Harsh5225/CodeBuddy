@@ -13,7 +13,11 @@ import ProblemPage from "./pages/ProblemPage";
 import LandingPage from "./pages/LandingPage";
 import AdminVideo from "./components/AdminVideo";
 import AdminUpload from "./components/AdminUpload";
+import CollaborativeProblemPage from "./pages/CollaborativeProblemPage";
+import ProblemPageUpdated from "./pages/ProblemPageUpdated";
+
 const App = () => {
+  // useLenis();
   const [isLoading, setIsLoading] = useState(true);
   const { user, isAuthenticated, loading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -56,93 +60,81 @@ const App = () => {
   }
 
   return (
-    // <BrowserRouter>
-    //   <Routes>
-    //     <Route
-    //       path="/"
-    //       element={isAuthenticated ? <HomePage /> : <Navigate to="/login" />}
-    //     />
-    //     <Route
-    //       path="/login"
-    //       element={isAuthenticated ? <Navigate to="/" /> : <Login />}
-    //     />
-    //     <Route
-    //       path="/signup"
-    //       element={isAuthenticated ? <Navigate to="/" /> : <Signup />}
-    //     />
-    //     <Route
-    //       path="/profile"
-    //       element={isAuthenticated ? <ProfilePage /> : <Navigate to="/login" />}
-    //     />
-    //     <Route
-    //       path="/admin"
-    //       element={
-    //         isAuthenticated && user?.role === "admin" ? (
-    //           <AdminPanel></AdminPanel>
-    //         ) : (
-    //           <Navigate to="/"></Navigate>
-    //         )
-    //       }
-    //     ></Route>
-    //     <Route path="/problem/:problemId" element={<ProblemPage />}></Route>
-    //     <Route path="*" element={<NotFound />} />
-    //   </Routes>
-    // </BrowserRouter>
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={isAuthenticated ? <HomePage /> : <LandingPage />}
-        />
-        <Route
-          path="/login"
-          element={isAuthenticated ? <Navigate to="/" /> : <Login />}
-        />
-        <Route
-          path="/signup"
-          element={isAuthenticated ? <Navigate to="/" /> : <Signup />}
-        />
-        <Route
-          path="/profile"
-          element={isAuthenticated ? <ProfilePage /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/admin"
-          element={
-            isAuthenticated && user?.role === "admin" ? (
-              <AdminPanel />
-            ) : (
-              <Navigate to="/" />
-            )
-          }
-        />
-        <Route
-          path="/problem/:problemId"
-          element={isAuthenticated ? <ProblemPage /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/admin/video"
-          element={
-            isAuthenticated && user?.role === "admin" ? (
-              <AdminVideo />
-            ) : (
-              <Navigate to="/" />
-            )
-          }
-        />
-        <Route
-          path="/admin/upload/:problemId"
-          element={
-            isAuthenticated && user?.role === "admin" ? (
-              <AdminUpload />
-            ) : (
-              <Navigate to="/" />
-            )
-          }
-        />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+    < >
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={isAuthenticated ? <HomePage /> : <LandingPage />}
+          />
+          <Route
+            path="/login"
+            element={isAuthenticated ? <Navigate to="/" /> : <Login />}
+          />
+          <Route
+            path="/signup"
+            element={isAuthenticated ? <Navigate to="/" /> : <Signup />}
+          />
+          <Route
+            path="/profile"
+            element={
+              isAuthenticated ? <ProfilePage /> : <Navigate to="/login" />
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              isAuthenticated && user?.role === "admin" ? (
+                <AdminPanel />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
+          <Route
+            path="/problem/:problemId"
+            element={
+              isAuthenticated ? (
+                <ProblemPageUpdated />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
+          <Route
+            path="/collaborate/:roomId"
+            element={
+              isAuthenticated ? (
+                <CollaborativeProblemPage />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
+          <Route
+            path="/admin/video"
+            element={
+              isAuthenticated && user?.role === "admin" ? (
+                <AdminVideo />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
+          <Route
+            path="/admin/upload/:problemId"
+            element={
+              isAuthenticated && user?.role === "admin" ? (
+                <AdminUpload />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 };
 

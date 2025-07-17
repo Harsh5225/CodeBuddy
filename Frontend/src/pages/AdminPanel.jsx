@@ -20,6 +20,7 @@ import {
   Shield,
   Star,
 } from "lucide-react"
+import useLenis from "../hooks/useLenis"
 
 const AdminPanel = () => {
   const navigate = useNavigate()
@@ -30,6 +31,7 @@ const AdminPanel = () => {
   const [formSubmitting, setFormSubmitting] = useState(false)
   const [editMode, setEditMode] = useState(false)
   const [currentProblemId, setCurrentProblemId] = useState(null)
+  useLenis();
 
   // Form state
   const [formData, setFormData] = useState({
@@ -302,20 +304,20 @@ const AdminPanel = () => {
         {/* Background Effects */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-40 -right-40 w-96 h-96 bg-red-500/15 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl animate-pulse"></div>
         </div>
 
         <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 backdrop-blur-xl rounded-3xl border border-gray-600/40 p-8 shadow-2xl relative overflow-hidden max-w-md w-full">
-          <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-purple-500/5 rounded-3xl"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-blue-500/5 rounded-3xl"></div>
           <div className="relative z-10 text-center">
-            <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <Shield className="w-8 h-8 text-white" />
             </div>
             <h2 className="text-2xl font-bold text-white mb-2">Access Denied</h2>
             <p className="text-gray-400 mb-6">You don't have permission to access this page.</p>
             <button
               onClick={() => navigate("/")}
-              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-500 hover:to-blue-500 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2"
             >
               <Home className="w-5 h-5" />
               <span>Go Home</span>
@@ -330,7 +332,7 @@ const AdminPanel = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden">
       {/* Enhanced Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl"></div>
@@ -349,7 +351,7 @@ const AdminPanel = () => {
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-3">
                   <div className="relative">
-                    <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl flex items-center justify-center">
+                    <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-500 rounded-xl flex items-center justify-center">
                       <Code className="w-6 h-6 text-white" />
                     </div>
                     <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center">
@@ -357,12 +359,12 @@ const AdminPanel = () => {
                     </div>
                   </div>
                   <div>
-                    <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                    <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-400 bg-clip-text text-transparent">
                       CodeBuddy
                     </h1>
                   </div>
                 </div>
-                <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-1 rounded-full text-sm font-semibold flex items-center space-x-1">
+                <div className="bg-gradient-to-r from-blue-600 to-pink-600 text-white px-3 py-1 rounded-full text-sm font-semibold flex items-center space-x-1">
                   <Settings className="w-3 h-3" />
                   <span>Admin Panel</span>
                 </div>
@@ -377,7 +379,7 @@ const AdminPanel = () => {
                 </button>
 
                 <div className="relative">
-                  <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl flex items-center justify-center text-white font-bold cursor-pointer hover:scale-105 transition-transform duration-200">
+                  <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-500 rounded-xl flex items-center justify-center text-white font-bold cursor-pointer hover:scale-105 transition-transform duration-200">
                     {user?.firstName?.charAt(0) || "A"}
                   </div>
                 </div>
@@ -402,7 +404,7 @@ const AdminPanel = () => {
                 onClick={() => setActiveTab("create")}
                 className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2 ${
                   activeTab === "create"
-                    ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg"
+                    ? "bg-gradient-to-r from-blue-600 to-blue-600 text-white shadow-lg"
                     : "text-gray-400 hover:text-white hover:bg-gray-700/30"
                 }`}
               >
@@ -413,7 +415,7 @@ const AdminPanel = () => {
                 onClick={() => setActiveTab("manage")}
                 className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2 ${
                   activeTab === "manage"
-                    ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg"
+                    ? "bg-gradient-to-r from-blue-600 to-blue-600 text-white shadow-lg"
                     : "text-gray-400 hover:text-white hover:bg-gray-700/30"
                 }`}
               >
@@ -426,10 +428,10 @@ const AdminPanel = () => {
           {/* Create Problem Form */}
           {activeTab === "create" && (
             <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 backdrop-blur-xl rounded-3xl border border-gray-600/40 shadow-2xl relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-blue-500/5 rounded-3xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-blue-500/5 rounded-3xl"></div>
               <div className="relative z-10 p-8">
                 <div className="flex items-center space-x-3 mb-8">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-500 rounded-xl flex items-center justify-center">
                     {editMode ? <Edit3 className="w-6 h-6 text-white" /> : <Plus className="w-6 h-6 text-white" />}
                   </div>
                   <div>
@@ -453,7 +455,7 @@ const AdminPanel = () => {
                         value={formData.title}
                         onChange={handleInputChange}
                         placeholder="Enter problem title"
-                        className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                        className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                         required
                       />
                     </div>
@@ -465,7 +467,7 @@ const AdminPanel = () => {
                           name="difficulty"
                           value={formData.difficulty}
                           onChange={handleInputChange}
-                          className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                          className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                         >
                           <option value="easy">Easy</option>
                           <option value="medium">Medium</option>
@@ -479,7 +481,7 @@ const AdminPanel = () => {
                           name="tags"
                           value={formData.tags}
                           onChange={handleInputChange}
-                          className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                          className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                         >
                           <option value="array">Array</option>
                           <option value="linkedList">Linked List</option>
@@ -498,7 +500,7 @@ const AdminPanel = () => {
                       value={formData.description}
                       onChange={handleInputChange}
                       placeholder="Provide a detailed problem description with examples and constraints"
-                      className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 h-32 resize-none"
+                      className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 h-32 resize-none"
                       required
                     />
                   </div>
@@ -507,7 +509,7 @@ const AdminPanel = () => {
                   <div className="bg-gradient-to-r from-gray-700/30 to-gray-600/20 rounded-2xl p-6 border border-gray-600/30">
                     <div className="flex justify-between items-center mb-6">
                       <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
+                        <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-lg flex items-center justify-center">
                           <Eye className="w-4 h-4 text-white" />
                         </div>
                         <h3 className="text-xl font-bold text-white">Visible Test Cases</h3>
@@ -521,7 +523,7 @@ const AdminPanel = () => {
                             explanation: "",
                           })
                         }
-                        className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-200 flex items-center space-x-2"
+                        className="bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-500 hover:to-emerald-500 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-200 flex items-center space-x-2"
                       >
                         <Plus className="w-4 h-4" />
                         <span>Add Test Case</span>
@@ -554,7 +556,7 @@ const AdminPanel = () => {
                                 handleArrayFieldChange("visibleTestCases", index, "input", e.target.value)
                               }
                               placeholder="Test case input"
-                              className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 h-24 resize-none font-mono text-sm"
+                              className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 h-24 resize-none font-mono text-sm"
                               required
                             />
                           </div>
@@ -567,7 +569,7 @@ const AdminPanel = () => {
                                 handleArrayFieldChange("visibleTestCases", index, "output", e.target.value)
                               }
                               placeholder="Expected output"
-                              className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 h-24 resize-none font-mono text-sm"
+                              className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 h-24 resize-none font-mono text-sm"
                               required
                             />
                           </div>
@@ -580,7 +582,7 @@ const AdminPanel = () => {
                                 handleArrayFieldChange("visibleTestCases", index, "explanation", e.target.value)
                               }
                               placeholder="Explanation of the test case"
-                              className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 h-24 resize-none"
+                              className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 h-24 resize-none"
                               required
                             />
                           </div>
@@ -639,7 +641,7 @@ const AdminPanel = () => {
                                 handleArrayFieldChange("hiddenTestCases", index, "input", e.target.value)
                               }
                               placeholder="Test case input"
-                              className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 h-24 resize-none font-mono text-sm"
+                              className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 h-24 resize-none font-mono text-sm"
                               required
                             />
                           </div>
@@ -652,7 +654,7 @@ const AdminPanel = () => {
                                 handleArrayFieldChange("hiddenTestCases", index, "output", e.target.value)
                               }
                               placeholder="Expected output"
-                              className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 h-24 resize-none font-mono text-sm"
+                              className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 h-24 resize-none font-mono text-sm"
                               required
                             />
                           </div>
@@ -707,7 +709,7 @@ const AdminPanel = () => {
                           <select
                             value={template.language}
                             onChange={(e) => handleArrayFieldChange("startCode", index, "language", e.target.value)}
-                            className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                            className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                           >
                             <option value="javascript">JavaScript</option>
                             <option value="python">Python</option>
@@ -722,7 +724,7 @@ const AdminPanel = () => {
                             value={template.initialCode}
                             onChange={(e) => handleArrayFieldChange("startCode", index, "initialCode", e.target.value)}
                             placeholder="Starter code for this language"
-                            className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 h-32 resize-none font-mono text-sm"
+                            className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 h-32 resize-none font-mono text-sm"
                             required
                           />
                         </div>
@@ -734,7 +736,7 @@ const AdminPanel = () => {
                   <div className="bg-gradient-to-r from-gray-700/30 to-gray-600/20 rounded-2xl p-6 border border-gray-600/30">
                     <div className="flex justify-between items-center mb-6">
                       <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                        <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-pink-500 rounded-lg flex items-center justify-center">
                           <Star className="w-4 h-4 text-white" />
                         </div>
                         <h3 className="text-xl font-bold text-white">Reference Solutions</h3>
@@ -747,7 +749,7 @@ const AdminPanel = () => {
                             completeCode: "// Complete solution here",
                           })
                         }
-                        className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-200 flex items-center space-x-2"
+                        className="bg-gradient-to-r from-blue-600 to-pink-600 hover:from-blue-500 hover:to-pink-500 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-200 flex items-center space-x-2"
                       >
                         <Plus className="w-4 h-4" />
                         <span>Add Solution</span>
@@ -778,7 +780,7 @@ const AdminPanel = () => {
                             onChange={(e) =>
                               handleArrayFieldChange("referenceSolution", index, "language", e.target.value)
                             }
-                            className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                            className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                           >
                             <option value="javascript">JavaScript</option>
                             <option value="c++">C++</option>
@@ -796,7 +798,7 @@ const AdminPanel = () => {
                               handleArrayFieldChange("referenceSolution", index, "completeCode", e.target.value)
                             }
                             placeholder="Complete working solution"
-                            className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 h-48 resize-none font-mono text-sm"
+                            className="w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 h-48 resize-none font-mono text-sm"
                             required
                           />
                         </div>
@@ -819,8 +821,8 @@ const AdminPanel = () => {
                     <button
                       type="submit"
                       disabled={formSubmitting}
-                      className={`bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 hover:from-purple-500 hover:via-pink-500 hover:to-blue-500 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 flex items-center space-x-3 shadow-2xl relative overflow-hidden ${
-                        formSubmitting ? "opacity-50 cursor-not-allowed" : "hover:scale-105 hover:shadow-purple-500/25"
+                      className={`bg-gradient-to-r from-blue-600 via-pink-600 to-blue-600 hover:from-blue-500 hover:via-pink-500 hover:to-blue-500 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 flex items-center space-x-3 shadow-2xl relative overflow-hidden ${
+                        formSubmitting ? "opacity-50 cursor-not-allowed" : "hover:scale-105 hover:shadow-blue-500/25"
                       }`}
                     >
                       <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
@@ -845,10 +847,10 @@ const AdminPanel = () => {
           {/* Manage Problems */}
           {activeTab === "manage" && (
             <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 backdrop-blur-xl rounded-3xl border border-gray-600/40 shadow-2xl relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-blue-500/5 rounded-3xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-blue-500/5 rounded-3xl"></div>
               <div className="relative z-10 p-8">
                 <div className="flex items-center space-x-3 mb-8">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-500 rounded-xl flex items-center justify-center">
                     <Settings className="w-6 h-6 text-white" />
                   </div>
                   <div>
@@ -859,7 +861,7 @@ const AdminPanel = () => {
 
                 {loading ? (
                   <div className="flex justify-center items-center py-16">
-                    <div className="w-12 h-12 border-4 border-purple-500/30 border-t-purple-500 rounded-full animate-spin"></div>
+                    <div className="w-12 h-12 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
                   </div>
                 ) : problems.length > 0 ? (
                   <div className="overflow-hidden rounded-2xl border border-gray-600/30">
@@ -886,7 +888,7 @@ const AdminPanel = () => {
                                 <span
                                   className={`px-3 py-1 rounded-full text-xs font-semibold ${
                                     problem.difficulty === "easy"
-                                      ? "bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-400 border border-green-500/30"
+                                      ? "bg-gradient-to-r from-blue-500/20 to-emerald-500/20 text-blue-400 border border-blue-500/30"
                                       : problem.difficulty === "medium"
                                         ? "bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-yellow-400 border border-yellow-500/30"
                                         : "bg-gradient-to-r from-red-500/20 to-pink-500/20 text-red-400 border border-red-500/30"
@@ -896,7 +898,7 @@ const AdminPanel = () => {
                                 </span>
                               </td>
                               <td className="px-6 py-4">
-                                <span className="px-3 py-1 bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-purple-400 border border-purple-500/30 rounded-full text-xs font-semibold">
+                                <span className="px-3 py-1 bg-gradient-to-r from-blue-500/20 to-blue-500/20 text-blue-400 border border-blue-500/30 rounded-full text-xs font-semibold">
                                   {problem.tags}
                                 </span>
                               </td>
@@ -911,7 +913,7 @@ const AdminPanel = () => {
                                   </button>
                                   <button
                                     onClick={() => handleEditProblem(problem._id)}
-                                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold py-2 px-3 rounded-lg transition-all duration-200 flex items-center space-x-1"
+                                    className="bg-gradient-to-r from-blue-600 to-pink-600 hover:from-blue-500 hover:to-pink-500 text-white font-semibold py-2 px-3 rounded-lg transition-all duration-200 flex items-center space-x-1"
                                   >
                                     <Edit3 className="w-3 h-3" />
                                     <span>Edit</span>
@@ -947,7 +949,7 @@ const AdminPanel = () => {
                     <p className="text-gray-400 mb-6">Create some problems to get started!</p>
                     <button
                       onClick={() => setActiveTab("create")}
-                      className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 flex items-center space-x-2 mx-auto"
+                      className="bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-500 hover:to-blue-500 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 flex items-center space-x-2 mx-auto"
                     >
                       <Plus className="w-5 h-5" />
                       <span>Create First Problem</span>

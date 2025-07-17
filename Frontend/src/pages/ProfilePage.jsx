@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-"use client";
+
 
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -153,7 +153,7 @@ const ProfilePage = () => {
   const getDifficultyColor = (difficulty) => {
     switch (difficulty?.toLowerCase()) {
       case "easy":
-        return "text-green-400 bg-green-500/10 border-green-500/20";
+        return "text-blue-400 bg-blue-500/10 border-blue-500/20";
       case "medium":
         return "text-yellow-400 bg-yellow-500/10 border-yellow-500/20";
       case "hard":
@@ -165,7 +165,7 @@ const ProfilePage = () => {
 
   const getStatusColor = (status) => {
     return status === "accepted"
-      ? "text-green-400 bg-green-500/10 border-green-500/20"
+      ? "text-blue-400 bg-blue-500/10 border-blue-500/20"
       : "text-red-400 bg-red-500/10 border-red-500/20";
   };
 
@@ -202,7 +202,7 @@ const ProfilePage = () => {
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 flex items-center justify-center relative overflow-hidden">
         {/* Enhanced Background Effects */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl animate-pulse"></div>
         </div>
 
@@ -210,7 +210,7 @@ const ProfilePage = () => {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
 
         <div className="text-center relative z-10">
-          <div className="w-16 h-16 border-4 border-purple-500/30 border-t-purple-400 rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="w-16 h-16 border-4 border-blue-500/30 border-t-blue-400 rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-gray-300 text-lg">Loading profile...</p>
         </div>
       </div>
@@ -221,18 +221,18 @@ const ProfilePage = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden">
       {/* Enhanced Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-r from-purple-500/8 to-blue-500/8 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-r from-blue-500/8 to-blue-500/8 rounded-full blur-3xl"></div>
       </div>
 
       {/* Animated Grid Background */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
 
       {/* Floating Elements */}
-      <div className="absolute top-20 left-20 w-2 h-2 bg-purple-400 rounded-full animate-ping"></div>
+      <div className="absolute top-20 left-20 w-2 h-2 bg-blue-400 rounded-full animate-ping"></div>
       <div className="absolute top-40 right-32 w-1 h-1 bg-blue-400 rounded-full animate-pulse"></div>
       <div className="absolute bottom-32 left-40 w-1.5 h-1.5 bg-pink-400 rounded-full animate-bounce"></div>
 
@@ -242,7 +242,7 @@ const ProfilePage = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
               <div className="relative">
-                <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center overflow-hidden">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-500 rounded-lg flex items-center justify-center overflow-hidden">
                   {currentUser?.photoUrl ? (
                     <img
                       src={currentUser.photoUrl || "/placeholder.svg"}
@@ -261,7 +261,7 @@ const ProfilePage = () => {
               </div>
               <button
                 onClick={() => navigate("/")}
-                className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent hover:from-purple-300 hover:to-blue-300 transition-all duration-200"
+                className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-400 bg-clip-text text-transparent hover:from-blue-300 hover:to-blue-300 transition-all duration-200"
               >
                 CodeBuddy
               </button>
@@ -276,7 +276,7 @@ const ProfilePage = () => {
                     .classList.toggle("hidden")
                 }
               >
-                <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-500 rounded-full flex items-center justify-center">
                   <span className="text-sm font-bold text-white">
                     {currentUser?.firstName?.charAt(0) || "U"}
                   </span>
@@ -292,7 +292,7 @@ const ProfilePage = () => {
               >
                 <div className="py-2">
                   <button
-                    className="flex items-center w-full px-4 py-2 text-purple-400 hover:bg-gray-700/50 transition-colors duration-200 font-medium"
+                    className="flex items-center w-full px-4 py-2 text-blue-400 hover:bg-gray-700/50 transition-colors duration-200 font-medium"
                     disabled
                   >
                     <User className="w-4 h-4 mr-3" />
@@ -332,11 +332,11 @@ const ProfilePage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Enhanced User Info Card */}
           <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 backdrop-blur-xl rounded-3xl border border-gray-600/40 shadow-2xl relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-blue-500/5 rounded-3xl"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-blue-500/5 rounded-3xl"></div>
             <div className="relative z-10 p-8">
               <div className="flex flex-col items-center mb-6">
                 <div className="relative mb-6">
-                  <div className="w-24 h-24 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center shadow-2xl overflow-hidden">
+                  <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-blue-500 rounded-full flex items-center justify-center shadow-2xl overflow-hidden">
                     {currentUser?.photoUrl ? (
                       <img
                         src={currentUser.photoUrl || "/placeholder.svg"}
@@ -367,7 +367,7 @@ const ProfilePage = () => {
                 </p>
 
                 <div className="flex items-center space-x-2 mb-4">
-                  <div className="px-3 py-1 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full text-sm font-semibold flex items-center space-x-1">
+                  <div className="px-3 py-1 bg-gradient-to-r from-blue-600 to-blue-600 text-white rounded-full text-sm font-semibold flex items-center space-x-1">
                     <Crown className="w-3 h-3" />
                     <span>{getUserLevel()}</span>
                   </div>
@@ -381,7 +381,7 @@ const ProfilePage = () => {
 
                 <button
                   onClick={handleEditProfile}
-                  className="flex items-center space-x-2 text-purple-400 hover:text-purple-300 transition-colors duration-200 mb-4 hover:bg-purple-500/10 px-3 py-2 rounded-lg"
+                  className="flex items-center space-x-2 text-blue-400 hover:text-blue-300 transition-colors duration-200 mb-4 hover:bg-blue-500/10 px-3 py-2 rounded-lg"
                 >
                   <Edit3 className="w-4 h-4" />
                   <span className="text-sm font-medium">Edit Profile</span>
@@ -394,7 +394,7 @@ const ProfilePage = () => {
               <div className="space-y-4 mb-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <Calendar className="w-4 h-4 text-purple-400" />
+                    <Calendar className="w-4 h-4 text-blue-400" />
                     <span className="text-gray-300 text-sm">Joined</span>
                   </div>
                   <span className="text-white font-medium text-sm">
@@ -458,7 +458,7 @@ const ProfilePage = () => {
               {/* Innovative Achievement Cards */}
               <div className="space-y-4">
                 <h3 className="text-white font-semibold text-sm mb-4 flex items-center">
-                  <Sparkles className="w-4 h-4 mr-2 text-purple-400" />
+                  <Sparkles className="w-4 h-4 mr-2 text-blue-400" />
                   Achievements & Stats
                 </h3>
 
@@ -468,16 +468,16 @@ const ProfilePage = () => {
                 <div className="grid grid-cols-2 gap-2 mt-4">
                   <button
                     onClick={() => navigate("/")}
-                    className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 border border-purple-500/30 rounded-lg p-3 hover:from-purple-600/30 hover:to-blue-600/30 transition-all duration-200 flex items-center justify-center space-x-2 group"
+                    className="bg-gradient-to-r from-blue-600/20 to-blue-600/20 border border-blue-500/30 rounded-lg p-3 hover:from-blue-600/30 hover:to-blue-600/30 transition-all duration-200 flex items-center justify-center space-x-2 group"
                   >
-                    <Code className="w-4 h-4 text-purple-400 group-hover:animate-pulse" />
-                    <span className="text-sm text-purple-300 font-medium">
+                    <Code className="w-4 h-4 text-blue-400 group-hover:animate-pulse" />
+                    <span className="text-sm text-blue-300 font-medium">
                       Solve
                     </span>
                   </button>
-                  <button className="bg-gradient-to-r from-green-600/20 to-emerald-600/20 border border-green-500/30 rounded-lg p-3 hover:from-green-600/30 hover:to-emerald-600/30 transition-all duration-200 flex items-center justify-center space-x-2 group">
-                    <BarChart3 className="w-4 h-4 text-green-400 group-hover:animate-bounce" />
-                    <span className="text-sm text-green-300 font-medium">
+                  <button className="bg-gradient-to-r from-blue-600/20 to-emerald-600/20 border border-blue-500/30 rounded-lg p-3 hover:from-blue-600/30 hover:to-emerald-600/30 transition-all duration-200 flex items-center justify-center space-x-2 group">
+                    <BarChart3 className="w-4 h-4 text-blue-400 group-hover:animate-bounce" />
+                    <span className="text-sm text-blue-300 font-medium">
                       Stats
                     </span>
                   </button>
@@ -490,10 +490,10 @@ const ProfilePage = () => {
           <div className="lg:col-span-2 space-y-8">
             {/* Enhanced Problem Solving Statistics */}
             <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 backdrop-blur-xl rounded-3xl border border-gray-600/40 shadow-2xl relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-blue-500/5 rounded-3xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-blue-500/5 rounded-3xl"></div>
               <div className="relative z-10 p-8">
                 <div className="flex items-center mb-8">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl flex items-center justify-center mr-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-500 rounded-xl flex items-center justify-center mr-4">
                     <BarChart3 className="w-6 h-6 text-white" />
                   </div>
                   <div>
@@ -508,13 +508,13 @@ const ProfilePage = () => {
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
                   <div className="bg-gradient-to-r from-gray-700/30 to-gray-600/20 rounded-2xl p-6 border border-gray-600/30 text-center hover:scale-105 transition-transform duration-200">
-                    <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                       <Trophy className="w-6 h-6 text-white" />
                     </div>
                     <p className="text-gray-400 text-sm font-medium mb-1">
                       Total Solved
                     </p>
-                    <p className="text-3xl font-bold text-purple-400">
+                    <p className="text-3xl font-bold text-blue-400">
                       {stats.total}
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
@@ -523,13 +523,13 @@ const ProfilePage = () => {
                   </div>
 
                   <div className="bg-gradient-to-r from-gray-700/30 to-gray-600/20 rounded-2xl p-6 border border-gray-600/30 text-center hover:scale-105 transition-transform duration-200">
-                    <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                       <Target className="w-6 h-6 text-white" />
                     </div>
                     <p className="text-gray-400 text-sm font-medium mb-1">
                       Easy
                     </p>
-                    <p className="text-3xl font-bold text-green-400">
+                    <p className="text-3xl font-bold text-blue-400">
                       {stats.easy}
                     </p>
                     <p className="text-xs text-gray-500 mt-1">85% accuracy</p>
@@ -566,7 +566,7 @@ const ProfilePage = () => {
                 <div className="bg-gradient-to-r from-gray-700/30 to-gray-600/20 rounded-2xl p-6 border border-gray-600/30">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center">
-                      <TrendingUp className="w-5 h-5 text-purple-400 mr-3" />
+                      <TrendingUp className="w-5 h-5 text-blue-400 mr-3" />
                       <h3 className="text-lg font-semibold text-white">
                         Difficulty Distribution
                       </h3>
@@ -583,7 +583,7 @@ const ProfilePage = () => {
                     {stats.total > 0 && (
                       <>
                         <div
-                          className="bg-gradient-to-r from-green-500 to-emerald-500 h-6 rounded-full transition-all duration-1000 ease-out"
+                          className="bg-gradient-to-r from-blue-500 to-emerald-500 h-6 rounded-full transition-all duration-1000 ease-out"
                           style={{
                             width: `${(stats.easy / stats.total) * 100}%`,
                           }}
@@ -610,8 +610,8 @@ const ProfilePage = () => {
 
                   <div className="flex justify-between text-sm mt-3">
                     <div className="flex items-center">
-                      <div className="w-3 h-3 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mr-2"></div>
-                      <span className="text-green-400 font-medium">
+                      <div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full mr-2"></div>
+                      <span className="text-blue-400 font-medium">
                         Easy ({stats.easy})
                       </span>
                     </div>
@@ -634,11 +634,11 @@ const ProfilePage = () => {
 
             {/* Enhanced Recent Activity */}
             <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 backdrop-blur-xl rounded-3xl border border-gray-600/40 shadow-2xl relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-blue-500/5 rounded-3xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-blue-500/5 rounded-3xl"></div>
               <div className="relative z-10 p-8">
                 <div className="flex items-center justify-between mb-8">
                   <div className="flex items-center">
-                    <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl flex items-center justify-center mr-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-500 rounded-xl flex items-center justify-center mr-4">
                       <Activity className="w-6 h-6 text-white" />
                     </div>
                     <div>
@@ -680,7 +680,7 @@ const ProfilePage = () => {
                             >
                               <td className="px-6 py-4">
                                 <button
-                                  className="text-purple-400 hover:text-purple-300 font-medium transition-colors duration-200 hover:underline"
+                                  className="text-blue-400 hover:text-blue-300 font-medium transition-colors duration-200 hover:underline"
                                   onClick={() =>
                                     navigate(`/problem/${submission.problemId}`)
                                   }
@@ -734,7 +734,7 @@ const ProfilePage = () => {
 
                 <div className="flex justify-end mt-8">
                   <button
-                    className="bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 hover:from-purple-500 hover:via-pink-500 hover:to-blue-500 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 flex items-center space-x-3 shadow-2xl relative overflow-hidden hover:scale-105 hover:shadow-purple-500/25"
+                    className="bg-gradient-to-r from-blue-600 via-pink-600 to-blue-600 hover:from-blue-500 hover:via-pink-500 hover:to-blue-500 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 flex items-center space-x-3 shadow-2xl relative overflow-hidden hover:scale-105 hover:shadow-blue-500/25"
                     onClick={() => navigate("/")}
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>

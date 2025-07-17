@@ -1,4 +1,4 @@
-"use client"
+
 
 /* eslint-disable no-unused-vars */
 import { useParams } from "react-router"
@@ -108,31 +108,31 @@ function AdminUpload() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 flex items-center justify-center px-4 relative overflow-hidden">
       {/* Enhanced Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-r from-purple-500/8 to-blue-500/8 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-r from-blue-500/8 to-blue-500/8 rounded-full blur-3xl"></div>
       </div>
 
       {/* Animated Grid Background */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
 
       {/* Floating Elements */}
-      <div className="absolute top-20 left-20 w-2 h-2 bg-purple-400 rounded-full animate-ping"></div>
+      <div className="absolute top-20 left-20 w-2 h-2 bg-blue-400 rounded-full animate-ping"></div>
       <div className="absolute top-40 right-32 w-1 h-1 bg-blue-400 rounded-full animate-pulse"></div>
       <div className="absolute bottom-32 left-40 w-1.5 h-1.5 bg-pink-400 rounded-full animate-bounce"></div>
 
       <div className="w-full max-w-md mx-auto relative z-10">
         <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 backdrop-blur-xl rounded-3xl border border-gray-600/40 shadow-2xl relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-blue-500/5 rounded-3xl"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-blue-500/5 rounded-3xl"></div>
 
           <div className="relative z-10 p-8">
             <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <Video className="w-8 h-8 text-white" />
               </div>
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-2">
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-blue-400 bg-clip-text text-transparent mb-2">
                 Upload Video
               </h2>
               <p className="text-gray-400">Upload educational content for this problem</p>
@@ -165,12 +165,12 @@ function AdminUpload() {
                         },
                       },
                     })}
-                    className={`w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-500 ${
+                    className={`w-full bg-gray-700/60 border border-gray-600/60 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 ${
                       errors.videoFile ? "border-red-500/60" : ""
                     }`}
                     disabled={uploading}
                   />
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500/10 to-blue-500/10 opacity-0 hover:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-blue-500/10 opacity-0 hover:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
                 </div>
                 {errors.videoFile && (
                   <p className="text-red-400 text-sm flex items-center mt-1">
@@ -202,11 +202,11 @@ function AdminUpload() {
                       <Upload className="w-4 h-4 mr-1" />
                       Uploading...
                     </span>
-                    <span className="text-purple-400 font-semibold">{uploadProgress}%</span>
+                    <span className="text-blue-400 font-semibold">{uploadProgress}%</span>
                   </div>
                   <div className="w-full bg-gray-700/50 rounded-full h-3 overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-purple-600 to-blue-600 rounded-full transition-all duration-300 ease-out"
+                      className="h-full bg-gradient-to-r from-blue-600 to-blue-600 rounded-full transition-all duration-300 ease-out"
                       style={{ width: `${uploadProgress}%` }}
                     ></div>
                   </div>
@@ -225,11 +225,11 @@ function AdminUpload() {
 
               {/* Success Message */}
               {uploadedVideo && (
-                <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20 p-4 rounded-xl">
+                <div className="bg-gradient-to-r from-blue-500/10 to-emerald-500/10 border border-blue-500/20 p-4 rounded-xl">
                   <div className="flex items-start space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-400 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-blue-400 mt-0.5" />
                     <div>
-                      <h3 className="font-bold text-green-300 mb-2">Upload Successful!</h3>
+                      <h3 className="font-bold text-blue-300 mb-2">Upload Successful!</h3>
                       <div className="space-y-1 text-sm">
                         <p className="text-gray-300 flex items-center">
                           <Clock className="w-4 h-4 mr-1" />
@@ -246,8 +246,8 @@ function AdminUpload() {
               <button
                 type="submit"
                 disabled={uploading}
-                className={`w-full bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 hover:from-purple-500 hover:via-pink-500 hover:to-blue-500 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 flex items-center justify-center space-x-3 shadow-2xl relative overflow-hidden ${
-                  uploading ? "opacity-50 cursor-not-allowed" : "hover:scale-105 hover:shadow-purple-500/25"
+                className={`w-full bg-gradient-to-r from-blue-600 via-pink-600 to-blue-600 hover:from-blue-500 hover:via-pink-500 hover:to-blue-500 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 flex items-center justify-center space-x-3 shadow-2xl relative overflow-hidden ${
+                  uploading ? "opacity-50 cursor-not-allowed" : "hover:scale-105 hover:shadow-blue-500/25"
                 }`}
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
