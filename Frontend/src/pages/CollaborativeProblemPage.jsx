@@ -7,6 +7,8 @@ import CollaborativeEditor from "../components/CollaborativeEditor"
 import SubmissionHistory from "../components/SubmissionHistory"
 import ChatAi from "../components/ChatAi"
 import Editorial from "../components/Editorial"
+import TypingIndicator from "../components/TypingIndicator"
+import UserPresenceIndicator from "../components/UserPresenceIndicator"
 import {
   FileText,
   Users,
@@ -46,6 +48,8 @@ const CollaborativeProblemPage = () => {
   const [activeLeftTab, setActiveLeftTab] = useState("description")
   const [activeRightTab, setActiveRightTab] = useState("code")
   const [code, setCode] = useState("")
+  const [roomUsers, setRoomUsers] = useState([])
+  const [typingUsers, setTypingUsers] = useState(new Set())
 
   // Fetch room and problem data
   useEffect(() => {
@@ -318,7 +322,14 @@ const CollaborativeProblemPage = () => {
                     </h3>
                     <div className="space-y-4">
                       {problem.visibleTestCases?.map((example, index) => (
-                        <div
+              <div className="flex items-center space-x-4">
+                {/* Enhanced User Presence */}
+                <UserPresenceIndicator 
+                  users={roomUsers} 
+                  currentUser={user}
+                  maxVisible={3}
+                />
+                
                           key={index}
                           className="bg-gradient-to-r from-gray-800/50 to-gray-700/30 p-5 rounded-xl border border-gray-600/30 backdrop-blur-sm"
                         >
@@ -461,6 +472,8 @@ const CollaborativeProblemPage = () => {
               }}
               onRunCode={handleRunCode}
               onSubmitCode={handleSubmitCode}
+              onUsersUpdate={setRoomUsers}
+              onTypingUpdate={setTypingUsers}
             />
           )}
 
@@ -637,6 +650,12 @@ const CollaborativeProblemPage = () => {
             </div>
           )}
         </div>
+        
+        {/* Global Typing Indicator */}
+        <TypingIndicator 
+          typingUsers={typingUsers} 
+          currentUser={user}
+        />
       </div>
     </div>
   )

@@ -1,4 +1,3 @@
-
 /* eslint-disable no-unused-vars */
 import { useState, useEffect, useRef, useCallback } from "react";
 import Editor from "@monaco-editor/react";
@@ -37,6 +36,7 @@ const CollaborativeEditor = ({
   const [newMessage, setNewMessage] = useState("");
   const [userCursors, setUserCursors] = useState(new Map());
   const [typingUsers, setTypingUsers] = useState(new Set());
+  const [userPresence, setUserPresence] = useState(new Map());
   const [showChat, setShowChat] = useState(false);
   const [roomLink, setRoomLink] = useState("");
   const [linkCopied, setLinkCopied] = useState(false);
@@ -83,32 +83,75 @@ const CollaborativeEditor = ({
       setLanguage(state.language || initialLanguage);
       setRoomUsers(state.users || []);
       setMessages(state.messages || []);
+      
+      // Initialize typing users from state
+      if (state.typingUsers) {
+        setTypingUsers(new Set(state.typingUsers));
+      }
+      
+      // Initialize user presence
+      const presenceMap = new Map();
+      (state.users || []).forEach(user => {
+        presenceMap.set(user.id, {
+          status: user.status || 'online',
+          lastActivity: user.lastActivity || Date.now()
+        });
+      });
+      setUserPresence(presenceMap);
     });
 
     // User joined
-    on("user-joined", ({ user: newUser, totalUsers }) => {
+    on("user-joined", ({ user: newUser, totalUsers, onlineUsers }) => {
       setRoomUsers((prev) => [
         ...prev.filter((u) => u.id !== newUser.id),
         newUser,
       ]);
+      
+      // Update presence for new user
+      setUserPresence(prev => {
+        const newPresence = new Map(prev);
+        newPresence.set(newUser.id, {
+          status: newUser.status || 'online',
+          lastActivity: newUser.lastActivity || Date.now()
+        });
+        return newPresence;
+      });
+      
       // Add system message
       const systemMessage = {
         id: Date.now().toString(),
         type: "system",
         message: `${newUser.name} joined the session`,
+        userName: newUser.name,
+        status: 'joined',
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, systemMessage]);
     });
 
     // User left
-    on("user-left", ({ userId, userName }) => {
+    on("user-left", ({ userId, userName, totalUsers, onlineUsers, typingUsers: updatedTypingUsers }) => {
       setRoomUsers((prev) => prev.filter((u) => u.id !== userId));
+      
+      // Remove from presence
+      setUserPresence(prev => {
+        const newPresence = new Map(prev);
+        newPresence.delete(userId);
+        return newPresence;
+      });
+      
+      // Update typing users
+      if (updatedTypingUsers) {
+        setTypingUsers(new Set(updatedTypingUsers));
+      }
+      
       // Add system message
       const systemMessage = {
         id: Date.now().toString(),
         type: "system",
         message: `${userName} left the session`,
+        userName: userName,
+        status: 'left',
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, systemMessage]);
@@ -138,16 +181,88 @@ const CollaborativeEditor = ({
     });
 
     // Typing indicators
-    on("user-typing", ({ userId, userName, isTyping }) => {
-      setTypingUsers((prev) => {
-        const newTyping = new Set(prev);
-        if (isTyping) {
-          newTyping.add(userName);
-        } else {
-          newTyping.delete(userName);
+    on("user-typing", ({ userId, userName, isTyping, typingUsers: updatedTypingUsers }) => {
+      // Update typing users from server state
+      if (updatedTypingUsers) {
+        setTypingUsers(new Set(updatedTypingUsers));
+      }
+      
+      // Update user activity
+      setUserPresence(prev => {
+        const newPresence = new Map(prev);
+        if (newPresence.has(userId)) {
+          newPresence.set(userId, {
+            ...newPresence.get(userId),
+            lastActivity: Date.now()
+          });
         }
-        return newTyping;
+        return newPresence;
       });
+    });
+
+    // User presence updates
+    on("user-presence-update", ({ userId, userName, status, lastActivity }) => {
+      setUserPresence(prev => {
+        const newPresence = new Map(prev);
+        newPresence.set(userId, {
+          status,
+          lastActivity
+        });
+        return newPresence;
+      });
+      
+      // Update room users status
+      setRoomUsers(prev => 
+        prev.map(user => 
+          user.id === userId 
+            ? { ...user, status, lastActivity }
+            : user
+        )
+      );
+    });
+
+    // User status changed
+    on("user-status-changed", ({ userId, userName, status, lastActivity }) => {
+      setUserPresence(prev => {
+        const newPresence = new Map(prev);
+        newPresence.set(userId, {
+          status,
+          lastActivity
+        });
+        return newPresence;
+      });
+      
+      // Update room users
+      setRoomUsers(prev => 
+        prev.map(user => 
+          user.id === userId 
+            ? { ...user, status, lastActivity }
+            : user
+        )
+      );
+      
+      // Add system message for status changes
+      if (status === 'away') {
+        const systemMessage = {
+          id: Date.now().toString(),
+          type: "system",
+          message: `${userName} is now away`,
+          userName: userName,
+          status: 'away',
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, systemMessage]);
+      } else if (status === 'online') {
+        const systemMessage = {
+          id: Date.now().toString(),
+          type: "system",
+          message: `${userName} is back online`,
+          userName: userName,
+          status: 'online',
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, systemMessage]);
+      }
     });
 
     // New chat message
@@ -169,6 +284,8 @@ const CollaborativeEditor = ({
       off("language-update");
       off("cursor-update");
       off("user-typing");
+      off("user-presence-update");
+      off("user-status-changed");
       off("new-message");
       off("execution-shared");
     };
@@ -269,6 +386,9 @@ const CollaborativeEditor = ({
           code: value || "",
           changes: [], // Monaco provides change events, you can capture them if needed
         });
+        
+        // Send user activity update
+        emit("user-activity", { roomId });
       }
       // Handle typing indicators
       if (typingTimeoutRef.current) {
@@ -297,6 +417,45 @@ const CollaborativeEditor = ({
     [socket, isConnected, roomId, emit, onLanguageChange]
   );
 
+  // Get user status color
+  const getUserStatusColor = (status) => {
+    switch (status) {
+      case 'online':
+        return 'bg-blue-400';
+      case 'away':
+        return 'bg-yellow-400';
+      case 'busy':
+        return 'bg-red-400';
+      case 'offline':
+        return 'bg-gray-400';
+      default:
+        return 'bg-blue-400';
+    }
+  };
+
+  // Get user status text
+  const getUserStatusText = (status) => {
+    switch (status) {
+      case 'online':
+        return 'Online';
+      case 'away':
+        return 'Away';
+      case 'busy':
+        return 'Busy';
+      case 'offline':
+        return 'Offline';
+      default:
+        return 'Online';
+    }
+  };
+
+  // Send user activity on various interactions
+  const sendUserActivity = useCallback(() => {
+    if (socket && isConnected && roomId) {
+      emit("user-activity", { roomId });
+    }
+  }, [socket, isConnected, roomId, emit]);
+
   // Handle cursor position changes
   const handleCursorPositionChange = useCallback(
     (editor, position) => {
@@ -308,9 +467,12 @@ const CollaborativeEditor = ({
             column: position.column,
           },
         });
+        
+        // Send activity update
+        sendUserActivity();
       }
     },
-    [socket, isConnected, roomId, emit]
+    [socket, isConnected, roomId, emit, sendUserActivity]
   );
 
   // Handle editor mount
@@ -440,15 +602,29 @@ const CollaborativeEditor = ({
             <span className="text-sm text-gray-300">
               {roomUsers.length} user{roomUsers.length !== 1 ? "s" : ""}
             </span>
-            {/* User Avatars */}
+            {/* Enhanced User Avatars with Status */}
             <div className="flex -space-x-2">
               {roomUsers.slice(0, 3).map((roomUser) => (
-                <div
+                <div 
                   key={roomUser.id}
-                  className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-blue-500 to-blue-500 rounded-full flex items-center justify-center border-2 border-gray-800 text-white text-xs font-bold"
-                  title={roomUser.name}
+                  className="relative group"
                 >
-                  {roomUser.name.charAt(0).toUpperCase()}
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-blue-500 to-blue-500 rounded-full flex items-center justify-center border-2 border-gray-800 text-white text-xs font-bold">
+                    {roomUser.name.charAt(0).toUpperCase()}
+                  </div>
+                  {/* Status Indicator */}
+                  <div 
+                    className={`absolute -bottom-0.5 -right-0.5 w-2 h-2 sm:w-3 sm:h-3 rounded-full border border-gray-800 ${getUserStatusColor(roomUser.status || 'online')}`}
+                    title={`${roomUser.name} - ${getUserStatusText(roomUser.status || 'online')}`}
+                  ></div>
+                  
+                  {/* Tooltip */}
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50">
+                    {roomUser.name} - {getUserStatusText(roomUser.status || 'online')}
+                    {typingUsers.has(roomUser.name) && (
+                      <span className="text-blue-400 ml-1">(typing...)</span>
+                    )}
+                  </div>
                 </div>
               ))}
               {roomUsers.length > 3 && (
@@ -459,9 +635,9 @@ const CollaborativeEditor = ({
             </div>
           </div>
 
-          {/* Typing Indicators */}
+          {/* Enhanced Typing Indicators */}
           {typingUsers.size > 0 && (
-            <div className="flex items-center space-x-1 text-sm text-gray-400">
+            <div className="flex items-center space-x-2 text-sm text-gray-400 bg-gray-800/30 px-3 py-1 rounded-full">
               <div className="flex space-x-1">
                 <div className="w-1 h-1 bg-blue-400 rounded-full animate-bounce"></div>
                 <div
@@ -473,8 +649,10 @@ const CollaborativeEditor = ({
                   style={{ animationDelay: "0.2s" }}
                 ></div>
               </div>
-              <span className="hidden sm:inline">
-                {Array.from(typingUsers).join(", ")} typing...
+              <span className="text-xs">
+                {Array.from(typingUsers).slice(0, 2).join(", ")}
+                {typingUsers.size > 2 && ` +${typingUsers.size - 2} more`}
+                {typingUsers.size === 1 ? " is" : " are"} typing...
               </span>
             </div>
           )}
@@ -673,6 +851,8 @@ const CollaborativeEditor = ({
                   )}
                 </div>
               ))}
+              
+              {/* Enhanced System Messages */}
               <div ref={messagesEndRef} />
             </div>
 
@@ -682,8 +862,12 @@ const CollaborativeEditor = ({
                 <input
                   type="text"
                   value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
+                  onChange={(e) => {
+                    setNewMessage(e.target.value);
+                    sendUserActivity(); // Track activity when typing in chat
+                  }}
                   onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+                  onFocus={sendUserActivity}
                   placeholder="Type a message..."
                   className="flex-1 bg-gray-700/50 border border-gray-600/50 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                 />
@@ -694,6 +878,51 @@ const CollaborativeEditor = ({
                 >
                   <Send className="w-4 h-4" />
                 </button>
+              </div>
+            </div>
+            
+            {/* Room Users List (when expanded) */}
+            <div className="border-t border-gray-600/30 p-4">
+              <h4 className="text-sm font-semibold text-gray-300 mb-3 flex items-center">
+                <Users className="w-4 h-4 mr-2" />
+                Room Members ({roomUsers.length})
+              </h4>
+              <div className="space-y-2 max-h-32 overflow-y-auto">
+                {roomUsers.map((roomUser) => (
+                  <div key={roomUser.id} className="flex items-center justify-between text-sm">
+                    <div className="flex items-center space-x-2">
+                      <div className="relative">
+                        <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                          {roomUser.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div 
+                          className={`absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full border border-gray-800 ${getUserStatusColor(roomUser.status || 'online')}`}
+                        ></div>
+                      </div>
+                      <span className="text-gray-200 font-medium">{roomUser.name}</span>
+                      {roomUser.id === user._id && (
+                        <span className="text-xs text-blue-400">(You)</span>
+                      )}
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      {typingUsers.has(roomUser.name) && (
+                        <div className="flex space-x-0.5">
+                          <div className="w-1 h-1 bg-blue-400 rounded-full animate-bounce"></div>
+                          <div className="w-1 h-1 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
+                          <div className="w-1 h-1 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                        </div>
+                      )}
+                      <span className={`text-xs px-2 py-1 rounded-full ${
+                        roomUser.status === 'online' ? 'bg-blue-500/20 text-blue-400' :
+                        roomUser.status === 'away' ? 'bg-yellow-500/20 text-yellow-400' :
+                        roomUser.status === 'busy' ? 'bg-red-500/20 text-red-400' :
+                        'bg-gray-500/20 text-gray-400'
+                      }`}>
+                        {getUserStatusText(roomUser.status || 'online')}
+                      </span>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

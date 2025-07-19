@@ -5,6 +5,7 @@ export const useSocket = (serverUrl = "http://localhost:3000") => {
   const socketRef = useRef(null);
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState(null);
+  const [lastActivity, setLastActivity] = useState(Date.now());
 
   useEffect(() => {
     // Initialize socket connection
@@ -33,6 +34,24 @@ export const useSocket = (serverUrl = "http://localhost:3000") => {
       setIsConnected(false);
     });
 
+    // Handle reconnection
+    socket.on("reconnect", (attemptNumber) => {
+      console.log("Reconnected after", attemptNumber, "attempts");
+      setIsConnected(true);
+      setError(null);
+    });
+
+    // Handle reconnection attempts
+    socket.on("reconnect_attempt", (attemptNumber) => {
+      console.log("Attempting to reconnect...", attemptNumber);
+    });
+
+    // Handle reconnection failure
+    socket.on("reconnect_failed", () => {
+      console.log("Failed to reconnect");
+      setError("Failed to reconnect to server");
+    });
+
     // Cleanup on unmount
     return () => {
       if (socket) {
@@ -44,12 +63,14 @@ export const useSocket = (serverUrl = "http://localhost:3000") => {
   // Helper functions
   const emit = (event, data) => {
     if (socketRef.current && isConnected) {
+      setLastActivity(Date.now());
       socketRef.current.emit(event, data);
     }
   };
 
   const on = (event, callback) => {
     if (socketRef.current) {
+      setLastActivity(Date.now());
       socketRef.current.on(event, callback);
     }
   };
@@ -60,10 +81,24 @@ export const useSocket = (serverUrl = "http://localhost:3000") => {
     }
   };
 
+  // Send heartbeat to maintain connection
+  useEffect(() => {
+    if (!isConnected) return;
+
+    const heartbeatInterval = setInterval(() => {
+      if (socketRef.current && isConnected) {
+        socketRef.current.emit('heartbeat', { timestamp: Date.now() });
+      }
+    }, 30000); // Send heartbeat every 30 seconds
+
+    return () => clearInterval(heartbeatInterval);
+  }, [isConnected]);
+
   return {
     socket: socketRef.current,
     isConnected,
     error,
+    lastActivity,
     emit,
     on,
     off,
