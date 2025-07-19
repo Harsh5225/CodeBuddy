@@ -322,14 +322,7 @@ const CollaborativeProblemPage = () => {
                     </h3>
                     <div className="space-y-4">
                       {problem.visibleTestCases?.map((example, index) => (
-              <div className="flex items-center space-x-4">
-                {/* Enhanced User Presence */}
-                <UserPresenceIndicator 
-                  users={roomUsers} 
-                  currentUser={user}
-                  maxVisible={3}
-                />
-                
+                        <div
                           key={index}
                           className="bg-gradient-to-r from-gray-800/50 to-gray-700/30 p-5 rounded-xl border border-gray-600/30 backdrop-blur-sm"
                         >
