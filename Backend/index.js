@@ -6,6 +6,8 @@ import authRouter from "./routes/userAuth.js";
 import client from "./database/redis.js";
 import problemRouter from "./routes/problemcreationRoute.js";
 import doubtRouter from "./routes/aiChatRoute.js";
+import collaborationRouter from "./routes/collaboration.routes.js";
+import { initializeSocket } from "./socket/socketHandlers.js";
 
 import http from "http";
 import { Server } from "socket.io";
@@ -16,10 +18,14 @@ import submissionRoutes from "./routes/submission.routes.js";
 import videoRouter from "./routes/videoCreator.js";
 dotenv.config();
 const app = express();
+const server = http.createServer(app);
+
 const corsOptions = {
   origin: "http://localhost:5173",
   credentials: true, // ✅ allow cookies
 };
+
+app.use(express.json()); // Needed to parse JSON bodies
 
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -36,6 +42,10 @@ app.use("/problem", problemRouter);
 app.use("/submission", submissionRoutes);
 app.use("/ai", doubtRouter);
 app.use("/video", videoRouter);
+app.use("/collaboration", collaborationRouter);
+
+// Initialize Socket.io
+const io = initializeSocket(server);
 
 const main = async () => {
   try {
@@ -48,8 +58,9 @@ const main = async () => {
 
     console.log("mongoDb is connected");
     console.log("Redis is connected");
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`Server is running at ${PORT}`);
+      console.log("Socket.io server initialized");
     });
   } catch (error) {
     console.log(error);

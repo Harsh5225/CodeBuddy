@@ -17,7 +17,33 @@ const problemSchema = new Schema({
   },
   tags: {
     type: String,
-    enum: ["array", "linkedList", "graph", "dp", "math"],
+    enum: [
+      "string",
+      "array",
+      "hashmap",
+      "hashing",
+      "stack",
+      "trie",
+      "heap",
+      "set",
+      "dp",
+      "sliding window",
+      "two pointers",
+      "greedy",
+      "binary search",
+      "backtracking",
+      "recursion",
+      "string matching",
+      "bit manipulation",
+      "math",
+      "palindrome",
+      "anagram",
+      "substring",
+      "subsequence",
+      "pattern matching",
+      "regular expressions",
+      "lexicographical order",
+    ],
     required: true,
   },
   visibleTestCases: [
@@ -55,7 +81,7 @@ const problemSchema = new Schema({
       language: {
         type: String,
         required: true,
-        enum: ["javascript", "c++", "cpp", "java", "python", "c"]
+        enum: ["javascript", "c++", "cpp", "java", "python", "c"],
       },
       initialCode: {
         type: String,
@@ -69,7 +95,7 @@ const problemSchema = new Schema({
       language: {
         type: String,
         required: true,
-        enum: ["javascript", "c++", "cpp", "java", "python", "c"]
+        enum: ["javascript", "c++", "cpp", "java", "python", "c"],
       },
       completeCode: {
         type: String,

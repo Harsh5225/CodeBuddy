@@ -1,12 +1,14 @@
 /* eslint-disable no-unused-vars */
-import { useState, useEffect } from "react"
-import { useParams, useNavigate } from "react-router"
-import { useSelector } from "react-redux"
-import axiosClient from "../utils/axiosClient"
-import CollaborativeEditor from "../components/CollaborativeEditor"
-import SubmissionHistory from "../components/SubmissionHistory"
-import ChatAi from "../components/ChatAi"
-import Editorial from "../components/Editorial"
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router";
+import { useSelector } from "react-redux";
+import axiosClient from "../utils/axiosClient";
+import CollaborativeEditor from "../components/CollaborativeEditor";
+import SubmissionHistory from "../components/SubmissionHistory";
+import ChatAi from "../components/ChatAi";
+import Editorial from "../components/Editorial";
+import TypingIndicator from "../components/TypingIndicator";
+import UserPresenceIndicator from "../components/UserPresenceIndicator";
 import {
   FileText,
   Users,
@@ -24,150 +26,170 @@ import {
   XCircle,
   MemoryStickIcon as Memory,
   Zap,
-} from "lucide-react"
+} from "lucide-react";
 
 const langMap = {
   cpp: "C++",
   java: "Java",
   javascript: "JavaScript",
-}
+};
 
 const CollaborativeProblemPage = () => {
-  const { roomId } = useParams()
-  const navigate = useNavigate()
-  const { user } = useSelector((state) => state.auth)
+  const { roomId } = useParams();
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
 
-  const [problem, setProblem] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [runResult, setRunResult] = useState(null)
-  const [submitResult, setSubmitResult] = useState(null)
-  const [selectedLanguage, setSelectedLanguage] = useState("javascript")
-  const [activeLeftTab, setActiveLeftTab] = useState("description")
-  const [activeRightTab, setActiveRightTab] = useState("code")
-  const [code, setCode] = useState("")
+  const [problem, setProblem] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [runResult, setRunResult] = useState(null);
+  const [submitResult, setSubmitResult] = useState(null);
+  const [selectedLanguage, setSelectedLanguage] = useState("javascript");
+  const [activeLeftTab, setActiveLeftTab] = useState("description");
+  const [activeRightTab, setActiveRightTab] = useState("code");
+  const [code, setCode] = useState("");
+  const [roomUsers, setRoomUsers] = useState([]);
+  const [typingUsers, setTypingUsers] = useState(new Set());
 
   // Fetch room and problem data
   useEffect(() => {
     const fetchRoomData = async () => {
       try {
-        setLoading(true)
+        setLoading(true);
 
         // Get room information
-        const roomResponse = await axiosClient.get(`/collaboration/rooms/${roomId}`)
-        const roomData = roomResponse.data.room
+        const roomResponse = await axiosClient.get(
+          `/collaboration/rooms/${roomId}`
+        );
+        const roomData = roomResponse.data.room;
 
         if (!roomData) {
-          setError("Room not found")
-          return
+          setError("Room not found");
+          return;
         }
 
         // Get problem data
-        const problemResponse = await axiosClient.get(`/problem/${roomData.problemId}`)
-        const problemData = problemResponse.data
-        setProblem(problemData)
+        const problemResponse = await axiosClient.get(
+          `/problem/${roomData.problemId}`
+        );
+        const problemData = problemResponse.data;
+        setProblem(problemData);
 
         // Set initial code
         const initialCode =
-          problemData.startCode.find((sc) => sc.language.toLowerCase() === langMap[selectedLanguage].toLowerCase())
-            ?.initialCode || "// Your code here"
-        setCode(initialCode)
+          problemData.startCode.find(
+            (sc) =>
+              sc.language.toLowerCase() ===
+              langMap[selectedLanguage].toLowerCase()
+          )?.initialCode || "// Your code here";
+        setCode(initialCode);
       } catch (err) {
-        console.error("Error fetching room data:", err)
-        setError(err.response?.data?.message || "Failed to load collaboration room")
+        console.error("Error fetching room data:", err);
+        setError(
+          err.response?.data?.message || "Failed to load collaboration room"
+        );
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
     if (roomId) {
-      fetchRoomData()
+      fetchRoomData();
     }
-  }, [roomId, selectedLanguage])
+  }, [roomId, selectedLanguage]);
 
   // Update code when language changes
   useEffect(() => {
     if (problem) {
       const initialCode =
-        problem.startCode.find((sc) => sc.language.toLowerCase() === langMap[selectedLanguage].toLowerCase())
-          ?.initialCode || "// Your code here"
-      setCode(initialCode)
+        problem.startCode.find(
+          (sc) =>
+            sc.language.toLowerCase() ===
+            langMap[selectedLanguage].toLowerCase()
+        )?.initialCode || "// Your code here";
+      setCode(initialCode);
     }
-  }, [selectedLanguage, problem])
+  }, [selectedLanguage, problem]);
 
   // Handle code execution
   const handleRunCode = async (currentCode) => {
-    if (!problem) return null
+    if (!problem) return null;
 
-    setLoading(true)
-    setRunResult(null)
+    setLoading(true);
+    setRunResult(null);
 
     try {
-      const response = await axiosClient.post(`/submission/run/${problem._id}`, {
-        code: currentCode,
-        language: selectedLanguage,
-      })
+      const response = await axiosClient.post(
+        `/submission/run/${problem._id}`,
+        {
+          code: currentCode,
+          language: selectedLanguage,
+        }
+      );
 
-      setRunResult(response.data)
-      setActiveRightTab("testcase")
-      return response.data
+      setRunResult(response.data);
+      setActiveRightTab("testcase");
+      return response.data;
     } catch (error) {
-      console.error("Error running code:", error)
+      console.error("Error running code:", error);
       const errorResult = {
         success: false,
         error: "Internal server error",
-      }
-      setRunResult(errorResult)
-      setActiveRightTab("testcase")
-      return errorResult
+      };
+      setRunResult(errorResult);
+      setActiveRightTab("testcase");
+      return errorResult;
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   // Handle code submission
   const handleSubmitCode = async (currentCode) => {
-    if (!problem) return null
+    if (!problem) return null;
 
-    setLoading(true)
-    setSubmitResult(null)
+    setLoading(true);
+    setSubmitResult(null);
 
     try {
-      const response = await axiosClient.post(`/submission/submit/${problem._id}`, {
-        code: currentCode,
-        language: selectedLanguage,
-      })
+      const response = await axiosClient.post(
+        `/submission/submit/${problem._id}`,
+        {
+          code: currentCode,
+          language: selectedLanguage,
+        }
+      );
 
-      setSubmitResult(response.data)
-      setActiveRightTab("result")
-      return response.data
+      setSubmitResult(response.data);
+      setActiveRightTab("result");
+      return response.data;
     } catch (error) {
-      console.error("Error submitting code:", error)
+      console.error("Error submitting code:", error);
       const errorResult = {
         accepted: false,
         error: "Submission failed",
-      }
-      setSubmitResult(errorResult)
-      setActiveRightTab("result")
-      return errorResult
+      };
+      setSubmitResult(errorResult);
+      setActiveRightTab("result");
+      return errorResult;
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   // Get difficulty color
   const getDifficultyColor = (difficulty) => {
     switch (difficulty?.toLowerCase()) {
       case "easy":
-        return "text-blue-400 bg-blue-500/10 border-blue-500/20"
+        return "text-blue-400 bg-blue-500/10 border-blue-500/20";
       case "medium":
-        return "text-yellow-400 bg-yellow-500/10 border-yellow-500/20"
+        return "text-yellow-400 bg-yellow-500/10 border-yellow-500/20";
       case "hard":
-        return "text-red-400 bg-red-500/10 border-red-500/20"
+        return "text-red-400 bg-red-500/10 border-red-500/20";
       default:
-        return "text-gray-400 bg-gray-500/10 border-gray-500/20"
+        return "text-gray-400 bg-gray-500/10 border-gray-500/20";
     }
-  }
+  };
 
   const leftTabs = [
     { id: "description", label: "Description", icon: FileText },
@@ -175,13 +197,13 @@ const CollaborativeProblemPage = () => {
     { id: "solutions", label: "Solutions", icon: Code },
     { id: "submissions", label: "Submissions", icon: History },
     { id: "chatAI", label: "AI Assistant", icon: MessageSquare },
-  ]
+  ];
 
   const rightTabs = [
     { id: "code", label: "Code", icon: Code },
     { id: "testcase", label: "Test Cases", icon: TestTube },
     { id: "result", label: "Result", icon: Trophy },
-  ]
+  ];
 
   if (loading) {
     return (
@@ -197,7 +219,7 @@ const CollaborativeProblemPage = () => {
           <p className="text-gray-300 text-lg">Loading collaboration room...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -213,7 +235,9 @@ const CollaborativeProblemPage = () => {
           <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-blue-500/5 rounded-3xl"></div>
           <div className="relative z-10 text-center">
             <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-white mb-2">Room Not Found</h2>
+            <h2 className="text-2xl font-bold text-white mb-2">
+              Room Not Found
+            </h2>
             <p className="text-gray-400 mb-6">{error}</p>
             <button
               onClick={() => navigate("/")}
@@ -225,7 +249,7 @@ const CollaborativeProblemPage = () => {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -256,8 +280,12 @@ const CollaborativeProblemPage = () => {
                 <Users className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-white">Collaborative Session</h1>
-                <p className="text-gray-400 text-sm">Room: {roomId.slice(0, 8)}...</p>
+                <h1 className="text-xl font-bold text-white">
+                  Collaborative Session
+                </h1>
+                <p className="text-gray-400 text-sm">
+                  Room: {roomId.slice(0, 8)}...
+                </p>
               </div>
             </div>
           </div>
@@ -273,7 +301,7 @@ const CollaborativeProblemPage = () => {
         {/* Left Tabs */}
         <div className="flex border-b border-gray-700/50 bg-gray-800/30 backdrop-blur-sm">
           {leftTabs.map((tab) => {
-            const Icon = tab.icon
+            const Icon = tab.icon;
             return (
               <button
                 key={tab.id}
@@ -287,7 +315,7 @@ const CollaborativeProblemPage = () => {
                 <Icon className="w-4 h-4" />
                 <span className="hidden lg:inline">{tab.label}</span>
               </button>
-            )
+            );
           })}
         </div>
 
@@ -298,18 +326,25 @@ const CollaborativeProblemPage = () => {
               {activeLeftTab === "description" && (
                 <div className="p-6">
                   <div className="flex items-center gap-4 mb-6">
-                    <h2 className="text-2xl font-bold text-white">{problem.title}</h2>
+                    <h2 className="text-2xl font-bold text-white">
+                      {problem.title}
+                    </h2>
                     <div
-                      className={`px-3 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(problem.difficulty)}`}
+                      className={`px-3 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(
+                        problem.difficulty
+                      )}`}
                     >
-                      {problem.difficulty?.charAt(0).toUpperCase() + problem.difficulty?.slice(1)}
+                      {problem.difficulty?.charAt(0).toUpperCase() +
+                        problem.difficulty?.slice(1)}
                     </div>
                     <div className="px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full text-xs font-medium">
                       {problem.tags}
                     </div>
                   </div>
                   <div className="prose prose-invert max-w-none">
-                    <div className="text-gray-300 leading-relaxed whitespace-pre-wrap mb-8">{problem.description}</div>
+                    <div className="text-gray-300 leading-relaxed whitespace-pre-wrap mb-8">
+                      {problem.description}
+                    </div>
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
@@ -322,19 +357,33 @@ const CollaborativeProblemPage = () => {
                           key={index}
                           className="bg-gradient-to-r from-gray-800/50 to-gray-700/30 p-5 rounded-xl border border-gray-600/30 backdrop-blur-sm"
                         >
-                          <h4 className="font-semibold text-blue-300 mb-3">Example {index + 1}:</h4>
+                          <h4 className="font-semibold text-blue-300 mb-3">
+                            Example {index + 1}:
+                          </h4>
                           <div className="space-y-3 text-sm font-mono">
                             <div className="flex">
-                              <span className="text-blue-400 font-semibold min-w-20">Input:</span>
-                              <span className="text-gray-200 bg-gray-900/50 px-2 py-1 rounded">{example.input}</span>
+                              <span className="text-blue-400 font-semibold min-w-20">
+                                Input:
+                              </span>
+                              <span className="text-gray-200 bg-gray-900/50 px-2 py-1 rounded">
+                                {example.input}
+                              </span>
                             </div>
                             <div className="flex">
-                              <span className="text-blue-400 font-semibold min-w-20">Output:</span>
-                              <span className="text-gray-200 bg-gray-900/50 px-2 py-1 rounded">{example.output}</span>
+                              <span className="text-blue-400 font-semibold min-w-20">
+                                Output:
+                              </span>
+                              <span className="text-gray-200 bg-gray-900/50 px-2 py-1 rounded">
+                                {example.output}
+                              </span>
                             </div>
                             <div className="flex">
-                              <span className="text-yellow-400 font-semibold min-w-20">Explanation:</span>
-                              <span className="text-gray-300">{example.explanation}</span>
+                              <span className="text-yellow-400 font-semibold min-w-20">
+                                Explanation:
+                              </span>
+                              <span className="text-gray-300">
+                                {example.explanation}
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -351,7 +400,9 @@ const CollaborativeProblemPage = () => {
                       <BookOpen className="w-6 h-6 mr-2 text-blue-400" />
                       Editorial Solution
                     </h2>
-                    <p className="text-gray-400">Watch the comprehensive explanation and walkthrough</p>
+                    <p className="text-gray-400">
+                      Watch the comprehensive explanation and walkthrough
+                    </p>
                   </div>
                   <Editorial
                     secureUrl={problem.secureUrl}
@@ -381,14 +432,19 @@ const CollaborativeProblemPage = () => {
                         </div>
                         <div className="p-6">
                           <pre className="bg-gray-900/80 p-4 rounded-lg text-sm overflow-x-auto border border-gray-700/50">
-                            <code className="text-gray-200">{solution?.completeCode}</code>
+                            <code className="text-gray-200">
+                              {solution?.completeCode}
+                            </code>
                           </pre>
                         </div>
                       </div>
                     )) || (
                       <div className="text-center py-12">
                         <AlertCircle className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                        <p className="text-gray-400">Solutions will be available after you solve the problem.</p>
+                        <p className="text-gray-400">
+                          Solutions will be available after you solve the
+                          problem.
+                        </p>
                       </div>
                     )}
                   </div>
@@ -424,7 +480,7 @@ const CollaborativeProblemPage = () => {
         {/* Right Tabs */}
         <div className="flex border-b border-gray-700/50 bg-gray-800/30 backdrop-blur-sm">
           {rightTabs.map((tab) => {
-            const Icon = tab.icon
+            const Icon = tab.icon;
             return (
               <button
                 key={tab.id}
@@ -438,7 +494,7 @@ const CollaborativeProblemPage = () => {
                 <Icon className="w-4 h-4" />
                 <span>{tab.label}</span>
               </button>
-            )
+            );
           })}
         </div>
 
@@ -449,18 +505,23 @@ const CollaborativeProblemPage = () => {
               problemId={problem._id}
               roomId={roomId}
               initialCode={
-                problem.startCode?.find((sc) => sc.language.toLowerCase() === langMap[selectedLanguage].toLowerCase())
-                  ?.initialCode || "// Your code here"
+                problem.startCode?.find(
+                  (sc) =>
+                    sc.language.toLowerCase() ===
+                    langMap[selectedLanguage].toLowerCase()
+                )?.initialCode || "// Your code here"
               }
               initialLanguage={selectedLanguage}
               onCodeChange={(newCode) => {
-                setCode(newCode)
+                setCode(newCode);
               }}
               onLanguageChange={(language) => {
-                setSelectedLanguage(language)
+                setSelectedLanguage(language);
               }}
               onRunCode={handleRunCode}
               onSubmitCode={handleSubmitCode}
+              onUsersUpdate={setRoomUsers}
+              onTypingUpdate={setTypingUsers}
             />
           )}
 
@@ -482,7 +543,9 @@ const CollaborativeProblemPage = () => {
                     <div>
                       <div className="flex items-center mb-4">
                         <CheckCircle className="w-6 h-6 mr-2" />
-                        <h4 className="font-bold text-lg">All test cases passed!</h4>
+                        <h4 className="font-bold text-lg">
+                          All test cases passed!
+                        </h4>
                       </div>
                       <div className="flex gap-6 mb-6 text-sm">
                         <div className="flex items-center">
@@ -496,19 +559,34 @@ const CollaborativeProblemPage = () => {
                       </div>
                       <div className="space-y-3">
                         {runResult.testCases.map((tc, i) => (
-                          <div key={i} className="bg-gray-800/50 p-4 rounded-lg border border-gray-600/30">
+                          <div
+                            key={i}
+                            className="bg-gray-800/50 p-4 rounded-lg border border-gray-600/30"
+                          >
                             <div className="font-mono text-sm space-y-2">
                               <div className="flex">
-                                <span className="text-blue-400 font-semibold min-w-20">Input:</span>
-                                <span className="text-gray-200">{tc.stdin}</span>
+                                <span className="text-blue-400 font-semibold min-w-20">
+                                  Input:
+                                </span>
+                                <span className="text-gray-200">
+                                  {tc.stdin}
+                                </span>
                               </div>
                               <div className="flex">
-                                <span className="text-yellow-400 font-semibold min-w-20">Expected:</span>
-                                <span className="text-gray-200">{tc.expected_output}</span>
+                                <span className="text-yellow-400 font-semibold min-w-20">
+                                  Expected:
+                                </span>
+                                <span className="text-gray-200">
+                                  {tc.expected_output}
+                                </span>
                               </div>
                               <div className="flex">
-                                <span className="text-blue-400 font-semibold min-w-20">Output:</span>
-                                <span className="text-gray-200">{tc.stdout}</span>
+                                <span className="text-blue-400 font-semibold min-w-20">
+                                  Output:
+                                </span>
+                                <span className="text-gray-200">
+                                  {tc.stdout}
+                                </span>
                               </div>
                               <div className="flex items-center text-blue-400">
                                 <CheckCircle className="w-4 h-4 mr-1" />
@@ -527,29 +605,50 @@ const CollaborativeProblemPage = () => {
                       </div>
                       <div className="space-y-3">
                         {runResult.testCases?.map((tc, i) => (
-                          <div key={i} className="bg-gray-800/50 p-4 rounded-lg border border-gray-600/30">
+                          <div
+                            key={i}
+                            className="bg-gray-800/50 p-4 rounded-lg border border-gray-600/30"
+                          >
                             <div className="font-mono text-sm space-y-2">
                               <div className="flex">
-                                <span className="text-blue-400 font-semibold min-w-20">Input:</span>
-                                <span className="text-gray-200">{tc.stdin}</span>
+                                <span className="text-blue-400 font-semibold min-w-20">
+                                  Input:
+                                </span>
+                                <span className="text-gray-200">
+                                  {tc.stdin}
+                                </span>
                               </div>
                               <div className="flex">
-                                <span className="text-yellow-400 font-semibold min-w-20">Expected:</span>
-                                <span className="text-gray-200">{tc.expected_output}</span>
+                                <span className="text-yellow-400 font-semibold min-w-20">
+                                  Expected:
+                                </span>
+                                <span className="text-gray-200">
+                                  {tc.expected_output}
+                                </span>
                               </div>
                               <div className="flex">
-                                <span className="text-blue-400 font-semibold min-w-20">Output:</span>
-                                <span className="text-gray-200">{tc.stdout}</span>
+                                <span className="text-blue-400 font-semibold min-w-20">
+                                  Output:
+                                </span>
+                                <span className="text-gray-200">
+                                  {tc.stdout}
+                                </span>
                               </div>
                               <div
-                                className={`flex items-center ${tc.status_id == 3 ? "text-blue-400" : "text-red-400"}`}
+                                className={`flex items-center ${
+                                  tc.status_id == 3
+                                    ? "text-blue-400"
+                                    : "text-red-400"
+                                }`}
                               >
                                 {tc.status_id == 3 ? (
                                   <CheckCircle className="w-4 h-4 mr-1" />
                                 ) : (
                                   <XCircle className="w-4 h-4 mr-1" />
                                 )}
-                                <span className="font-semibold">{tc.status_id == 3 ? "Passed" : "Failed"}</span>
+                                <span className="font-semibold">
+                                  {tc.status_id == 3 ? "Passed" : "Failed"}
+                                </span>
                               </div>
                             </div>
                           </div>
@@ -561,7 +660,9 @@ const CollaborativeProblemPage = () => {
               ) : (
                 <div className="text-center py-12">
                   <TestTube className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                  <p className="text-gray-400">Click "Run" to test your code with the example test cases.</p>
+                  <p className="text-gray-400">
+                    Click "Run" to test your code with the example test cases.
+                  </p>
                 </div>
               )}
             </div>
@@ -576,38 +677,53 @@ const CollaborativeProblemPage = () => {
               {submitResult ? (
                 <div
                   className={`p-6 rounded-xl border backdrop-blur-sm ${
-                    submitResult.accepted ? "bg-blue-500/10 border-blue-500/20" : "bg-red-500/10 border-red-500/20"
+                    submitResult.accepted
+                      ? "bg-blue-500/10 border-blue-500/20"
+                      : "bg-red-500/10 border-red-500/20"
                   }`}
                 >
                   {submitResult.accepted ? (
                     <div>
                       <div className="flex items-center mb-4">
                         <Trophy className="w-8 h-8 mr-3 text-yellow-400" />
-                        <h4 className="font-bold text-2xl text-blue-400">Accepted!</h4>
+                        <h4 className="font-bold text-2xl text-blue-400">
+                          Accepted!
+                        </h4>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                         <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-600/30">
                           <div className="flex items-center mb-2">
                             <CheckCircle className="w-5 h-5 mr-2 text-blue-400" />
-                            <span className="text-gray-300 font-medium">Test Cases</span>
+                            <span className="text-gray-300 font-medium">
+                              Test Cases
+                            </span>
                           </div>
                           <p className="text-xl font-bold text-white">
-                            {submitResult.passedTestCases}/{submitResult.totalTestCases}
+                            {submitResult.passedTestCases}/
+                            {submitResult.totalTestCases}
                           </p>
                         </div>
                         <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-600/30">
                           <div className="flex items-center mb-2">
                             <Clock className="w-5 h-5 mr-2 text-blue-400" />
-                            <span className="text-gray-300 font-medium">Runtime</span>
+                            <span className="text-gray-300 font-medium">
+                              Runtime
+                            </span>
                           </div>
-                          <p className="text-xl font-bold text-white">{submitResult.runtime} sec</p>
+                          <p className="text-xl font-bold text-white">
+                            {submitResult.runtime} sec
+                          </p>
                         </div>
                         <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-600/30">
                           <div className="flex items-center mb-2">
                             <Zap className="w-5 h-5 mr-2 text-blue-400" />
-                            <span className="text-gray-300 font-medium">Memory</span>
+                            <span className="text-gray-300 font-medium">
+                              Memory
+                            </span>
                           </div>
-                          <p className="text-xl font-bold text-white">{submitResult.memory} KB</p>
+                          <p className="text-xl font-bold text-white">
+                            {submitResult.memory} KB
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -615,13 +731,16 @@ const CollaborativeProblemPage = () => {
                     <div>
                       <div className="flex items-center mb-4">
                         <XCircle className="w-8 h-8 mr-3 text-red-400" />
-                        <h4 className="font-bold text-2xl text-red-400">{submitResult.error}</h4>
+                        <h4 className="font-bold text-2xl text-red-400">
+                          {submitResult.error}
+                        </h4>
                       </div>
                       <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-600/30 mt-6">
                         <p className="text-gray-300">
                           Test Cases Passed:{" "}
                           <span className="font-bold text-white">
-                            {submitResult.passedTestCases}/{submitResult.totalTestCases}
+                            {submitResult.passedTestCases}/
+                            {submitResult.totalTestCases}
                           </span>
                         </p>
                       </div>
@@ -631,15 +750,20 @@ const CollaborativeProblemPage = () => {
               ) : (
                 <div className="text-center py-12">
                   <Trophy className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                  <p className="text-gray-400">Click "Submit" to submit your solution for evaluation.</p>
+                  <p className="text-gray-400">
+                    Click "Submit" to submit your solution for evaluation.
+                  </p>
                 </div>
               )}
             </div>
           )}
         </div>
+
+        {/* Global Typing Indicator */}
+        <TypingIndicator typingUsers={typingUsers} currentUser={user} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CollaborativeProblemPage
+export default CollaborativeProblemPage;
