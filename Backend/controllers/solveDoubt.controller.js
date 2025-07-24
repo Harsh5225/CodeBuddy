@@ -1,8 +1,14 @@
 // const { GoogleGenAI } = require("@google/genai");
 import { GoogleGenAI } from "@google/genai";
+import { checkAIAccess, incrementAIUsage } from "../middlewares/subscriptionMiddleware.js";
+
 const solveDoubt = async (req, res) => {
   try {
     const { messages, title, description, testCases, startCode } = req.body;
+    
+    // AI usage is already checked by middleware
+    // req.subscription and req.aiUsage are available
+    
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_KEY });
     async function main() {
       const response = await ai.models.generateContent({
@@ -82,12 +88,25 @@ Remember: Your goal is to help users learn and understand DSA concepts through t
 
       res.status(201).json({
         message: response.text,
+        subscription: req.subscription ? {
+          type: req.subscription.subscriptionType,
+          questionsRemaining: req.subscription.hasPremiumAccess() 
+            ? -1 
+            : (req.subscription.features.aiQuestionsPerProblem - (req.aiUsage?.questionsAsked || 0) - 1)
+        } : null,
       });
+      
+      // Increment usage after successful response
+      if (req.aiUsage) {
+        await req.aiUsage.incrementQuestionCount();
+      }
+      
       console.log(response.text);
     }
 
     main();
   } catch (err) {
+    console.error("Error in AI chat:", err);
     res.status(500).json({
       message: "Internal server error",
     });

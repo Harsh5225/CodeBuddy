@@ -166,3 +166,40 @@ export const deleteVideo = async (req, res) => {
     res.status(500).json({ error: "Failed to delete video" });
   }
 };
+
+
+export const getVideoForUser = async (req, res) => {
+  try {
+    const { problemId } = req.params;
+    const userId = req.userInfo._id;
+
+    // Find video for the problem
+    const video = await SolutionVideo.findOne({ problemId });
+
+    if (!video) {
+      return res.status(404).json({ 
+        success: false,
+        error: "Video not found for this problem" 
+      });
+    }
+
+    // Video access is already checked by middleware
+    // Return video details
+    res.json({
+      success: true,
+      video: {
+        id: video._id,
+        secureUrl: video.secureUrl,
+        thumbnailUrl: video.thumbnailUrl,
+        duration: video.duration,
+        uploadedAt: video.createdAt,
+      },
+    });
+  } catch (error) {
+    console.error("Error getting video for user:", error);
+    res.status(500).json({ 
+      success: false,
+      error: "Failed to get video" 
+    });
+  }
+};
