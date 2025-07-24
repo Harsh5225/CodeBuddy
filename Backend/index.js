@@ -16,6 +16,8 @@ import { Server } from "socket.io";
 import cors from "cors";
 import submissionRoutes from "./routes/submission.routes.js";
 import videoRouter from "./routes/videoCreator.js";
+import subscriptionRouter from "./routes/subscription.routes.js";
+
 dotenv.config();
 const app = express();
 const server = http.createServer(app);
@@ -43,6 +45,7 @@ app.use("/submission", submissionRoutes);
 app.use("/ai", doubtRouter);
 app.use("/video", videoRouter);
 app.use("/collaboration", collaborationRouter);
+app.use("/subscription", subscriptionRouter);
 
 // Initialize Socket.io
 const io = initializeSocket(server);
