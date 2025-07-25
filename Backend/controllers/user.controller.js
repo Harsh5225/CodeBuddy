@@ -98,7 +98,13 @@ export const login = async (req, res) => {
       role: user.role,
     };
 
-    res.cookie("token", token, { maxAge: 3600000 });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Only use HTTPS in prod
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 3600000, // 1 hour
+    });
+
     res.status(200).json({ message: "Login successful", token, user: reply });
   } catch (error) {
     console.error("Error in login controller:", error.message);
@@ -123,10 +129,17 @@ export const logout = async (req, res) => {
 
     await client.expireAt(`token:${token}`, payload.exp);
 
-    return res.cookie("token", null, { maxAge: 0 }).json({
-      success: true,
-      message: "Logout successful",
-    });
+    return res
+      .cookie("token", "", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        expires: new Date(0),
+      })
+      .json({
+        success: true,
+        message: "Logout successful",
+      });
   } catch (error) {
     console.error("Error in logout controller:", error.message);
     res.status(500).json({ message: "Internal server error" });
@@ -182,6 +195,7 @@ export const adminRegister = async (req, res) => {
       maxAge: 3600000,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
+       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     });
 
     res.status(201).json({ message: "User registered successfully" });
