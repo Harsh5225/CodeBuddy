@@ -21,20 +21,46 @@ import subscriptionRouter from "./routes/subscription.routes.js";
 dotenv.config();
 const app = express();
 const server = http.createServer(app);
-
-app.use(
-  cors({
-    // 'http://localhost:3000',
-    origin: process.env.FRONTEND_URL, // or your frontend domain
-     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-}));
-
 app.use(express.json()); // Needed to parse JSON bodies
 
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:8000",
+  "http://localhost:3000",
+  "http://localhost:5000",
+  process.env.FRONTEND_URL, // Add production frontend URL
+];
+
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  console.log("Cookies:", req.cookies);
+  next();
+});
+
+// Update CORS configuration
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+
+      if (
+        allowedOrigins.indexOf(origin) !== -1 ||
+        process.env.NODE_ENV !== "production"
+      ) {
+        callback(null, true);
+      } else {
+        console.log("CORS blocked for origin:", origin);
+        callback(null, true); // Temporarily allow all origins
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  })
+);
 
 const PORT = process.env.PORT || 8000;
 app.get("/", (req, res) => {
