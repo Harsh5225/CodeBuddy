@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axiosClient from "../utils/axiosClient";
@@ -22,17 +23,18 @@ import {
 const DailyStreakCalendar = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  const { currentStreak, longestStreak, totalSolved, loading } = useSelector((state) => state.streak)
+  const { currentStreak, longestStreak, totalSolved, loading } = useSelector(
+    (state) => state.streak
+  );
 
-
-  const [currentDate, setCurrentDate] = useState(new Date())
-  const [solvedDates, setSolvedDates] = useState(new Set()) // Keep solvedDates local as it's for calendar rendering
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [solvedDates, setSolvedDates] = useState(new Set()); // Keep solvedDates local as it's for calendar rendering
 
   useEffect(() => {
     if (user) {
-      fetchStreakData()
+      fetchStreakData();
     }
-  }, [user, dispatch])
+  }, [user, dispatch]);
 
   useEffect(() => {
     if (isOpen && user) {
@@ -42,98 +44,102 @@ const DailyStreakCalendar = ({ isOpen, onClose }) => {
 
   const fetchStreakData = async () => {
     try {
-      dispatch(setStreakLoading(true)) // Dispatch loading state
-      const submissionsResponse = await axiosClient.get("/submission/recent")
-      console.log("submission", submissionsResponse)
-      const submissions = submissionsResponse.data.submissions || []
+      dispatch(setStreakLoading(true)); // Dispatch loading state
+      const submissionsResponse = await axiosClient.get("/submission/recent");
+      console.log("submission", submissionsResponse);
+      const submissions = submissionsResponse.data.submissions || [];
 
-      const solvedResponse = await axiosClient.get("/problem/userSolvedProblem")
-      const solvedProblems = solvedResponse.data.problems || []
+      const solvedResponse = await axiosClient.get(
+        "/problem/userSolvedProblem"
+      );
+      const solvedProblems = solvedResponse.data.problems || [];
 
-      const solvedDatesSet = new Set()
-      const acceptedSubmissions = submissions.filter((sub) => sub.status === "accepted")
+      const solvedDatesSet = new Set();
+      const acceptedSubmissions = submissions.filter(
+        (sub) => sub.status === "accepted"
+      );
 
       acceptedSubmissions.forEach((submission) => {
-        const date = new Date(submission.createdAt)
-        const dateString = date.toDateString()
-        solvedDatesSet.add(dateString)
-      })
+        const date = new Date(submission.createdAt);
+        const dateString = date.toDateString();
+        solvedDatesSet.add(dateString);
+      });
 
-      setSolvedDates(solvedDatesSet) // Update local solvedDates for calendar rendering
+      setSolvedDates(solvedDatesSet); // Update local solvedDates for calendar rendering
 
-      const calculatedCurrentStreak = calculateCurrentStreak(solvedDatesSet)
-      const calculatedLongestStreak = calculateLongestStreak(solvedDatesSet)
+      const calculatedCurrentStreak = calculateCurrentStreak(solvedDatesSet);
+      const calculatedLongestStreak = calculateLongestStreak(solvedDatesSet);
 
       dispatch(
         setStreakData({
           currentStreak: calculatedCurrentStreak,
           longestStreak: calculatedLongestStreak,
           totalSolved: solvedProblems.length,
-        }),
-      ) // Dispatch streak data to Redux
+        })
+      ); // Dispatch streak data to Redux
     } catch (error) {
-      console.error("Error fetching streak data:", error)
-      dispatch(setStreakError(error.message)) // Dispatch error state
+      console.error("Error fetching streak data:", error);
+      dispatch(setStreakError(error.message)); // Dispatch error state
     } finally {
-      dispatch(setStreakLoading(false)) // Dispatch loading state
+      dispatch(setStreakLoading(false)); // Dispatch loading state
     }
-  }
+  };
 
   const calculateCurrentStreak = (solvedDatesSet) => {
-    const today = new Date()
-    let streak = 0
-    let currentDate = new Date(today)
+    const today = new Date();
+    let streak = 0;
+    let currentDate = new Date(today);
 
-    const todayString = today.toDateString()
-    const yesterday = new Date(today)
-    yesterday.setDate(yesterday.getDate() - 1)
-    const yesterdayString = yesterday.toDateString()
+    const todayString = today.toDateString();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayString = yesterday.toDateString();
 
     if (solvedDatesSet.has(todayString)) {
-      streak = 1
-      currentDate.setDate(currentDate.getDate() - 1)
+      streak = 1;
+      currentDate.setDate(currentDate.getDate() - 1);
     } else if (solvedDatesSet.has(yesterdayString)) {
-      streak = 1
-      currentDate = new Date(yesterday)
-      currentDate.setDate(currentDate.getDate() - 1)
+      streak = 1;
+      currentDate = new Date(yesterday);
+      currentDate.setDate(currentDate.getDate() - 1);
     } else {
-      return 0
+      return 0;
     }
 
     while (solvedDatesSet.has(currentDate.toDateString())) {
-      streak++
-      currentDate.setDate(currentDate.getDate() - 1)
+      streak++;
+      currentDate.setDate(currentDate.getDate() - 1);
     }
 
-    return streak
-  }
+    return streak;
+  };
 
-   const calculateLongestStreak = (solvedDatesSet) => {
-    if (solvedDatesSet.size === 0) return 0
+  const calculateLongestStreak = (solvedDatesSet) => {
+    if (solvedDatesSet.size === 0) return 0;
 
     const sortedDates = Array.from(solvedDatesSet)
       .map((dateString) => new Date(dateString))
-      .sort((a, b) => a - b)
+      .sort((a, b) => a - b);
 
-    let longestStreak = 1
-    let currentStreak = 1
+    let longestStreak = 1;
+    let currentStreak = 1;
 
     for (let i = 1; i < sortedDates.length; i++) {
-      const prevDate = sortedDates[i - 1]
-      const currentDate = sortedDates[i]
-      const diffTime = currentDate - prevDate
-      const diffDays = diffTime / (1000 * 60 * 60 * 24)
+      const prevDate = sortedDates[i - 1];
+      const currentDate = sortedDates[i];
+      const diffTime = currentDate - prevDate;
+      const diffDays = diffTime / (1000 * 60 * 60 * 24);
 
       if (diffDays === 1) {
-        currentStreak++
-        longestStreak = Math.max(longestStreak, currentStreak)
+        currentStreak++;
+        longestStreak = Math.max(longestStreak, currentStreak);
       } else {
-        currentStreak = 1
+        currentStreak = 1;
       }
     }
 
-    return longestStreak
-  }
+    return longestStreak;
+  };
 
   const getDaysInMonth = (date) => {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
@@ -309,7 +315,7 @@ const DailyStreakCalendar = ({ isOpen, onClose }) => {
                     ? "Keep up the excellent work! 🔥"
                     : currentStreak >= 7
                     ? "You're on fire! 🚀"
-                    :currentStreak >= 3
+                    : currentStreak >= 3
                     ? "Great progress! 💪"
                     : "Start your streak today! 🌟"}
                 </p>
