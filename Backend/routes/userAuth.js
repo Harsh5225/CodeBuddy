@@ -23,7 +23,12 @@ authRouter.get("/logout", userMiddleware, logout);
 authRouter.get("/profile", isAuthenticate, getProfile);
 authRouter.post("/adminRegister", userMiddleware, adminRegister);
 authRouter.delete("/delete-profile", userMiddleware, deleteProfile);
-authRouter.put("/edit-profile", userMiddleware, upload.single("photo"), updateUserProfile);
+authRouter.put(
+  "/edit-profile",
+  userMiddleware,
+  upload.single("profilePhoto"),
+  updateUserProfile
+);
 authRouter.get("/check", userMiddleware, (req, res) => {
   const reply = {
     firstName: req.userInfo.firstName,
