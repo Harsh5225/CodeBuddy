@@ -12,16 +12,16 @@ const connection = new Connection(clusterApiUrl(NETWORK), "confirmed");
 
 // Your platform's wallet address (replace with your actual wallet)
 console.log(import.meta.env.VITE_PLATFORM_WALLET);
-if (import.meta.env.VITE_PLATFORM_WALLET) {
-  try {
-    const PLATFORM_WALLET = new PublicKey(import.meta.env.VITE_PLATFORM_WALLET);
-    console.log("Platform wallet set:", PLATFORM_WALLET.toBase58());
-  } catch (e) {
-    console.error("Invalid wallet address:", e.message);
-  }
-} else {
-  console.warn("VITE_PLATFORM_WALLET is not set in env variables.");
-}
+// if (import.meta.env.VITE_PLATFORM_WALLET) {
+//   try {
+//     const PLATFORM_WALLET = new PublicKey(import.meta.env.VITE_PLATFORM_WALLET);
+//     console.log("Platform wallet set:", PLATFORM_WALLET.toBase58());
+//   } catch (e) {
+//     console.error("Invalid wallet address:", e.message);
+//   }
+// } else {
+//   console.warn("VITE_PLATFORM_WALLET is not set in env variables.");
+// }
 const PLATFORM_WALLET = new PublicKey(import.meta.env.VITE_PLATFORM_WALLET);
 
 export const usePhantomWallet = () => {

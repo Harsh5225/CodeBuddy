@@ -18,6 +18,7 @@ import ProblemPageUpdated from "./pages/ProblemPageUpdated";
 
 const App = () => {
   // useLenis();
+  console.log("Using backend URL:", import.meta.env.VITE_BACKEND_URL);
   const [isLoading, setIsLoading] = useState(true);
   const { user, isAuthenticated, loading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
