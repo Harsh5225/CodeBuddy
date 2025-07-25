@@ -26,6 +26,7 @@ app.use(express.json()); // Needed to parse JSON bodies
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
+// cors issue solved
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:8000",
