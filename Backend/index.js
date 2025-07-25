@@ -21,7 +21,7 @@ import subscriptionRouter from "./routes/subscription.routes.js";
 dotenv.config();
 const app = express();
 const server = http.createServer(app);
-console.log("Using Frontend URL:", process.env.FRONTEND_URL);
+
 app.use(
   cors({
     // 'http://localhost:3000',
@@ -29,7 +29,7 @@ app.use(
      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
-});
+}));
 
 app.use(express.json()); // Needed to parse JSON bodies
 
@@ -63,6 +63,7 @@ const main = async () => {
 
     console.log("mongoDb is connected");
     console.log("Redis is connected");
+    console.log("Using Frontend URL:", process.env.FRONTEND_URL);
     server.listen(PORT, () => {
       console.log(`Server is running at ${PORT}`);
       console.log("Socket.io server initialized");
