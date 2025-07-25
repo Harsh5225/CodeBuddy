@@ -21,14 +21,15 @@ import subscriptionRouter from "./routes/subscription.routes.js";
 dotenv.config();
 const app = express();
 const server = http.createServer(app);
-
+console.log("Using Frontend URL:", process.env.FRONTEND_URL);
 app.use(
   cors({
     // 'http://localhost:3000',
     origin: process.env.FRONTEND_URL, // or your frontend domain
-    credentials: true, // only if you're using cookies/auth headers
-  })
-);
+     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+});
 
 app.use(express.json()); // Needed to parse JSON bodies
 
