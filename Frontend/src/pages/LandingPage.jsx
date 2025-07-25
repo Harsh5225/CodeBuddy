@@ -304,7 +304,9 @@ const LandingPage = () => {
             <div className="max-w-6xl mx-auto text-center">
               <div
                 className={`transition-all duration-1000 ${
-                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+                  isVisible
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-10"
                 }`}
               >
                 <div className="mb-10">
@@ -429,10 +431,11 @@ const LandingPage = () => {
                   <p className="text-gray-300 text-lg leading-relaxed mb-8">
                     CodeBuddy is more than just a coding platform. It's your
                     intelligent companion that understands your learning style,
-                    adapts to your pace, and provides personalized guidance every
-                    step of the way. Whether you're preparing for technical
-                    interviews or mastering new algorithms, our AI-powered system
-                    ensures you learn efficiently and effectively.
+                    adapts to your pace, and provides personalized guidance
+                    every step of the way. Whether you're preparing for
+                    technical interviews or mastering new algorithms, our
+                    AI-powered system ensures you learn efficiently and
+                    effectively.
                   </p>
                   <div className="space-y-4">
                     <IntroPoint
@@ -538,28 +541,30 @@ const LandingPage = () => {
                   borderColor="border-yellow-500/20"
                   delay="200"
                 />
-                <EnhancedFeatureCard
-                  icon={<Users className="w-7 h-7" />}
-                  title="Community Driven"
-                  description="Connect with fellow developers, share solutions, and learn from the best coding practices."
-                  gradient="from-blue-600 to-emerald-600"
-                  bgGradient="from-blue-500/10 to-emerald-500/10"
-                  borderColor="border-blue-500/20"
-                  delay="300"
-                />
+               <EnhancedFeatureCard
+  icon={<Users className="w-7 h-7" />}
+  title="Phantom Wallet Supported"
+  description="Seamlessly upgrade to premium using your Phantom wallet and unlock powerful coding features."
+  gradient="from-blue-600 to-emerald-600"
+  bgGradient="from-blue-500/10 to-emerald-500/10"
+  borderColor="border-blue-500/20"
+  delay="300"
+/>
+
                 <EnhancedFeatureCard
                   icon={<Trophy className="w-7 h-7" />}
-                  title="Competitive Coding"
-                  description="Participate in contests, climb leaderboards, and showcase your skills to top tech companies."
+                  title="Collaborative Editor"
+                  description="Code together in real-time with friends or peers, share logic, and solve problems as a team."
                   gradient="from-red-600 to-pink-600"
                   bgGradient="from-red-500/10 to-pink-500/10"
                   borderColor="border-red-500/20"
                   delay="400"
                 />
+
                 <EnhancedFeatureCard
                   icon={<BookOpen className="w-7 h-7" />}
                   title="Comprehensive Learning"
-                  description="Master data structures, algorithms, and system design with our structured curriculum."
+                  description="Master data structures, algorithms."
                   gradient="from-indigo-600 to-blue-600"
                   bgGradient="from-indigo-500/10 to-blue-500/10"
                   borderColor="border-indigo-500/20"
@@ -659,9 +664,9 @@ const LandingPage = () => {
                       Meet Your AI Coding Mentor
                     </h3>
                     <p className="text-lg text-gray-300 mb-8 leading-relaxed">
-                      Our advanced AI understands your code, identifies patterns,
-                      and provides personalized guidance to help you become a
-                      better programmer.
+                      Our advanced AI understands your code, identifies
+                      patterns, and provides personalized guidance to help you
+                      become a better programmer.
                     </p>
                     <div className="space-y-4">
                       <FeaturePoint
@@ -690,6 +695,14 @@ const LandingPage = () => {
             </div>
           </section>
 
+          {/* Premium Option
+          <section className="min-w-[80%] container m-auto">
+            <span>Premium Features</span>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="w-80 h-100 border-2 rounded-2xl text-center ">Free Plan</div>
+              <div className="w-80 h-100 border-2 rounded-2xl text-center">Premium Plan</div>
+            </div>
+          </section> */}
           {/* Enhanced Call to Action */}
           <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-900/20 via-blue-900/20 to-blue-900/20 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-blue-600/10"></div>
@@ -706,8 +719,9 @@ const LandingPage = () => {
                 </h2>
                 <p className="text-lg text-gray-300 mb-10 leading-relaxed max-w-3xl mx-auto">
                   Join thousands of developers who are already improving their
-                  skills with CodeBuddy's AI-powered platform. Start your journey
-                  today and become the programmer you've always wanted to be.
+                  skills with CodeBuddy's AI-powered platform. Start your
+                  journey today and become the programmer you've always wanted
+                  to be.
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -747,7 +761,10 @@ const LandingPage = () => {
                     worldwide to master algorithms and ace technical interviews.
                   </p>
                   <div className="flex space-x-3">
-                    <SocialLink href="#" icon={<Github className="w-4 h-4" />} />
+                    <SocialLink
+                      href="#"
+                      icon={<Github className="w-4 h-4" />}
+                    />
                     <SocialLink
                       href="#"
                       icon={<Twitter className="w-4 h-4" />}
@@ -783,7 +800,8 @@ const LandingPage = () => {
 
               <div className="border-t border-gray-700/50 pt-6 flex flex-col md:flex-row justify-between items-center">
                 <p className="text-gray-400 mb-4 md:mb-0 text-sm">
-                  &copy; {new Date().getFullYear()} CodeBuddy. All rights reserved.
+                  &copy; {new Date().getFullYear()} CodeBuddy. All rights
+                  reserved.
                 </p>
                 <div className="flex space-x-4">
                   <FooterLink href="/privacy" text="Privacy Policy" />
@@ -863,7 +881,13 @@ const IntroPoint = ({ icon, text }) => (
   </div>
 );
 
-const ApplicationFeature = ({ icon, title, description, features, gradient }) => (
+const ApplicationFeature = ({
+  icon,
+  title,
+  description,
+  features,
+  gradient,
+}) => (
   <div className="bg-gradient-to-r from-gray-800/50 to-gray-700/30 p-6 rounded-xl border border-gray-600/30 backdrop-blur-sm hover:scale-105 transition-all duration-300 group shadow-lg">
     <div className="flex items-center mb-4">
       <div
@@ -913,8 +937,8 @@ const EnhancedAIChat = () => (
         </div>
         <div className="bg-gray-700/50 rounded-lg p-3 max-w-xs border border-gray-600/30">
           <p className="text-gray-200 text-sm">
-            I can help you optimize this algorithm! Try using a hash map for O(1)
-            lookup time.
+            I can help you optimize this algorithm! Try using a hash map for
+            O(1) lookup time.
           </p>
         </div>
       </div>
@@ -985,7 +1009,9 @@ const CreativeAnimatedBackground = () => (
           <div className="text-blue-400 ml-2">
             let left = 0, right = arr.length - 1;
           </div>
-          <div className="text-blue-400 ml-2">while (left &lt;= right) {"{"}</div>
+          <div className="text-blue-400 ml-2">
+            while (left &lt;= right) {"{"}
+          </div>
           <div className="text-yellow-400 ml-4">
             const mid = Math.floor((left + right) / 2);
           </div>
@@ -1113,7 +1139,7 @@ const CollaborativeEditor = () => {
       user: "Alice",
       text: "Hey everyone, let's start with the main function.",
     },
-    { user: "Bob", text: "Sounds good! I'll add the initial setup." },
+    { user: "Harsh", text: "Sounds good! I'll add the initial setup." },
   ]);
   const [newMessage, setNewMessage] = useState("");
   const [users, setUsers] = useState([
@@ -1141,9 +1167,7 @@ const CollaborativeEditor = () => {
               <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
               <div className="w-3 h-3 bg-green-500 rounded-full"></div>
             </div>
-            <span className="text-gray-400 text-sm font-mono">
-              /room-123/main.js
-            </span>
+            <span className="text-gray-400 text-sm font-mono">code-room</span>
             <div className="flex items-center space-x-2">
               {users.map((user, index) => (
                 <div

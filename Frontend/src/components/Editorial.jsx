@@ -1,4 +1,8 @@
+/* eslint-disable no-unused-vars */
 import { useState, useRef, useEffect } from "react";
+import { useSubscription } from "../hooks/useSubscription";
+import SubscriptionBanner from "./SubscriptionBanner";
+import SubscriptionModal from "./SubscriptionModal";
 import {
   Pause,
   Play,
@@ -6,9 +10,14 @@ import {
   Maximize,
   SkipBack,
   SkipForward,
+  Lock,
 } from "lucide-react";
 
 const Editorial = ({ secureUrl, thumbnailUrl, duration }) => {
+  const { hasVideoAccess } = useSubscription();
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  const [showUpgradeBanner, setShowUpgradeBanner] = useState(!hasVideoAccess());
+
   console.log("secure url in Editorial:", secureUrl);
   console.log("thumbnail url in Editorial:", thumbnailUrl);
   console.log("duration in Editorial:", duration);
@@ -24,6 +33,17 @@ const Editorial = ({ secureUrl, thumbnailUrl, duration }) => {
   const cleanThumbnailUrl =
     thumbnailUrl?.replace(/<[^>]*>/g, "").replace(/'/g, "") || "";
 
+  const handleSubscriptionUpdate = (newSubscription) => {
+    setShowUpgradeBanner(false);
+    setShowSubscriptionModal(false);
+    // Refresh video access
+  };
+
+  // Show upgrade banner if no video access
+  useEffect(() => {
+    setShowUpgradeBanner(!hasVideoAccess());
+  }, [hasVideoAccess]);
+
   // Format seconds to MM:SS
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
@@ -32,6 +52,11 @@ const Editorial = ({ secureUrl, thumbnailUrl, duration }) => {
   };
 
   const togglePlayPause = () => {
+    if (!hasVideoAccess()) {
+      setShowSubscriptionModal(true);
+      return;
+    }
+    
     if (videoRef.current) {
       setIsLoading(true);
       if (isPlaying) {
@@ -97,6 +122,21 @@ const Editorial = ({ secureUrl, thumbnailUrl, duration }) => {
 
   return (
     <div className="w-full max-w-4xl mx-auto">
+      {/* Subscription Banner */}
+      <SubscriptionBanner
+        show={showUpgradeBanner}
+        onClose={() => setShowUpgradeBanner(false)}
+        onUpgrade={() => setShowSubscriptionModal(true)}
+        feature="video"
+      />
+
+      {/* Subscription Modal */}
+      <SubscriptionModal
+        isOpen={showSubscriptionModal}
+        onClose={() => setShowSubscriptionModal(false)}
+        onSubscriptionUpdate={handleSubscriptionUpdate}
+      />
+
       {/* Video Container */}
       <div
         className="relative rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-gray-900 via-gray-800 to-black ring-1 ring-blue-500/20"
@@ -105,12 +145,28 @@ const Editorial = ({ secureUrl, thumbnailUrl, duration }) => {
       >
         {/* Video Element */}
         <div className="relative aspect-video bg-black">
+          {!hasVideoAccess() && (
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-10">
+              <div className="text-center">
+                <Lock className="w-16 h-16 text-purple-400 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-white mb-2">Premium Content</h3>
+                <p className="text-gray-300 mb-4">Upgrade to Premium to watch video solutions</p>
+                <button
+                  onClick={() => setShowSubscriptionModal(true)}
+                  className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300"
+                >
+                  Unlock Videos
+                </button>
+              </div>
+            </div>
+          )}
+          
           <video
             ref={videoRef}
             src={secureUrl}
             poster={cleanThumbnailUrl}
             onClick={togglePlayPause}
-            className="w-full h-full object-cover cursor-pointer"
+            className={`w-full h-full object-cover cursor-pointer ${!hasVideoAccess() ? 'blur-sm' : ''}`}
           />
 
           {/* Loading Spinner */}

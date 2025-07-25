@@ -6,29 +6,19 @@ import { Send } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useDispatch, useSelector } from "react-redux";
 import { addMessage, setMessages } from "../features/chatMessage/ChatSlice";
+import { useSubscription } from "../hooks/useSubscription";
+import SubscriptionBanner from "./SubscriptionBanner";
+import SubscriptionModal from "./SubscriptionModal";
+
 function ChatAi({ problem }) {
-  // const [messages, setMessages] = useState([
-    // {
-    //   role: "model",
-    //   parts: [{ text: "Hi, how are you?" }],
-    //   time: new Date().toLocaleTimeString([], {
-    //     hour: "2-digit",
-    //     minute: "2-digit",
-    //   }),
-    // },
-    // {
-    //   role: "user",
-    //   parts: [{ text: "I am good" }],
-    //   time: new Date().toLocaleTimeString([], {
-    //     hour: "2-digit",
-    //     minute: "2-digit",
-    //   }),
-    // },
-  // ]);
   const messages = useSelector((state) => state.chat.messages);
   const dispatch = useDispatch();
+  const { checkFeatureAccess, hasUnlimitedAI } = useSubscription();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  const [showUpgradeBanner, setShowUpgradeBanner] = useState(false);
+  const [questionsRemaining, setQuestionsRemaining] = useState(2);
 
   const {
     register,
@@ -38,6 +28,25 @@ function ChatAi({ problem }) {
   } = useForm();
 
   const messagesEndRef = useRef(null);
+
+  // Check AI access when component mounts
+  useEffect(() => {
+    const checkAccess = async () => {
+      if (problem?._id) {
+        const accessResult = await checkFeatureAccess('ai', problem._id);
+        if (!accessResult.hasAccess) {
+          setShowUpgradeBanner(true);
+        }
+      }
+    };
+    checkAccess();
+  }, [problem, checkFeatureAccess]);
+
+  const handleSubscriptionUpdate = (newSubscription) => {
+    setShowUpgradeBanner(false);
+    setShowSubscriptionModal(false);
+    // Refresh the component or update state as needed
+  };
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -53,6 +62,13 @@ function ChatAi({ problem }) {
       }),
     };
 
+    // Check access before sending
+    const accessResult = await checkFeatureAccess('ai', problem._id);
+    if (!accessResult.hasAccess) {
+      setShowUpgradeBanner(true);
+      return;
+    }
+
     dispatch(addMessage(userMessage));
     reset();
     setIsLoading(true);
@@ -67,6 +83,7 @@ function ChatAi({ problem }) {
         description: problem.description,
         testCases: problem.visibleTestCases,
         startCode: problem.startCode,
+        problemId: problem._id,
       });
 
       const aiMessage = {
@@ -78,10 +95,23 @@ function ChatAi({ problem }) {
         }),
       };
 
-      // setMessages((prev) => [...prev, aiMessage]);
       dispatch(addMessage(aiMessage));
+      
+      // Update questions remaining
+      if (response.data.subscription && response.data.subscription.questionsRemaining >= 0) {
+        setQuestionsRemaining(response.data.subscription.questionsRemaining);
+        if (response.data.subscription.questionsRemaining === 0) {
+          setShowUpgradeBanner(true);
+        }
+      }
     } catch (error) {
       console.error("API Error:", error);
+      
+      // Check if it's a subscription limit error
+      if (error.response?.status === 429) {
+        setShowUpgradeBanner(true);
+        return;
+      }
 
       const errorMessage = {
         role: "model",
@@ -100,6 +130,33 @@ function ChatAi({ problem }) {
 
   return (
     <div className="flex flex-col h-screen max-h-[80vh] min-h-[500px]">
+      {/* Subscription Banner */}
+      <SubscriptionBanner
+        show={showUpgradeBanner && !hasUnlimitedAI()}
+        onClose={() => setShowUpgradeBanner(false)}
+        onUpgrade={() => setShowSubscriptionModal(true)}
+        feature="ai"
+      />
+
+      {/* Subscription Modal */}
+      <SubscriptionModal
+        isOpen={showSubscriptionModal}
+        onClose={() => setShowSubscriptionModal(false)}
+        onSubscriptionUpdate={handleSubscriptionUpdate}
+      />
+
+      {/* Questions Remaining Indicator */}
+      {!hasUnlimitedAI() && (
+        <div className="px-4 py-2 bg-gray-800/50 border-b border-gray-700/30 text-center">
+          <p className="text-sm text-gray-400">
+            {questionsRemaining > 0 
+              ? `${questionsRemaining} AI questions remaining for this problem`
+              : "AI question limit reached. Upgrade to Premium for unlimited access."
+            }
+          </p>
+        </div>
+      )}
+
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((msg, index) => (
           <div
@@ -139,14 +196,15 @@ function ChatAi({ problem }) {
       >
         <div className="flex items-center">
           <input
-            placeholder="Ask me anything"
+            placeholder={hasUnlimitedAI() ? "Ask me anything" : `Ask me anything (${questionsRemaining} remaining)`}
             className="input input-bordered flex-1"
             {...register("message", { required: true, minLength: 2 })}
+            disabled={!hasUnlimitedAI() && questionsRemaining <= 0}
           />
           <button
             type="submit"
             className="btn btn-ghost ml-2"
-            disabled={!!errors.message || isLoading}
+            disabled={!!errors.message || isLoading || (!hasUnlimitedAI() && questionsRemaining <= 0)}
           >
             <Send size={20} />
           </button>
