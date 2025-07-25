@@ -32,12 +32,15 @@ import {
   Brain,
   Rocket,
   Sparkles,
+  Calendar,
 } from "lucide-react";
-
+import DailyStreakCalendar from "../components/DailyStreakCalendar";
 function Homepage() {
   useLenis();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+
+  const { currentStreak, longestStreak, totalSolved } = useSelector((state) => state.streak) // Get streak data and loading from Redux
   const {
     problems,
     solvedProblems,
@@ -60,6 +63,7 @@ function Homepage() {
 
   const [showFilters, setShowFilters] = useState(false);
   const [filteredProblems, setFilteredProblems] = useState([]);
+  const [showStreakCalendar, setShowStreakCalendar] = useState(false);
 
   // Fetch problems on component mount
   useEffect(() => {
@@ -283,55 +287,61 @@ function Homepage() {
       </nav>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 relative z-10">
+        {/* Daily Streak Calendar Modal */}
+        <DailyStreakCalendar
+          isOpen={showStreakCalendar}
+          onClose={() => setShowStreakCalendar(false)}
+        />
+
         {/* Hero Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
             <span className="bg-gradient-to-r from-blue-400 via-blue-400 to-blue-400 bg-clip-text text-transparent">
               Welcome back, {user?.firstName || "User"}!
             </span>
           </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto px-4">
             Continue your coding journey and master algorithmic problem solving
           </p>
-          <div className="mt-6 w-24 h-1 bg-gradient-to-r from-blue-500 to-blue-500 rounded-full mx-auto"></div>
+          <div className="mt-4 sm:mt-6 w-24 h-1 bg-gradient-to-r from-blue-500 to-blue-500 rounded-full mx-auto"></div>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-          <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 p-6 rounded-xl border border-gray-600/30 backdrop-blur-sm">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-6 mb-8 sm:mb-12">
+          <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 p-4 sm:p-6 rounded-xl border border-gray-600/30 backdrop-blur-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-400 text-sm font-medium">
+                <p className="text-gray-400 text-xs sm:text-sm font-medium">
                   Total Problems
                 </p>
-                <p className="text-2xl font-bold text-white">
+                <p className="text-xl sm:text-2xl font-bold text-white">
                   {totalProblems || 0}
                 </p>
               </div>
-              <BookOpen className="w-8 h-8 text-blue-400" />
+              <BookOpen className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 p-6 rounded-xl border border-gray-600/30 backdrop-blur-sm">
+          <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 p-4 sm:p-6 rounded-xl border border-gray-600/30 backdrop-blur-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-400 text-sm font-medium">Solved</p>
-                <p className="text-2xl font-bold text-blue-400">
+                <p className="text-gray-400 text-xs sm:text-sm font-medium">Solved</p>
+                <p className="text-xl sm:text-2xl font-bold text-blue-400">
                   {solvedProblems?.length || 0}
                 </p>
               </div>
-              <CheckCircle className="w-8 h-8 text-blue-400" />
+              <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 p-6 rounded-xl border border-gray-600/30 backdrop-blur-sm">
+          <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 p-4 sm:p-6 rounded-xl border border-gray-600/30 backdrop-blur-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-400 text-sm font-medium">
+                <p className="text-gray-400 text-xs sm:text-sm font-medium">
                   Success Rate
                 </p>
-                <p className="text-2xl font-bold text-blue-400">
+                <p className="text-xl sm:text-2xl font-bold text-blue-400">
                   {totalProblems
                     ? Math.round(
                         ((solvedProblems?.length || 0) / totalProblems) * 100
@@ -340,17 +350,37 @@ function Homepage() {
                   %
                 </p>
               </div>
-              <TrendingUp className="w-8 h-8 text-blue-400" />
+              <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 p-6 rounded-xl border border-gray-600/30 backdrop-blur-sm">
+          <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 p-4 sm:p-6 rounded-xl border border-gray-600/30 backdrop-blur-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-400 text-sm font-medium">Rank</p>
-                <p className="text-2xl font-bold text-yellow-400">Expert</p>
+                <p className="text-gray-400 text-xs sm:text-sm font-medium">Rank</p>
+                <p className="text-xl sm:text-2xl font-bold text-yellow-400">Expert</p>
               </div>
-              <Award className="w-8 h-8 text-yellow-400" />
+              <Award className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-400" />
+            </div>
+          </div>
+
+          {/* Daily Streak Card */}
+          <div 
+            className="lg:col-span-1 col-span-2 bg-gradient-to-r from-orange-500/10 to-red-500/10 p-4 sm:p-6 rounded-xl border border-orange-500/20 backdrop-blur-sm cursor-pointer hover:scale-105 transition-all duration-300 group"
+            onClick={() => setShowStreakCalendar(true)}
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-400 text-xs sm:text-sm font-medium">Daily Streak</p>
+                <p className="text-xl sm:text-2xl font-bold text-orange-400">
+                  {currentStreak || 0}
+                </p>
+                <p className="text-xs text-gray-500">days</p>
+              </div>
+              <div className="flex flex-col items-center">
+                <Flame className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400 group-hover:animate-pulse" />
+                <Calendar className="w-4 h-4 text-orange-400 mt-1 opacity-70" />
+              </div>
             </div>
           </div>
         </div>
@@ -364,18 +394,18 @@ function Homepage() {
         )}
 
         {/* Problem Categories */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
-            <Brain className="w-6 h-6 mr-3 text-blue-400" />
+        <div className="mb-8 sm:mb-12">
+          <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center px-4 sm:px-0">
+            <Brain className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 text-blue-400" />
             Problem Categories
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 px-4 sm:px-0">
             {difficultyCards.map((card) => {
               const Icon = card.icon;
               return (
                 <div
                   key={card.difficulty}
-                  className={`bg-gradient-to-r ${card.bgGradient} p-6 rounded-xl border ${card.borderColor} backdrop-blur-sm hover:scale-105 transition-all duration-300 cursor-pointer group`}
+                  className={`bg-gradient-to-r ${card.bgGradient} p-4 sm:p-6 rounded-xl border ${card.borderColor} backdrop-blur-sm hover:scale-105 transition-all duration-300 cursor-pointer group`}
                   onClick={() => {
                     handleFilterChange("difficulty", card.difficulty);
                     document
@@ -383,19 +413,19 @@ function Homepage() {
                       ?.scrollIntoView({ behavior: "smooth" });
                   }}
                 >
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-3 sm:mb-4">
                     <Icon
-                      className={`w-8 h-8 bg-gradient-to-r ${card.gradient} bg-clip-text text-transparent`}
+                      className={`w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r ${card.gradient} bg-clip-text text-transparent`}
                     />
-                    <Rocket className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors duration-200" />
+                    <Rocket className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-hover:text-white transition-colors duration-200" />
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-2">
+                  <h3 className="text-lg sm:text-xl font-bold text-white mb-2">
                     {card.title}
                   </h3>
-                  <p className="text-gray-300 text-sm leading-relaxed">
+                  <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">
                     {card.description}
                   </p>
-                  <div className="mt-4 flex items-center text-sm">
+                  <div className="mt-3 sm:mt-4 flex items-center text-xs sm:text-sm">
                     <span
                       className={`bg-gradient-to-r ${card.gradient} bg-clip-text text-transparent font-medium`}
                     >
@@ -409,36 +439,36 @@ function Homepage() {
         </div>
 
         {/* Problems Section */}
-        <div id="problems-section" className="mb-12">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-            <h2 className="text-2xl font-bold text-white flex items-center">
-              <Code className="w-6 h-6 mr-3 text-blue-400" />
+        <div id="problems-section" className="mb-8 sm:mb-12">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 sm:mb-6 px-4 sm:px-0">
+            <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center">
+              <Code className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 text-blue-400" />
               All Problems
             </h2>
             <button
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 backdrop-blur-sm border ${
+              className={`flex items-center space-x-2 px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 backdrop-blur-sm border text-sm ${
                 showFilters
                   ? "bg-blue-600 text-white border-blue-500/30"
                   : "bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 hover:text-white border-gray-600/30"
               }`}
               onClick={() => setShowFilters(!showFilters)}
             >
-              <Filter className="w-4 h-4" />
+              <Filter className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>{showFilters ? "Hide Filters" : "Show Filters"}</span>
             </button>
           </div>
 
           {/* Filters Section */}
           {showFilters && (
-            <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 p-6 rounded-xl border border-gray-600/30 backdrop-blur-sm mb-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 p-4 sm:p-6 rounded-xl border border-gray-600/30 backdrop-blur-sm mb-4 sm:mb-6 mx-4 sm:mx-0">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mb-4">
                 {/* Difficulty Filter */}
                 <div>
-                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                  <label className="block text-gray-300 text-xs sm:text-sm font-medium mb-2">
                     Difficulty
                   </label>
                   <select
-                    className="w-full bg-gray-700/60 border border-gray-600/60 rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm"
+                    className="w-full bg-gray-700/60 border border-gray-600/60 rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm text-sm"
                     value={filters.difficulty}
                     onChange={(e) =>
                       handleFilterChange("difficulty", e.target.value)
@@ -453,11 +483,11 @@ function Homepage() {
 
                 {/* Tags Filter */}
                 <div>
-                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                  <label className="block text-gray-300 text-xs sm:text-sm font-medium mb-2">
                     Tags
                   </label>
                   <select
-                    className="w-full bg-gray-700/60 border border-gray-600/60 rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm"
+                    className="w-full bg-gray-700/60 border border-gray-600/60 rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm text-sm"
                     value={filters.tag}
                     onChange={(e) => handleFilterChange("tag", e.target.value)}
                   >
@@ -473,11 +503,11 @@ function Homepage() {
 
                 {/* Status Filter */}
                 <div>
-                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                  <label className="block text-gray-300 text-xs sm:text-sm font-medium mb-2">
                     Status
                   </label>
                   <select
-                    className="w-full bg-gray-700/60 border border-gray-600/60 rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm"
+                    className="w-full bg-gray-700/60 border border-gray-600/60 rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm text-sm"
                     value={filters.status}
                     onChange={(e) =>
                       handleFilterChange("status", e.target.value)
@@ -492,12 +522,12 @@ function Homepage() {
 
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <button
-                  className="px-4 py-2 bg-gray-600/50 hover:bg-gray-500/50 text-gray-200 rounded-lg transition-colors duration-200 backdrop-blur-sm border border-gray-600/30"
+                  className="px-3 sm:px-4 py-2 bg-gray-600/50 hover:bg-gray-500/50 text-gray-200 rounded-lg transition-colors duration-200 backdrop-blur-sm border border-gray-600/30 text-sm"
                   onClick={resetFilters}
                 >
                   Reset Filters
                 </button>
-                <span className="text-sm text-gray-400">
+                <span className="text-xs sm:text-sm text-gray-400">
                   Showing {filteredProblems.length} of {problems?.length || 0}{" "}
                   problems
                 </span>
@@ -511,27 +541,27 @@ function Homepage() {
             </div>
           ) : filteredProblems.length > 0 ? (
             <>
-              <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 rounded-xl border border-gray-600/30 backdrop-blur-sm overflow-hidden">
+              <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 rounded-xl border border-gray-600/30 backdrop-blur-sm overflow-hidden mx-4 sm:mx-0">
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead className="bg-gray-800/50 border-b border-gray-600/30">
                       <tr>
-                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                        <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">
                           ID
                         </th>
-                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                        <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">
                           Title
                         </th>
-                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                        <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300 hidden sm:table-cell">
                           Difficulty
                         </th>
-                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                        <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300 hidden md:table-cell">
                           Tags
                         </th>
-                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                        <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300 hidden lg:table-cell">
                           Status
                         </th>
-                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                        <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">
                           Action
                         </th>
                       </tr>
@@ -542,49 +572,49 @@ function Homepage() {
                           key={problem._id}
                           className="hover:bg-gray-700/30 transition-colors duration-200"
                         >
-                          <td className="px-6 py-4 text-gray-300">
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 text-gray-300 text-sm">
                             {index + 1}
                           </td>
-                          <td className="px-6 py-4">
+                          <td className="px-3 sm:px-6 py-3 sm:py-4">
                             <NavLink
                               to={`/problem/${problem._id}`}
-                              className="text-white hover:text-blue-400 font-medium transition-colors duration-200"
+                              className="text-white hover:text-blue-400 font-medium transition-colors duration-200 text-sm sm:text-base"
                             >
                               {problem.title}
                             </NavLink>
                           </td>
-                          <td className="px-6 py-4">
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 hidden sm:table-cell">
                             <span
-                              className={`px-3 py-1 rounded-full text-xs font-medium border ${getDifficultyBadge(
+                              className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium border ${getDifficultyBadge(
                                 problem.difficulty
                               )}`}
                             >
                               {problem.difficulty}
                             </span>
                           </td>
-                          <td className="px-6 py-4">
-                            <span className="px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full text-xs font-medium">
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 hidden md:table-cell">
+                            <span className="px-2 sm:px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full text-xs font-medium">
                               {problem.tags}
                             </span>
                           </td>
-                          <td className="px-6 py-4">
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 hidden lg:table-cell">
                             {isProblemSolved(problem._id) ? (
                               <div className="flex items-center text-blue-400">
-                                <CheckCircle className="w-4 h-4 mr-1" />
+                                <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                                 <span className="text-sm font-medium">
                                   Solved
                                 </span>
                               </div>
                             ) : (
                               <div className="flex items-center text-gray-500">
-                                <Clock className="w-4 h-4 mr-1" />
+                                <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                                 <span className="text-sm">Not Attempted</span>
                               </div>
                             )}
                           </td>
-                          <td className="px-6 py-4">
+                          <td className="px-3 sm:px-6 py-3 sm:py-4">
                             <button
-                              className="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-500 hover:to-blue-500 text-white rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105"
+                              className="px-3 sm:px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-500 hover:to-blue-500 text-white rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 hover:scale-105"
                               onClick={() => handleProblemSelect(problem._id)}
                             >
                               Solve
@@ -601,20 +631,20 @@ function Homepage() {
               {filters.difficulty === "all" &&
                 filters.tag === "all" &&
                 filters.status === "all" && (
-                  <div className="flex justify-center mt-8">
+                  <div className="flex justify-center mt-6 sm:mt-8 px-4 sm:px-0">
                     <div className="flex items-center space-x-2">
                       <button
-                        className="p-2 bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed backdrop-blur-sm border border-gray-600/30"
+                        className="p-1.5 sm:p-2 bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed backdrop-blur-sm border border-gray-600/30"
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 1}
                       >
-                        <ChevronLeft className="w-4 h-4" />
+                        <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4" />
                       </button>
                       {Array.from({ length: totalPages }, (_, i) => i + 1).map(
                         (page) => (
                           <button
                             key={page}
-                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 backdrop-blur-sm border ${
+                            className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 backdrop-blur-sm border ${
                               currentPage === page
                                 ? "bg-gradient-to-r from-blue-600 to-blue-600 text-white border-blue-500/30"
                                 : "bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 border-gray-600/30"
@@ -626,18 +656,18 @@ function Homepage() {
                         )
                       )}
                       <button
-                        className="p-2 bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed backdrop-blur-sm border border-gray-600/30"
+                        className="p-1.5 sm:p-2 bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed backdrop-blur-sm border border-gray-600/30"
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={currentPage === totalPages}
                       >
-                        <ChevronRight className="w-4 h-4" />
+                        <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
                       </button>
                     </div>
                   </div>
                 )}
             </>
           ) : (
-            <div className="text-center py-12 bg-gradient-to-r from-gray-800/60 to-gray-700/40 rounded-xl border border-gray-600/30 backdrop-blur-sm">
+            <div className="text-center py-8 sm:py-12 bg-gradient-to-r from-gray-800/60 to-gray-700/40 rounded-xl border border-gray-600/30 backdrop-blur-sm mx-4 sm:mx-0">
               <Search className="w-12 h-12 text-gray-500 mx-auto mb-4" />
               <p className="text-gray-400">
                 {filters.difficulty !== "all" ||
@@ -652,8 +682,8 @@ function Homepage() {
 
         {/* Solved Problems Section */}
         <div>
-          <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
-            <Trophy className="w-6 h-6 mr-3 text-yellow-400" />
+          <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center px-4 sm:px-0">
+            <Trophy className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 text-yellow-400" />
             Your Solved Problems
           </h2>
 
@@ -662,24 +692,24 @@ function Homepage() {
               <div className="w-12 h-12 border-4 border-blue-500/30 border-t-blue-400 rounded-full animate-spin"></div>
             </div>
           ) : solvedProblems.length > 0 ? (
-            <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 rounded-xl border border-gray-600/30 backdrop-blur-sm overflow-hidden">
+            <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 rounded-xl border border-gray-600/30 backdrop-blur-sm overflow-hidden mx-4 sm:mx-0">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-gray-800/50 border-b border-gray-600/30">
                     <tr>
-                      <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">
                         ID
                       </th>
-                      <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">
                         Title
                       </th>
-                      <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300 hidden sm:table-cell">
                         Difficulty
                       </th>
-                      <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300 hidden md:table-cell">
                         Tags
                       </th>
-                      <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">
+                      <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">
                         Action
                       </th>
                     </tr>
@@ -690,32 +720,32 @@ function Homepage() {
                         key={problem._id}
                         className="hover:bg-gray-700/30 transition-colors duration-200"
                       >
-                        <td className="px-6 py-4 text-gray-300">{index + 1}</td>
-                        <td className="px-6 py-4">
+                        <td className="px-3 sm:px-6 py-3 sm:py-4 text-gray-300 text-sm">{index + 1}</td>
+                        <td className="px-3 sm:px-6 py-3 sm:py-4">
                           <div className="flex items-center">
-                            <CheckCircle className="w-4 h-4 text-blue-400 mr-2" />
-                            <span className="text-white font-medium">
+                            <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-blue-400 mr-2" />
+                            <span className="text-white font-medium text-sm sm:text-base">
                               {problem.title}
                             </span>
                           </div>
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-3 sm:px-6 py-3 sm:py-4 hidden sm:table-cell">
                           <span
-                            className={`px-3 py-1 rounded-full text-xs font-medium border ${getDifficultyBadge(
+                            className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium border ${getDifficultyBadge(
                               problem.difficulty
                             )}`}
                           >
                             {problem.difficulty}
                           </span>
                         </td>
-                        <td className="px-6 py-4">
-                          <span className="px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full text-xs font-medium">
+                        <td className="px-3 sm:px-6 py-3 sm:py-4 hidden md:table-cell">
+                          <span className="px-2 sm:px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full text-xs font-medium">
                             {problem.tags}
                           </span>
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-3 sm:px-6 py-3 sm:py-4">
                           <button
-                            className="px-4 py-2 bg-gray-600/50 hover:bg-gray-500/50 text-gray-200 rounded-lg text-sm font-medium transition-colors duration-200 backdrop-blur-sm border border-gray-600/30"
+                            className="px-3 sm:px-4 py-2 bg-gray-600/50 hover:bg-gray-500/50 text-gray-200 rounded-lg text-xs sm:text-sm font-medium transition-colors duration-200 backdrop-blur-sm border border-gray-600/30"
                             onClick={() => handleProblemSelect(problem._id)}
                           >
                             Review
@@ -728,7 +758,7 @@ function Homepage() {
               </div>
             </div>
           ) : (
-            <div className="text-center py-12 bg-gradient-to-r from-gray-800/60 to-gray-700/40 rounded-xl border border-gray-600/30 backdrop-blur-sm">
+            <div className="text-center py-8 sm:py-12 bg-gradient-to-r from-gray-800/60 to-gray-700/40 rounded-xl border border-gray-600/30 backdrop-blur-sm mx-4 sm:mx-0">
               <Trophy className="w-12 h-12 text-gray-500 mx-auto mb-4" />
               <p className="text-gray-400">
                 You haven't solved any problems yet. Start solving to track your
