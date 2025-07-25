@@ -22,16 +22,17 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app);
 
-const corsOptions = {
-  // ||"http://localhost:5173"
-  origin: process.env.FRONTEND_URL,
-  credentials: true, // ✅ allow cookies
-};
+app.use(
+  cors({
+    // 'http://localhost:3000',
+    origin: process.env.FRONTEND_URL, // or your frontend domain
+    credentials: true, // only if you're using cookies/auth headers
+  })
+);
 
 app.use(express.json()); // Needed to parse JSON bodies
 
-app.use(cors(corsOptions));
-app.use(express.json());
+app.use(cors());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
