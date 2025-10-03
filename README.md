@@ -485,6 +485,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Built with ❤️ by the Harsh **
+* Built with ❤️ by the Harsh *
 
-*Empowering developers to master algorithmic problem solving through collaboration and AI assistance.*
