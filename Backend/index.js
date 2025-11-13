@@ -8,6 +8,7 @@ import problemRouter from "./routes/problemcreationRoute.js";
 import doubtRouter from "./routes/aiChatRoute.js";
 import collaborationRouter from "./routes/collaboration.routes.js";
 import { initializeSocket } from "./socket/socketHandlers.js";
+import healthRouter from "./routes/health.routes.js";
 
 import http from "http";
 import { Server } from "socket.io";
@@ -68,6 +69,8 @@ const PORT = process.env.PORT || 8000;
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
+
+app.use("/health", healthRouter);
 app.use("/user", authRouter);
 app.use("/problem", problemRouter);
 // app.use("/problem-submit", submitRouter);
