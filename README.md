@@ -1,7 +1,5 @@
 # CodeBuddy - Collaborative Coding Platform
 
-![CodeBuddy Logo](https://via.placeholder.com/800x200/1e40af/ffffff?text=CodeBuddy+-+Master+Your+Coding+Skills)
-
 ## 🚀 Overview
 
 CodeBuddy is a modern, full-stack collaborative coding platform designed to help developers improve their algorithmic problem-solving skills. Built with React, Node.js, and Socket.IO, it provides real-time collaboration features, AI-powered assistance, and comprehensive problem management.
