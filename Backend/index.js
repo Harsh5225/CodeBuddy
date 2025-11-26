@@ -33,6 +33,9 @@ const allowedOrigins = [
   "http://localhost:8000",
   "http://localhost:3000",
   "http://localhost:5000",
+  "https://www.codeleet.xyz",
+  "https://codeleet.xyz",
+  "https://codebuddy-babc.onrender.com",
   process.env.FRONTEND_URL, // Add production frontend URL
 ];
 
