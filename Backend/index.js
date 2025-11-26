@@ -13,7 +13,7 @@ import healthRouter from "./routes/health.routes.js";
 import http from "http";
 import { Server } from "socket.io";
 
-// import submitRouter from "./routes/submit.js";
+
 import cors from "cors";
 import submissionRoutes from "./routes/submission.routes.js";
 import videoRouter from "./routes/videoCreator.js";
@@ -61,7 +61,7 @@ app.use(
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-     allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
@@ -73,23 +73,17 @@ app.get("/", (req, res) => {
 app.use("/health", healthRouter);
 app.use("/user", authRouter);
 app.use("/problem", problemRouter);
-// app.use("/problem-submit", submitRouter);
+
 app.use("/submission", submissionRoutes);
 app.use("/ai", doubtRouter);
 app.use("/video", videoRouter);
 app.use("/collaboration", collaborationRouter);
 app.use("/subscription", subscriptionRouter);
-
 // Initialize Socket.io
 const io = initializeSocket(server);
 
 const main = async () => {
   try {
-    // await client.connect();
-    // await connectDB();
-    // then connectDB() wouldn't even start until client.connect() finishes.
-
-    // means both client.connect() and connectDB() will start executing at the same time, in parallel.
     await Promise.all([client.connect(), connectDB()]);
 
     console.log("mongoDb is connected");
@@ -106,4 +100,3 @@ const main = async () => {
 };
 
 main();
-("// Updated configuration");

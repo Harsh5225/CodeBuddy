@@ -99,7 +99,7 @@ const Login = () => {
       {/* Main container with reduced max-width and gap for a more compact layout */}
       <animated.div
         style={containerAnimation}
-        className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10"
+        className="w-full max-w-6xl mx-auto flex flex-col-reverse lg:grid lg:grid-cols-2 gap-8 lg:gap-12 items-center relative z-10"
       >
         {/* Left Side - Made more compact */}
         {/* Further reduced vertical spacing to space-y-8 */}
@@ -162,7 +162,7 @@ const Login = () => {
         </div>
 
         {/* Right Side - Form */}
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center w-full px-4 sm:px-6">
           <div className="w-full max-w-md mx-auto lg:mx-0">
             {/* Mobile Logo */}
             <div className="lg:hidden text-center mb-8">
@@ -184,7 +184,7 @@ const Login = () => {
             {/* Form card padding reduced from p-8 to p-6 */}
             <animated.div
               style={formAnimation}
-              className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 backdrop-blur-xl rounded-3xl border border-gray-600/40 p-6 shadow-2xl relative"
+              className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 backdrop-blur-xl rounded-2xl border border-gray-600/40 p-4 sm:p-6 lg:p-8 shadow-2xl relative w-full"
             >
               <div className="relative z-10">
                 <div className="hidden lg:block text-center mb-6">
@@ -197,10 +197,7 @@ const Login = () => {
                 </div>
 
                 {/* Form element spacing reduced from space-y-6 to space-y-4 */}
-                <form
-                  onSubmit={handleSubmit(onSubmit)}
-                  className="space-y-4"
-                >
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                   {/* Email Field */}
                   <div className="space-y-2">
                     <label className="text-gray-300 text-sm font-medium flex items-center">
@@ -209,6 +206,8 @@ const Login = () => {
                     </label>
                     <div className="relative">
                       <input
+                        id="email"
+                        aria-label="Email Address"
                         {...register("email")}
                         type="email"
                         placeholder="Enter your email"
@@ -230,6 +229,8 @@ const Login = () => {
                     </label>
                     <div className="relative">
                       <input
+                        id="password"
+                        aria-label="Password"
                         {...register("password")}
                         type={showPassword ? "text" : "password"}
                         placeholder="Enter your password"

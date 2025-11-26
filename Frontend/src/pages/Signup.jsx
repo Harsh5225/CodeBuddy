@@ -92,7 +92,7 @@ const SignUp = () => {
       {/* Main container with adjustments for compactness */}
       <animated.div
         style={containerAnimation}
-        className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10"
+        className="w-full max-w-6xl mx-auto flex flex-col-reverse lg:grid lg:grid-cols-2 gap-8 lg:gap-12 items-center relative z-10"
       >
         {/* Left Side - Made compact, hidden on mobile */}
         <div className="hidden lg:block space-y-8">
@@ -152,7 +152,7 @@ const SignUp = () => {
         </div>
 
         {/* Right Side - Form */}
-        <div className="w-full max-w-md mx-auto lg:mx-0">
+        <div className="w-full max-w-md mx-auto lg:mx-0 px-4 sm:px-6">
           <div className="lg:hidden text-center mb-8">
             <div className="flex items-center justify-center space-x-3 mb-4">
               <div className="relative">
@@ -171,7 +171,7 @@ const SignUp = () => {
 
           <animated.div
             style={formAnimation}
-            className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 backdrop-blur-xl rounded-3xl border border-gray-600/40 p-6 shadow-2xl"
+            className="bg-gradient-to-r from-gray-800/60 to-gray-700/40 backdrop-blur-xl rounded-2xl border border-gray-600/40 p-4 sm:p-6 lg:p-8 shadow-2xl w-full"
           >
             <div className="relative z-10">
               <div className="hidden lg:block text-center mb-6">
@@ -189,6 +189,8 @@ const SignUp = () => {
                   </label>
                   <div className="relative">
                     <input
+                      id="firstName"
+                      aria-label="First Name"
                       {...register("firstName")}
                       type="text"
                       placeholder="Enter your first name"
@@ -209,6 +211,8 @@ const SignUp = () => {
                   </label>
                   <div className="relative">
                     <input
+                      id="email"
+                      aria-label="Email Address"
                       {...register("email")}
                       type="email"
                       placeholder="Enter your email"
@@ -229,6 +233,8 @@ const SignUp = () => {
                   </label>
                   <div className="relative">
                     <input
+                      id="password"
+                      aria-label="Password"
                       {...register("password")}
                       type={showPassword ? "text" : "password"}
                       placeholder="Create a strong password"

@@ -282,7 +282,7 @@ const LandingPage = () => {
                     <div className="flex flex-col space-y-2 pt-3 border-t border-gray-700/50">
                       <Link
                         to="/login"
-                        className="text-gray-300 hover:text-white transition-colors duration-200 font-medium text-sm"
+                        className="px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-500 hover:to-blue-500 text-white rounded-lg font-medium transition-all duration-200 text-center text-sm"
                       >
                         Login
                       </Link>

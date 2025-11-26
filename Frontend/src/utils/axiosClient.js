@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL,
+
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -13,32 +13,31 @@ let loadingMessageTimeout;
 // Function to show the loading message
 const showLoadingMessage = () => {
   // Check if the message already exists
-  if (document.getElementById('backend-loading-message')) {
+  if (document.getElementById("backend-loading-message")) {
     return;
   }
-  const messageElement = document.createElement('div');
-  messageElement.id = 'backend-loading-message';
-  messageElement.style.position = 'fixed';
-  messageElement.style.top = '50%';
-  messageElement.style.left = '50%';
-  messageElement.style.transform = 'translate(-50%, -50%)';
-  messageElement.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-  messageElement.style.color = 'white';
-  messageElement.style.padding = '20px';
-  messageElement.style.borderRadius = '10px';
-  messageElement.style.zIndex = '9999';
-  messageElement.innerText = 'Backend is starting, please wait...';
+  const messageElement = document.createElement("div");
+  messageElement.id = "backend-loading-message";
+  messageElement.style.position = "fixed";
+  messageElement.style.top = "50%";
+  messageElement.style.left = "50%";
+  messageElement.style.transform = "translate(-50%, -50%)";
+  messageElement.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+  messageElement.style.color = "white";
+  messageElement.style.padding = "20px";
+  messageElement.style.borderRadius = "10px";
+  messageElement.style.zIndex = "9999";
+  messageElement.innerText = "Backend is starting, please wait...";
   document.body.appendChild(messageElement);
 };
 
 // Function to hide the loading message
 const hideLoadingMessage = () => {
-  const messageElement = document.getElementById('backend-loading-message');
+  const messageElement = document.getElementById("backend-loading-message");
   if (messageElement) {
     document.body.removeChild(messageElement);
   }
 };
-
 
 // Request interceptor
 axiosClient.interceptors.request.use(
@@ -59,7 +58,6 @@ axiosClient.interceptors.request.use(
   }
 );
 
-
 // Response interceptor
 axiosClient.interceptors.response.use(
   (response) => {
@@ -77,20 +75,27 @@ axiosClient.interceptors.response.use(
     const originalRequest = config;
 
     // Retry on network error or 5xx errors, which can happen on cold starts
-    if (response && response.status >= 500 && originalRequest && !originalRequest._retry) {
-        originalRequest._retry = true;
-        const retryCount = originalRequest.retryCount || 0;
-        if (retryCount < 3) { // Retry up to 3 times
-            originalRequest.retryCount = retryCount + 1;
-            const delay = Math.pow(2, retryCount) * 1000; // Exponential backoff
-            console.log(`Request failed, retrying in ${delay}ms...`);
-            return new Promise(resolve => setTimeout(() => resolve(axiosClient(originalRequest)), delay));
-        }
+    if (
+      response &&
+      response.status >= 500 &&
+      originalRequest &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
+      const retryCount = originalRequest.retryCount || 0;
+      if (retryCount < 3) {
+        // Retry up to 3 times
+        originalRequest.retryCount = retryCount + 1;
+        const delay = Math.pow(2, retryCount) * 1000; // Exponential backoff
+        console.log(`Request failed, retrying in ${delay}ms...`);
+        return new Promise((resolve) =>
+          setTimeout(() => resolve(axiosClient(originalRequest)), delay)
+        );
+      }
     }
 
     return Promise.reject(error);
   }
 );
-
 
 export default axiosClient;
