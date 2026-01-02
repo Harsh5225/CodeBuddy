@@ -21,7 +21,7 @@ const subscriptionSchema = new Schema(
     },
     transactionSignature: {
       type: String,
-      required: function() {
+      required: function () {
         return this.subscriptionType === "premium";
       },
     },
@@ -31,7 +31,7 @@ const subscriptionSchema = new Schema(
     },
     subscriptionEndDate: {
       type: Date,
-      default: function() {
+      default: function () {
         // Free users get 30 days, premium gets 365 days
         const days = this.subscriptionType === "premium" ? 365 : 30;
         return new Date(Date.now() + days * 24 * 60 * 60 * 1000);
@@ -66,17 +66,15 @@ const subscriptionSchema = new Schema(
 );
 
 // Index for efficient queries
-subscriptionSchema.index({ userId: 1 });
-subscriptionSchema.index({ walletAddress: 1 });
 subscriptionSchema.index({ subscriptionEndDate: 1 });
 
 // Method to check if subscription is active
-subscriptionSchema.methods.isSubscriptionActive = function() {
+subscriptionSchema.methods.isSubscriptionActive = function () {
   return this.isActive && this.subscriptionEndDate > new Date();
 };
 
 // Method to check if user has premium features
-subscriptionSchema.methods.hasPremiumAccess = function() {
+subscriptionSchema.methods.hasPremiumAccess = function () {
   return this.subscriptionType === "premium" && this.isSubscriptionActive();
 };
 
