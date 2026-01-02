@@ -7,10 +7,8 @@ const client = createClient({
 
   socket: {
     host: process.env.REDIS_HOST,
-    port: 19735,
+    port: 17998,
   },
 });
-
-client.on('error', (err) => console.log('Redis Client Error', err));
 
 export default client;
