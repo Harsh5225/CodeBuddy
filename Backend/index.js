@@ -68,7 +68,8 @@ app.use(
   })
 );
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 3000; // Use Render's port or default to 3000
+
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
@@ -92,9 +93,9 @@ const main = async () => {
     console.log("mongoDb is connected");
     console.log("Redis is connected");
     console.log("Using Frontend URL:", process.env.FRONTEND_URL);
-    server.listen(PORT, () => {
-      console.log(`Server is running at ${PORT}`);
-      console.log("Socket.io server initialized");
+
+    server.listen(PORT, '0.0.0.0', () => {
+      console.log(`Server is running on port ${PORT}`);
     });
   } catch (error) {
     console.log(error);
